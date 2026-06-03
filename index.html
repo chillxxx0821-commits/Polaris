@@ -238,6 +238,129 @@
   .vev.event.allday{background:linear-gradient(150deg,#7a90ab,#6b819c);}
   .cal-dot.event{background:#6a8cb0;}
   .vad-chip.event{background:#6a8cb0;}
+
+  /* 中分類グループ */
+  .step-group{
+    margin-top:24px;
+    border-top:1px solid var(--line);
+    padding-top:14px;
+  }
+  .step-group-head{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:6px;
+    padding-bottom:6px;
+  }
+  .step-group-name{
+    font-size:13px;
+    font-weight:700;
+    color:var(--star);
+    letter-spacing:0.06em;
+  }
+  .step-group-edit{
+    background:none;border:none;
+    font-family:inherit;font-size:11px;
+    color:var(--ink-faint);
+    padding:4px 8px;
+    cursor:pointer;
+  }
+  .step-group-edit:hover{color:var(--star);}
+  .step-group .sadd-sub-in-group{
+    display:block;width:100%;
+    font-family:inherit;font-size:12px;
+    color:var(--ink-faint);
+    background:none;border:none;
+    padding:8px 0;
+    margin-top:6px;
+    text-align:left;
+    cursor:pointer;
+    letter-spacing:0.02em;
+  }
+  .step-group .sadd-sub-in-group:hover{color:var(--star);}
+  /* 移動先オプション */
+  .mv-opt{display:block;width:100%;text-align:left;font-family:inherit;background:none;border:1px solid var(--line);border-radius:11px;padding:13px 16px;cursor:pointer;color:var(--ink);font-size:14px;letter-spacing:0.02em;}
+  .mv-opt:hover{border-color:var(--star);background:rgba(201,162,39,0.08);}
+  .mv-opt.current{opacity:0.4;cursor:default;}
+  .mv-opt.current:hover{border-color:var(--line);background:none;}
+  .mv-opt .mv-mark{color:var(--star);margin-right:6px;}
+
+  /* 軌跡フィルタ */
+  .trail-filter{margin-bottom:18px;}
+  .trail-filter .tf-label{font-size:11px;color:var(--ink-faint);letter-spacing:0.14em;margin-bottom:10px;}
+  .trail-filter .chips{display:flex;flex-wrap:wrap;gap:7px;}
+  .trail-filter .fchip{font-family:inherit;font-size:12.5px;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:16px;padding:7px 13px;transition:all 0.2s;cursor:pointer;}
+  .trail-filter .fchip:hover{border-color:var(--star);color:var(--ink);}
+  .trail-filter .fchip::before{content:'▸ ';color:var(--star);font-weight:700;opacity:0.7;}
+  .trail-filter .fchip.on{background:rgba(201,162,39,0.12);border-color:var(--star);color:var(--ink);font-weight:700;}
+  .trail-filter .fchip.on::before{content:'● ';color:var(--star);opacity:1;}
+  .trail-filter-summary{font-size:11px;color:var(--ink-faint);margin-top:8px;letter-spacing:0.02em;}
+
+  /* 価値観の全画面編集 */
+  .vsheet-full{
+    border-radius:0 !important;
+    max-height:100% !important;
+    max-width:none !important;
+    width:100% !important;
+    height:100% !important;
+    inset:0 !important;
+    transform:translateY(100%);
+    transition:transform 0.4s cubic-bezier(.2,.8,.2,1) !important;
+    padding:0 !important;
+    visibility:visible !important;
+    overflow:hidden !important;
+    display:flex;
+    flex-direction:column;
+  }
+  .vsheet-full.open{transform:translateY(0);}
+  .vfull-inner{
+    flex:1;overflow-y:auto;
+    padding:60px 28px 40px;
+    max-width:680px;width:100%;margin:0 auto;
+    box-sizing:border-box;
+  }
+  .vfull-inner h2{font-size:26px;margin-bottom:6px;letter-spacing:0.01em;}
+  .vfull-inner h2 input{font-size:26px !important;font-weight:800 !important;padding:8px 0 !important;}
+  .vfull-inner .sword{margin-bottom:8px;}
+  .vfull-inner label{display:block;margin:24px 0 10px;font-size:11px;}
+  .vfull-inner #vDef{
+    min-height:340px;
+    font-size:15px;
+    line-height:1.85;
+    padding:18px 20px;
+    border:1px solid var(--line);
+    background:var(--card);
+    border-radius:14px;
+  }
+  .vfull-inner #vDef:focus{border-color:var(--star);}
+  .vfull-inner #vDef::placeholder{color:var(--ink-faint);opacity:0.7;line-height:1.85;}
+  .vfull-inner .btn-full{margin-top:24px;padding:16px;font-size:14px;}
+  .vclose-btn{
+    position:absolute;top:14px;right:18px;
+    background:none;border:none;
+    font-family:inherit;font-size:26px;
+    color:var(--ink-faint);
+    width:38px;height:38px;
+    border-radius:50%;
+    cursor:pointer;
+    z-index:10;
+    line-height:1;
+  }
+  .vclose-btn:hover{background:var(--paper-warm);color:var(--ink);}
+  /* 暦タスク（task）：緑系で区別 */
+  .vev.task{background:linear-gradient(150deg,#7a9b7a,#5e7e5e);box-shadow:0 1px 4px rgba(110,150,110,0.3);}
+  .vad-chip.task{background:#7a9b7a;}
+  .cal-dot.task{background:#7a9b7a;}
+  .cal-item.task .cdot{background:#7a9b7a;}
+  .cal-item.task .ci-dir{color:#7a9b7a;}
+  /* タスクのチェックボックス */
+  .task-check{flex-shrink:0;width:18px;height:18px;border:1.5px solid #7a9b7a;border-radius:5px;background:none;margin-right:8px;cursor:pointer;transition:all 0.2s;align-self:center;}
+  .task-check:hover{background:rgba(122,155,122,0.15);}
+  .task-check.done{background:#7a9b7a;}
+  .task-check.done::after{content:'✓';color:#fff;font-size:13px;font-weight:700;display:block;text-align:center;line-height:15px;}
+  .cal-item.task.done .ci-task{text-decoration:line-through;color:var(--ink-faint);}
+  .vev.task.done{opacity:0.5;}
+  .vev.task .vev-check{display:inline-block;width:12px;height:12px;border:1.5px solid #fff;border-radius:3px;margin-right:5px;vertical-align:middle;background:transparent;}
+  .vev.task.done .vev-check{background:#fff;}
+  .vev.task.done .vev-t{text-decoration:line-through;}
   .cal-item.event .cdot{background:#6a8cb0;}
   .cal-item.event .ci-dir{color:#6a8cb0;}
 
@@ -363,6 +486,7 @@
         <div style="font-size:16px;font-weight:700;color:var(--ink);margin-bottom:14px;text-align:center;">きのうまでの自分と、<br>何が変わった？</div>
         <textarea id="diffText" placeholder="やったこと、気づいたこと、わからないとわかったこと——なんでもいい。"></textarea>
         <div style="margin-top:12px;"><select id="diffStar"><option value="">（どの方向にも紐づけない）</option></select></div>
+        <div id="diffGroupZone" style="margin-top:8px;display:none;"><select id="diffGroup"><option value="">— 中分類なし</option></select></div>
         <div id="diffMetrics" style="margin-top:10px;"></div>
       </div>
       <button class="btn-full" id="addDiff">記す</button>
@@ -371,6 +495,7 @@
 
     <section class="view" id="v-trail">
       <p class="lead">溜まった差分が、線になる場所。「終点まであと何%」は出ません。出発点からどれだけ動いたか、だけ。</p>
+      <div class="trail-filter" id="trailFilter"></div>
       <div id="trailBody"></div>
     </section>
 
@@ -412,15 +537,19 @@
   </div>
 
   <div class="sheet-bg" id="vbg"></div>
-  <div class="sheet" id="vsheet">
-    <div class="grip"></div>
-    <div class="sword" id="vWordLabel">VALUE</div>
-    <h2 id="vWord">—</h2>
-    <label>あなたの言葉で</label>
-    <textarea id="vDef" placeholder="この言葉が、あなたにとって何を意味するか。空のままでもいい。"></textarea>
-    <button class="btn-full" id="vSave">書きとめる</button>
-    <button class="btn-ghost" id="vArchive">この言葉を、過去の価値観へ</button>
-    <button class="btn-ghost danger" id="vDelete">完全に削除する</button>
+  <div class="sheet vsheet-full" id="vsheet">
+    <button class="vclose-btn" id="vClose" title="閉じる">×</button>
+    <div class="vfull-inner">
+      <div class="sword" id="vWordLabel">VALUE</div>
+      <h2 id="vWord">—</h2>
+      <label>あなたの言葉で</label>
+      <textarea id="vDef" placeholder="この言葉が、あなたにとって何を意味するか。空のままでもいい。
+
+ゆっくり、長く書いてもいい。改行も箇条書きも自由に。"></textarea>
+      <button class="btn-full" id="vSave">書きとめる</button>
+      <button class="btn-ghost" id="vArchive">この言葉を、過去の価値観へ</button>
+      <button class="btn-ghost danger" id="vDelete">完全に削除する</button>
+    </div>
   </div>
 
   <div class="sheet-bg" id="dbg"></div>
@@ -434,6 +563,7 @@
     <div class="sort-row" style="margin-top:14px;"><button class="sort-btn" id="sortByDue">期日順に整える</button></div>
     <div class="steps-tree" id="stepsTree"></div>
     <button class="sadd-root" id="addRootStep"><span class="p">+</span> 手順をぶら下げる</button>
+    <button class="sadd-root" id="addGroup" style="margin-top:8px;"><span class="p">+</span> 中分類を加える（例：運動・食事）</button>
     <button class="btn-ghost" id="dArchive" style="margin-top:18px;">★ この方向に、たどり着いた（達成）</button>
     <button class="btn-ghost" id="dHold">いまは目指さない（保留）</button>
     <button class="btn-ghost danger" id="dDelete">この方向を削除する</button>
@@ -475,9 +605,17 @@
     <div class="due-row"><input type="date" id="stepDue"><button class="due-clear" id="stepDueClear">なし</button></div>
     <div class="time-row" id="timeRow">
       <input type="text" id="stepFrom" inputmode="numeric" placeholder="9:00" maxlength="5"><span class="time-sep">〜</span><input type="text" id="stepTo" inputmode="numeric" placeholder="10:00" maxlength="5">
-      <span class="time-or">／</span>
-      <input type="number" id="stepDur" min="0" step="5" placeholder="所要分" class="dur-in">
     </div>
+    <div class="dur-row">
+      <span class="dur-label">所要：<span id="stepDurCalc">—</span></span>
+      <div class="dur-presets">
+        <button class="dur-p" data-stepdur="15">15分</button>
+        <button class="dur-p" data-stepdur="30">30分</button>
+        <button class="dur-p" data-stepdur="60">1時間</button>
+        <button class="dur-p" data-stepdur="120">2時間</button>
+      </div>
+    </div>
+    <input type="hidden" id="stepDur">
     <p class="due-note">期限も時間も、ただの目印です。過ぎても責められません。通知も、赤い表示もありません。</p>
 
     <label style="display:block;margin-top:14px;">繰り返し（任意）</label>
@@ -545,9 +683,13 @@
   <div class="sheet-bg" id="ebg"></div>
   <div class="sheet" id="esheet">
     <div class="grip"></div>
-    <div class="sword">EVENT</div>
+    <div class="sword" id="eSword">EVENT</div>
     <h2 style="font-size:17px;" id="eHead">予定を加える</h2>
-    <label>なにの予定</label>
+    <div class="rep-row" id="eKindRow" style="margin-bottom:14px;">
+      <button class="rep-opt active" data-ekind="event">予定</button>
+      <button class="rep-opt" data-ekind="task">タスク（完了できる）</button>
+    </div>
+    <label id="eTextLabel">なにの予定</label>
     <textarea id="eText" style="min-height:54px;" placeholder="例：歯医者／打ち合わせ／ライブ"></textarea>
     <label style="display:block;margin-top:14px;">メモ（任意）</label>
     <textarea id="eMemo" style="min-height:48px;" placeholder="場所、相手、持ち物など"></textarea>
@@ -556,6 +698,12 @@
       <option value="">— 紐づけない（ただの予定）</option>
     </select>
     <p class="due-note" style="margin-top:6px;">紐づけると、この予定は「手順」になります。完了すると軌跡に刻まれます。</p>
+    <div id="eGroupZone" style="display:none;">
+      <label style="display:block;margin-top:10px;">中分類に入れる（任意）</label>
+      <select id="eGroup" style="margin-top:6px;">
+        <option value="">— 中分類なし（北極星の直下）</option>
+      </select>
+    </div>
     <label style="display:block;margin-top:14px;">いつ</label>
     <div class="due-row"><input type="date" id="eDue"></div>
     <div class="time-row">
@@ -586,6 +734,31 @@
     </div>
     <button class="btn-full" id="eSave">加える</button>
     <button class="btn-ghost danger" id="eDelete" style="display:none;">この予定を削除する</button>
+  </div>
+
+  <!-- step move sheet -->
+  <div class="sheet-bg" id="mvbg"></div>
+  <div class="sheet" id="mvsheet">
+    <div class="grip"></div>
+    <div class="sword">MOVE</div>
+    <h2 style="font-size:17px;">どこへ移動しますか？</h2>
+    <p class="due-note" style="margin-top:8px;">この手順を、別の場所へ動かします。中身の手順もまるごと一緒に動きます。</p>
+    <div id="mvTargets" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;"></div>
+    <button class="btn-ghost" id="mvCancel" style="margin-top:14px;">やめる</button>
+  </div>
+
+  <!-- group edit sheet -->
+  <div class="sheet-bg" id="gpbg"></div>
+  <div class="sheet" id="gpsheet">
+    <div class="grip"></div>
+    <div class="sword" id="gpKind">NEW</div>
+    <h2 style="font-size:17px;" id="gpHead">中分類を加える</h2>
+    <label>名前</label>
+    <input type="text" id="gpName" placeholder="例：運動／食事／声掛け" style="margin-top:6px;">
+    <p class="due-note" style="margin-top:8px;">北極星の中で、手順をまとめる箱です。後から名前を変えたり、削除もできます。</p>
+    <button class="btn-full" id="gpSave">置く</button>
+    <button class="btn-ghost danger" id="gpDelete" style="display:none;">この中分類を削除する</button>
+    <p class="due-note" id="gpDelNote" style="display:none;margin-top:8px;">削除しても、中にある手順は北極星の直下に戻ります。手順は消えません。</p>
   </div>
 
   <!-- diff edit sheet -->
@@ -715,12 +888,19 @@ function openValue(v){
 /* STARS */
 function countMoves(id){return diffs.filter(d=>d.starId===id).length;}
 function countOpenSteps(steps){let n=0;(steps||[]).forEach(st=>{if(!st.done)n++;n+=countOpenSteps(st.children);});return n;}
+function countOpenAll(s){
+  let n=countOpenSteps(s.steps||[]);
+  (s.groups||[]).forEach(g=>{n+=countOpenSteps(g.steps||[]);});
+  return n;
+}
 function renderStars(){
   const l=document.getElementById('starsList');
   if(!stars.length){l.innerHTML=`<div class="empty"><span class="em-glyph">☆</span>まだ北極星はありません。<br>向かいたい方を、ひとつ置いてみてください。</div>`;return;}
   l.innerHTML=stars.map(s=>{
-    const open=countOpenSteps(s.steps||[]);const moves=countMoves(s.id);
+    const open=countOpenAll(s);const moves=countMoves(s.id);
     let meta=[];if(moves)meta.push(`この方へ ${moves} の差分`);if(open)meta.push(`手順 ${open}`);
+    const groupCount=(s.groups||[]).length;
+    if(groupCount)meta.push(`中分類 ${groupCount}`);
     // preview: top-level steps, up to 3
     let preview='';
     const top=(s.steps||[]);
@@ -789,8 +969,25 @@ function openMetricEditor(starId,metricIdOrIndex){
 function renderStepsTree(){
   const s=stars.find(x=>x.id===detailSid);const tree=document.getElementById('stepsTree');
   if(!s){tree.innerHTML='';return;}
-  if(!s.steps||!s.steps.length){tree.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);text-align:center;padding:14px 0;line-height:1.7;">まだ手順はありません。<br>手順が見える方向にだけ、ぶら下げればいい。</div>`;return;}
-  tree.innerHTML=renderStepNodes(s.steps,[]);
+  if(!s.groups)s.groups=[];
+  const hasGroups=s.groups.length>0;
+  const hasRootSteps=s.steps&&s.steps.length>0;
+  if(!hasGroups&&!hasRootSteps){tree.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);text-align:center;padding:14px 0;line-height:1.7;">まだ手順はありません。<br>手順が見える方向にだけ、ぶら下げればいい。</div>`;return;}
+  let html='';
+  // 中分類なしの手順
+  if(hasRootSteps){
+    html+=renderStepNodes(s.steps,[]);
+  }
+  // 中分類ごとの手順
+  s.groups.forEach((g,gi)=>{
+    const n=countOpenSteps(g.steps||[]);
+    html+=`<div class="step-group"><div class="step-group-head"><div class="step-group-name">${esc(g.name)}${n?`　<span style="color:var(--ink-faint);font-weight:400;font-size:11px;letter-spacing:0;">${n}</span>`:''}</div><button class="step-group-edit" data-editgroup="${g.id}">編集</button></div>`;
+    if(g.steps&&g.steps.length){
+      html+=renderStepNodes(g.steps,['g',g.id]);
+    }
+    html+=`<button class="sadd-sub-in-group" data-addingroup="${g.id}"><span style="color:var(--star);font-weight:700;">+</span> この中分類に手順を加える</button></div>`;
+  });
+  tree.innerHTML=html;
 }
 function fmtTime(st){
   let parts=[];
@@ -810,7 +1007,7 @@ function repLabel(st){
 }
 function renderStepNodes(steps,path){
   return steps.map((st,i)=>{
-    const p=path.concat(i).join('-');
+    const p=encPath(path.concat(i));
     let meta=[];
     if(st.due){const past=isPast(st.due);meta.push(`<span class="${past?'past':''}" style="${past?'color:#a98b6a;':''}">${fmtDue(st.due)}${past?'（過ぎました）':''}</span>`);}
     const tm=fmtTime(st);if(tm)meta.push(tm);
@@ -820,11 +1017,41 @@ function renderStepNodes(steps,path){
     const children=st.children&&st.children.length?`<div class="schildren">${renderStepNodes(st.children,path.concat(i))}</div>`:'';
     const upDis=i===0?'disabled':'';
     const downDis=i===steps.length-1?'disabled':'';
-    return `<div class="snode"><div class="srow"><button class="scheck" data-check="${p}"></button><div class="stext" data-editstep="${p}">${esc(st.text)}${metaLine}${memoLine}${repLine}</div><button class="smove" data-up="${p}" ${upDis}>↑</button><button class="smove" data-down="${p}" ${downDis}>↓</button><button class="smini" data-delstep="${p}">×</button></div><button class="sadd-sub" data-addsub="${p}">この中に手順を足す</button>${children}</div>`;
+    // 移動ボタンは最上位（pathが空 or ['g',gid]）のときだけ表示
+    const isTopLevel=path.length===0||(path.length===2&&path[0]==='g');
+    const moveBtn=isTopLevel?`<button class="smini" data-movestep="${p}" title="中分類へ移動">⇄</button>`:'';
+    return `<div class="snode"><div class="srow"><button class="scheck" data-check="${p}"></button><div class="stext" data-editstep="${p}">${esc(st.text)}${metaLine}${memoLine}${repLine}</div><button class="smove" data-up="${p}" ${upDis}>↑</button><button class="smove" data-down="${p}" ${downDis}>↓</button>${moveBtn}<button class="smini" data-delstep="${p}">×</button></div><button class="sadd-sub" data-addsub="${p}">この中に手順を足す</button>${children}</div>`;
   }).join('');
 }
-function getStepByPath(s,path){let arr=s.steps;let node=null;for(const idx of path){node=arr[idx];if(!node)return null;arr=node.children||[];}return node;}
-function getParentArr(s,path){let arr=s.steps;for(let i=0;i<path.length-1;i++){arr=arr[path[i]].children;}return arr;}
+function encPath(path){return path.join('|');}
+function decPath(str){return str.split('|').map(s=>/^-?\d+$/.test(s)?Number(s):s);}
+
+function getRootStepsByPath(s,path){
+  // pathが['g',groupId,...] で始まれば中分類内、それ以外は通常のsteps
+  if(path[0]==='g'){
+    const g=(s.groups||[]).find(x=>x.id===path[1]);
+    return g?g.steps:null;
+  }
+  return s.steps;
+}
+function getNumericPath(path){
+  // ['g',groupId,0,1] → [0,1], [0,1,2] → [0,1,2]
+  return path[0]==='g'?path.slice(2):path;
+}
+function getStepByPath(s,path){
+  const root=getRootStepsByPath(s,path);if(!root)return null;
+  const np=getNumericPath(path);
+  let arr=root;let node=null;
+  for(const idx of np){node=arr[idx];if(!node)return null;arr=node.children||[];}
+  return node;
+}
+function getParentArr(s,path){
+  const root=getRootStepsByPath(s,path);if(!root)return null;
+  const np=getNumericPath(path);
+  let arr=root;
+  for(let i=0;i<np.length-1;i++){arr=arr[np[i]].children;}
+  return arr;
+}
 let stepCtx=null;
 let repState='none', wdState=[], mdState=[];
 function setRep(r){
@@ -842,8 +1069,8 @@ function renderMonthDayGrid(){
   let h='';for(let i=1;i<=31;i++)h+=`<button class="md" data-md="${i}">${i}</button>`;
   g.innerHTML=h;setMd(mdState);
 }
-function openStepEditor(sid,parentPath,editPath){
-  stepCtx={sid,parentPath,editPath:editPath||null};
+function openStepEditor(sid,parentPath,editPath,groupId){
+  stepCtx={sid,parentPath,editPath:editPath||null,groupId:groupId||null};
   const editing=!!editPath;
   document.getElementById('stepKind').textContent=editing?'EDIT':(parentPath?'SUB STEP':'STEP');
   document.getElementById('stepHead').textContent=editing?'手順を編集':(parentPath?'この中に手順を足す':'手順を加える');
@@ -855,6 +1082,7 @@ function openStepEditor(sid,parentPath,editPath){
   document.getElementById('stepFrom').value=st?(st.from||''):'';
   document.getElementById('stepTo').value=st?(st.to||''):'';
   document.getElementById('stepDur').value=st?(st.dur||''):'';
+  updateStepDur();
   setRep(st?(st.rep||'none'):'none');
   setWd(st?(st.wd||[]):[]);
   setMd(st?(st.md||[]):[]);
@@ -878,14 +1106,20 @@ function renderStarSelect(){
   sel.innerHTML=`<option value="">（どの方向にも紐づけない）</option>`+stars.map(s=>`<option value="${s.id}">★ ${esc(s.dir)}</option>`).join('');
   sel.value=cur;
   if(typeof refreshDiffMetrics==='function')refreshDiffMetrics();
+  if(typeof refreshDiffGroup==='function')refreshDiffGroup();
 }
 
 /* TRAIL */
 let trailExpanded={}; // 3→7
 let trailFullStar=null; // 個別ページ表示中の北極星ID（'__loose__'含む）
+let trailFilterGroups=[]; // フィルタ：中分類IDの配列（個別ページ内で使う、複数可）
+
 function renderTrail(){
+  const fb=document.getElementById('trailFilter');if(fb)fb.innerHTML='';
   const b=document.getElementById('trailBody');
   if(trailFullStar){renderTrailFull(b);return;}
+  // 一覧ビューに戻ったら中分類フィルタはリセット
+  trailFilterGroups=[];
   if(!diffs.length){b.innerHTML=`<div class="empty"><span class="em-glyph">✦</span>まだ道はありません。<br>動いた分だけ、線が伸びていきます。</div>`;return;}
   const single=stars.length<=1;let h='';
   stars.forEach(s=>{const ds=diffs.filter(d=>d.starId===s.id).sort((a,b)=>b.ts-a.ts);if(ds.length)h+=trailBlock(s.id,'★ '+esc(s.dir),ds,single);});
@@ -920,12 +1154,36 @@ function stepHtml(d){
 }
 function renderTrailFull(b){
   const key=trailFullStar;
-  let title='',ds=[];
-  if(key==='__loose__'){title='— どの方向にも紐づかない動き';ds=diffs.filter(d=>!d.starId||!stars.find(s=>s.id===d.starId));}
-  else{const s=stars.find(x=>x.id===key);if(!s){trailFullStar=null;renderTrail();return;}title='★ '+esc(s.dir);ds=diffs.filter(d=>d.starId===key);}
+  let title='',ds=[];const isLoose=key==='__loose__';
+  let starObj=null;
+  if(isLoose){title='— どの方向にも紐づかない動き';ds=diffs.filter(d=>!d.starId||!stars.find(s=>s.id===d.starId));}
+  else{starObj=stars.find(x=>x.id===key);if(!starObj){trailFullStar=null;renderTrail();return;}title='★ '+esc(starObj.dir);ds=diffs.filter(d=>d.starId===key);}
+  // 中分類フィルタ（複数選択：OR検索）
+  if(trailFilterGroups.length&&starObj){
+    ds=ds.filter(d=>trailFilterGroups.includes(d.groupId));
+  }
   ds=ds.sort((a,b)=>b.ts-a.ts);
-  const steps=ds.map(stepHtml).join('');
-  b.innerHTML=`<button class="trail-more" data-backtrail style="margin-bottom:14px;padding-left:0;">‹ 軌跡の一覧へ戻る</button><div class="trail-star"><div class="trail-head"><span class="name">${title}</span><span class="n">${ds.length} steps</span></div><div class="trail-line">${steps}</div></div>`;
+  // フィルタUI（中分類がある時だけ）
+  let filterUI='';
+  if(!isLoose&&starObj&&starObj.groups&&starObj.groups.length){
+    const chips=starObj.groups.map(g=>{
+      const on=trailFilterGroups.includes(g.id);
+      return `<button class="fchip${on?' on':''}" data-tfg="${g.id}">${esc(g.name)}</button>`;
+    }).join('');
+    const summary=trailFilterGroups.length?`<div class="trail-filter-summary">${ds.length} 件の動き　・　もう一度押すと解除</div>`:`<div class="trail-filter-summary">押して、その中分類だけ振り返る。複数選んでもOK。</div>`;
+    filterUI=`<div class="trail-filter" style="margin-bottom:18px;"><div class="tf-label">中分類で絞る</div><div class="chips">${chips}</div>${summary}</div>`;
+  }
+  const steps=ds.length?ds.map(stepHtml).join(''):`<div class="empty" style="padding:24px 0;">この分類の動きはまだありません。</div>`;
+  b.innerHTML=`<button class="trail-more" data-backtrail style="margin-bottom:14px;padding-left:0;">‹ 軌跡の一覧へ戻る</button>${filterUI}<div class="trail-star"><div class="trail-head"><span class="name">${title}</span><span class="n">${ds.length} steps</span></div><div class="trail-line">${steps}</div></div>`;
+  // チップのイベント
+  b.querySelectorAll('[data-tfg]').forEach(c=>{
+    c.addEventListener('click',()=>{
+      const gid=c.dataset.tfg;
+      if(trailFilterGroups.includes(gid))trailFilterGroups=trailFilterGroups.filter(x=>x!==gid);
+      else trailFilterGroups=[...trailFilterGroups,gid];
+      renderTrail();
+    });
+  });
 }
 
 /* アーカイブ（達成・保留・過去の価値観） */
@@ -1014,27 +1272,30 @@ function metricChart(g){
 let calYear, calMonth, calMode='month', calAnchor=null; // calAnchor: 週/日表示の基準日(Date)
 function gatherDated(){
   const out=[];
-  const walk=(steps,star,path)=>{(steps||[]).forEach((st,i)=>{
+  const walk=(steps,star,path,groupId,groupName)=>{(steps||[]).forEach((st,i)=>{
     const p=path.concat(i);
-    if(st.due)out.push({due:st.due,text:st.text,memo:st.memo,from:st.from,to:st.to,dur:st.dur,rep:st.rep,dir:star.dir,starId:star.id,stepId:st.id,path:p,kind:'task'});
-    walk(st.children,star,p);
+    if(st.due)out.push({due:st.due,text:st.text,memo:st.memo,from:st.from,to:st.to,dur:st.dur,rep:st.rep,dir:star.dir,starId:star.id,stepId:st.id,path:p,groupId,groupName,kind:'step'});
+    walk(st.children,star,p,groupId,groupName);
   });};
-  stars.forEach(s=>walk(s.steps,s,[]));
+  stars.forEach(s=>{
+    walk(s.steps,s,[],null,null);
+    (s.groups||[]).forEach(g=>walk(g.steps,s,['g',g.id],g.id,g.name));
+  });
   return out;
 }
 // 予定を指定範囲に展開（繰り返しはオンザフライ展開）
 function expandEvents(rangeStart,rangeEnd){
   const out=[];
   events.forEach(ev=>{
+    const k=ev.kind==='task'?'task':'event';
     if(!ev.rep||ev.rep==='none'){
       const d=new Date(ev.due+'T00:00:00');
-      if(d>=rangeStart&&d<=rangeEnd)out.push({...ev,due:ev.due,kind:'event'});
+      if(d>=rangeStart&&d<=rangeEnd)out.push({...ev,due:ev.due,kind:k});
       return;
     }
     const start=new Date(ev.due+'T00:00:00');
     let cur=new Date(Math.max(start,rangeStart));
     cur.setHours(0,0,0,0);
-    // 開始日より前は出さない
     if(cur<start)cur=new Date(start);
     const limit=new Date(rangeEnd);limit.setHours(23,59,59,999);
     let safety=0;
@@ -1050,7 +1311,7 @@ function expandEvents(rangeStart,rangeEnd){
         if(ev.md&&ev.md.length)include=ev.md.includes(cur.getDate());
         else include=cur.getDate()===start.getDate();
       }
-      if(include&&cur>=start)out.push({...ev,due:iso(cur),kind:'event'});
+      if(include&&cur>=start)out.push({...ev,due:iso(cur),kind:k});
       cur.setDate(cur.getDate()+1);
     }
   });
@@ -1084,7 +1345,7 @@ function renderCalMonth(){
   for(let day=1;day<=daysInMonth;day++){
     const dIso=iso(new Date(calYear,calMonth,day));
     const dayItems=items.filter(it=>it.due===dIso);
-    const dots=dayItems.slice(0,4).map(it=>`<span class="cal-dot ${it.kind==='event'?'event':''}"></span>`).join('');
+    const dots=dayItems.slice(0,4).map(it=>`<span class="cal-dot ${it.kind==='event'?'event':it.kind==='task'?'task':''}"></span>`).join('');
     g+=`<div class="cal-cell ${dayItems.length?'has':''} ${dIso===todayIso?'today':''}" data-cellday="${dIso}"><span class="dn">${day}</span><div class="cal-dots">${dots}</div></div>`;
   }
   document.getElementById('calGrid').innerHTML=g;
@@ -1096,10 +1357,16 @@ function renderCalMonth(){
     if(it.due!==cur){if(cur)html+=`</div>`;cur=it.due;const d=new Date(it.due+'T00:00:00');html+=`<div class="cal-day-group"><div class="cal-day-label">${d.getMonth()+1}月${d.getDate()}日 (${dows[d.getDay()]})</div>`;}
     let meta=[];const tm=fmtTime(it);if(tm)meta.push(tm);if(it.rep&&it.rep!=='none')meta.push('↻ '+(it.rep==='daily'?'毎日':it.rep==='weekly'?'毎週':'毎月'));
     const isEv=it.kind==='event';
+    const isTask=it.kind==='task';
     const memoLine=(it.memo)?`<div class="ci-memo">${escLink(it.memo)}</div>`:'';
-    const tail=isEv?'':`<div class="ci-dir">★ ${esc(it.dir)}</div>`;
-    const click=isEv?` data-editev="${it.id}"`:` data-edittask="${it.starId}::${it.path.join(',')}"`;
-    html+=`<div class="cal-item ${isEv?'event':''}"${click}><span class="cdot"></span><div class="ci-body"><div class="ci-task">${esc(it.text)}</div>${meta.length?`<div class="ci-meta">${meta.join(' ・ ')}</div>`:''}${memoLine}${tail}</div></div>`;
+    const tail=isEv||isTask?'':`<div class="ci-dir">★ ${esc(it.dir)}</div>`;
+    let click='';
+    if(isEv)click=` data-editev="${it.id}"`;
+    else if(isTask)click=` data-editev="${it.id}"`;
+    else click=` data-edittask="${it.starId}::${encPath(it.path)}"`;
+    const checkbox=isTask?`<button class="task-check ${it.done?'done':''}" data-taskdone="${it.id}"></button>`:'';
+    const itemCls=isEv?'event':(isTask?`task ${it.done?'done':''}`:'');
+    html+=`<div class="cal-item ${itemCls}"${click}>${checkbox}<span class="cdot"></span><div class="ci-body"><div class="ci-task">${esc(it.text)}</div>${meta.length?`<div class="ci-meta">${meta.join(' ・ ')}</div>`:''}${memoLine}${tail}</div></div>`;
   });
   if(cur)html+=`</div>`;listEl.innerHTML=html;
 }
@@ -1138,8 +1405,12 @@ function renderCalWeek(){
   let allday=`<div class="vcal-allday">`+days.map(d=>{
     const its=items.filter(it=>it.due===iso(d)&&!it.from);
     return `<div class="vad-col" data-emptyday="${iso(d)}">`+its.map(it=>{
-      const click=it.kind==='event'?` data-editev="${it.id}"`:` data-edittask="${it.starId}::${it.path.join(',')}"`;
-      return `<div class="vad-chip ${it.kind==='event'?'event':''}"${click}>${esc(it.text)}</div>`;
+      let click;
+      if(it.kind==='event')click=` data-editev="${it.id}"`;
+      else if(it.kind==='task')click=` data-editev="${it.id}"`;
+      else click=` data-edittask="${it.starId}::${encPath(it.path)}"`;
+      const cls=it.kind==='event'?'event':(it.kind==='task'?`task ${it.done?'done':''}`:'');
+      return `<div class="vad-chip ${cls}"${click}>${esc(it.text)}</div>`;
     }).join('')+`</div>`;
   }).join('')+`</div>`;
   const bodyH=(DAY_END-DAY_START)*HOUR_H;
@@ -1149,9 +1420,12 @@ function renderCalWeek(){
     its.forEach(it=>{
       const pos=eventTopHeight(it);if(!pos)return;
       const left=`calc(${ci}/3*100% + 1px)`;const width=`calc(100%/3 - 2px)`;
-      const cls=it.kind==='event'?'vev event':'vev';
-      const click=it.kind==='event'?` data-editev="${it.id}"`:` data-edittask="${it.starId}::${it.path.join(',')}"`;
-      evtHtml+=`<div class="${cls}" style="top:${pos.top}px;height:${pos.height}px;left:${left};width:${width};"${click}><span class="vev-t">${esc(it.text)}</span></div>`;
+      let cls,click;
+      if(it.kind==='event'){cls='vev event';click=` data-editev="${it.id}"`;}
+      else if(it.kind==='task'){cls=`vev task ${it.done?'done':''}`;click=` data-editev="${it.id}"`;}
+      else{cls='vev';click=` data-edittask="${it.starId}::${encPath(it.path)}"`;}
+      const cb=it.kind==='task'?`<span class="vev-check"></span>`:'';
+      evtHtml+=`<div class="${cls}" style="top:${pos.top}px;height:${pos.height}px;left:${left};width:${width};"${click}>${cb}<span class="vev-t">${esc(it.text)}</span></div>`;
     });
   });
   // 3つの日付の時間枠（タップで予定追加・スライドで時間範囲）
@@ -1172,18 +1446,24 @@ function renderCalDay(){
   const allDayItems=items.filter(it=>it.due===dIso&&!it.from);
   let allday='';
   if(allDayItems.length)allday=`<div class="vcal-allday" style="padding-left:38px;"><div class="vad-col">`+allDayItems.map(it=>{
-    const click=it.kind==='event'?` data-editev="${it.id}"`:` data-edittask="${it.starId}::${it.path.join(',')}"`;
-    return `<div class="vad-chip ${it.kind==='event'?'event':''}"${click}>${esc(it.text)} ${it.rep&&it.rep!=='none'?'↻':''}</div>`;
+    let click;
+    if(it.kind==='event')click=` data-editev="${it.id}"`;
+    else if(it.kind==='task')click=` data-editev="${it.id}"`;
+    else click=` data-edittask="${it.starId}::${encPath(it.path)}"`;
+    const cls=it.kind==='event'?'event':(it.kind==='task'?`task ${it.done?'done':''}`:'');
+    return `<div class="vad-chip ${cls}"${click}>${esc(it.text)} ${it.rep&&it.rep!=='none'?'↻':''}</div>`;
   }).join('')+`</div></div>`;
   const bodyH=(DAY_END-DAY_START)*HOUR_H;
   let evtHtml='';
   timed.forEach(it=>{
     const pos=eventTopHeight(it);if(!pos)return;
     let meta=[];const tm=fmtTime(it);if(tm)meta.push(tm);
-    const cls=it.kind==='event'?'vev event':'vev';
-    const click=it.kind==='event'?` data-editev="${it.id}"`:` data-edittask="${it.starId}::${it.path.join(',')}"`;
-    const tail=it.kind==='event'?(it.memo?` ・ ${esc(it.memo)}`:''):` ・ ★${esc(it.dir)}`;
-    evtHtml+=`<div class="${cls}" style="top:${pos.top}px;height:${pos.height}px;left:2px;right:2px;width:auto;"${click}><span class="vev-t">${esc(it.text)}</span>${meta.length||tail?`<span class="vev-m">${meta.join(' ・ ')}${tail}</span>`:''}</div>`;
+    let cls,click,tail;
+    if(it.kind==='event'){cls='vev event';click=` data-editev="${it.id}"`;tail=it.memo?` ・ ${esc(it.memo)}`:'';}
+    else if(it.kind==='task'){cls=`vev task ${it.done?'done':''}`;click=` data-editev="${it.id}"`;tail=it.memo?` ・ ${esc(it.memo)}`:'';}
+    else{cls='vev';click=` data-edittask="${it.starId}::${encPath(it.path)}"`;tail=` ・ ★${esc(it.dir)}`;}
+    const cb=it.kind==='task'?`<span class="vev-check"></span>`:'';
+    evtHtml+=`<div class="${cls}" style="top:${pos.top}px;height:${pos.height}px;left:2px;right:2px;width:auto;"${click}>${cb}<span class="vev-t">${esc(it.text)}</span>${meta.length||tail?`<span class="vev-m">${meta.join(' ・ ')}${tail}</span>`:''}</div>`;
   });
   let body=`<div class="vcal-body" style="height:${bodyH}px;">${hourLabels(1)}<div class="vcal-events">${evtHtml}</div><div class="vcal-cols"><div class="vcol" data-coliso="${dIso}" style="left:0;width:100%;"></div></div></div>`;
   let empty=(!timed.length&&!allDayItems.length)?`<div class="section-note">この日に、予定はありません。</div>`:'';
@@ -1315,6 +1595,7 @@ document.getElementById('chips').addEventListener('click',async e=>{
 document.getElementById('addValue').addEventListener('click',()=>openValue(null));
 document.getElementById('vcards').addEventListener('click',e=>{const c=e.target.closest('[data-vid]');if(c){const v=values.find(x=>x.id===c.dataset.vid);openValue(v);}});
 document.getElementById('vbg').addEventListener('click',()=>closeSheet('vbg','vsheet'));
+document.getElementById('vClose').addEventListener('click',()=>closeSheet('vbg','vsheet'));
 document.getElementById('vSave').addEventListener('click',async()=>{
   const def=document.getElementById('vDef').value.trim();
   if(editVid){const v=values.find(x=>x.id===editVid);if(v)v.def=def;}
@@ -1419,34 +1700,131 @@ document.getElementById('metricDelete').addEventListener('click',async()=>{
   await ss();await sml();renderMetricsOnStar();renderWeek();closeSheet('mbg','msheet');toast('削除しました');
 });
 document.getElementById('addRootStep').addEventListener('click',()=>openStepEditor(detailSid,null));
+document.getElementById('addGroup').addEventListener('click',()=>openGroupEditor(null));
 document.getElementById('stepsTree').addEventListener('click',async e=>{
+  const eg=e.target.closest('[data-editgroup]');
+  if(eg){openGroupEditor(eg.dataset.editgroup);return;}
+  const ag=e.target.closest('[data-addingroup]');
+  if(ag){openStepEditor(detailSid,null,null,ag.dataset.addingroup);return;}
+  const mv=e.target.closest('[data-movestep]');
+  if(mv){openMoveSheet(decPath(mv.dataset.movestep));return;}
   const up=e.target.closest('[data-up]');
-  if(up){await moveStep(up.dataset.up.split('-').map(Number),-1);return;}
+  if(up){await moveStep(decPath(up.dataset.up),-1);return;}
   const down=e.target.closest('[data-down]');
-  if(down){await moveStep(down.dataset.down.split('-').map(Number),1);return;}
+  if(down){await moveStep(decPath(down.dataset.down),1);return;}
   const addsub=e.target.closest('[data-addsub]');
-  if(addsub){openStepEditor(detailSid,addsub.dataset.addsub.split('-').map(Number));return;}
+  if(addsub){openStepEditor(detailSid,decPath(addsub.dataset.addsub));return;}
   const del=e.target.closest('[data-delstep]');
   if(del){
-    const path=del.dataset.delstep.split('-').map(Number);const s=stars.find(x=>x.id===detailSid);const node=getStepByPath(s,path);
+    const path=decPath(del.dataset.delstep);const s=stars.find(x=>x.id===detailSid);const node=getStepByPath(s,path);
+    if(!node)return;
     const hasKids=node.children&&node.children.length;
     const ok=await confirmAsk('この手順を削除しますか？',hasKids?'中にぶら下げた手順も一緒に削除されます。':'この手順を削除します。');if(!ok)return;
-    getParentArr(s,path).splice(path[path.length-1],1);await ss();renderStepsTree();renderStars();renderCal();toast('手順を削除しました');return;
+    getParentArr(s,path).splice(getNumericPath(path)[getNumericPath(path).length-1],1);await ss();renderStepsTree();renderStars();renderCal();toast('手順を削除しました');return;
   }
   const edit=e.target.closest('[data-editstep]');
-  if(edit){openStepEditor(detailSid,null,edit.dataset.editstep.split('-').map(Number));return;}
-  const ck=e.target.closest('[data-check]');if(ck)await completeStep(ck,ck.dataset.check.split('-').map(Number));
+  if(edit){openStepEditor(detailSid,null,decPath(edit.dataset.editstep));return;}
+  const ck=e.target.closest('[data-check]');if(ck)await completeStep(ck,decPath(ck.dataset.check));
 });
 async function moveStep(path,dir){
   const s=stars.find(x=>x.id===detailSid);if(!s)return;
-  const arr=getParentArr(s,path);const i=path[path.length-1];const j=i+dir;
+  const arr=getParentArr(s,path);if(!arr)return;
+  const np=getNumericPath(path);const i=np[np.length-1];const j=i+dir;
   if(j<0||j>=arr.length)return;
   [arr[i],arr[j]]=[arr[j],arr[i]];
   await ss();renderStepsTree();renderStars();
 }
+
+/* 中分類エディタ */
+let groupEditCtx=null;
+function openGroupEditor(groupId){
+  groupEditCtx={starId:detailSid,groupId:groupId||null};
+  const s=stars.find(x=>x.id===detailSid);
+  const g=groupId?(s.groups||[]).find(x=>x.id===groupId):null;
+  document.getElementById('gpKind').textContent=g?'EDIT':'NEW';
+  document.getElementById('gpHead').textContent=g?'中分類を編集':'中分類を加える';
+  document.getElementById('gpName').value=g?g.name:'';
+  document.getElementById('gpSave').textContent=g?'保存する':'置く';
+  document.getElementById('gpDelete').style.display=g?'block':'none';
+  document.getElementById('gpDelNote').style.display=g?'block':'none';
+  openSheet('gpbg','gpsheet');
+}
+document.getElementById('gpbg').addEventListener('click',()=>closeSheet('gpbg','gpsheet'));
+document.getElementById('gpSave').addEventListener('click',async()=>{
+  const name=document.getElementById('gpName').value.trim();if(!name){toast('名前を入れてください');return;}
+  const s=stars.find(x=>x.id===groupEditCtx.starId);if(!s)return;if(!s.groups)s.groups=[];
+  if(groupEditCtx.groupId){
+    const g=s.groups.find(x=>x.id===groupEditCtx.groupId);if(g)g.name=name;
+  }else{
+    s.groups.push({id:uid(),name,steps:[]});
+  }
+  await ss();renderStepsTree();renderStars();closeSheet('gpbg','gpsheet');toast(groupEditCtx.groupId?'保存しました':'中分類を加えました');
+});
+document.getElementById('gpDelete').addEventListener('click',async()=>{
+  if(!groupEditCtx.groupId)return;
+  const ok=await confirmAsk('この中分類を削除しますか？','中にある手順は、北極星の直下に戻ります。手順自体は消えません。');if(!ok)return;
+  const s=stars.find(x=>x.id===groupEditCtx.starId);if(!s)return;
+  const g=s.groups.find(x=>x.id===groupEditCtx.groupId);
+  if(g&&g.steps&&g.steps.length){
+    if(!s.steps)s.steps=[];
+    s.steps=s.steps.concat(g.steps);
+  }
+  s.groups=s.groups.filter(x=>x.id!==groupEditCtx.groupId);
+  await ss();renderStepsTree();renderStars();renderCal();closeSheet('gpbg','gpsheet');toast('中分類を削除しました');
+});
+
+/* 手順を中分類に移動 */
+let moveCtx=null;
+function openMoveSheet(path){
+  const s=stars.find(x=>x.id===detailSid);if(!s)return;
+  moveCtx={path};
+  const isCurInGroup=path[0]==='g';
+  const curGroupId=isCurInGroup?path[1]:null;
+  const target=document.getElementById('mvTargets');
+  let html='';
+  // 直下オプション
+  const directCur=!isCurInGroup;
+  html+=`<button class="mv-opt ${directCur?'current':''}" data-mv="root">${directCur?'<span class="mv-mark">●</span>':''}北極星の直下（中分類なし）${directCur?'<span style="color:var(--ink-faint);font-size:11px;margin-left:6px;">いま、ここ</span>':''}</button>`;
+  // 中分類オプション
+  (s.groups||[]).forEach(g=>{
+    const cur=g.id===curGroupId;
+    html+=`<button class="mv-opt ${cur?'current':''}" data-mv="${g.id}">${cur?'<span class="mv-mark">●</span>':''}▸ ${esc(g.name)}${cur?'<span style="color:var(--ink-faint);font-size:11px;margin-left:6px;">いま、ここ</span>':''}</button>`;
+  });
+  if(!(s.groups||[]).length){
+    html+=`<p class="due-note" style="margin-top:6px;">中分類がまだありません。詳細画面で「中分類を加える」を押して、最初のひとつを作ってみてください。</p>`;
+  }
+  target.innerHTML=html;
+  openSheet('mvbg','mvsheet');
+}
+document.getElementById('mvbg').addEventListener('click',()=>closeSheet('mvbg','mvsheet'));
+document.getElementById('mvCancel').addEventListener('click',()=>closeSheet('mvbg','mvsheet'));
+document.getElementById('mvTargets').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-mv]');if(!b||b.classList.contains('current'))return;
+  const dest=b.dataset.mv;
+  const s=stars.find(x=>x.id===detailSid);if(!s||!moveCtx)return;
+  // 移動元の手順ノードを取り出す
+  const path=moveCtx.path;
+  const arr=getParentArr(s,path);
+  const np=getNumericPath(path);
+  const idx=np[np.length-1];
+  const node=arr.splice(idx,1)[0];
+  // 移動先に追加
+  if(dest==='root'){
+    if(!s.steps)s.steps=[];s.steps.push(node);
+  }else{
+    if(!s.groups)s.groups=[];
+    const g=s.groups.find(x=>x.id===dest);
+    if(g){if(!g.steps)g.steps=[];g.steps.push(node);}
+    else{if(!s.steps)s.steps=[];s.steps.push(node);}
+  }
+  await ss();renderStepsTree();renderStars();renderCal();closeSheet('mvbg','mvsheet');toast('移動しました');
+  moveCtx=null;
+});
 /* sort by due: 期日ありを先頭(昇順)、期日なしは後ろ。同階層すべてに再帰適用 */
 document.getElementById('sortByDue').addEventListener('click',async()=>{
-  const s=stars.find(x=>x.id===detailSid);if(!s||!s.steps||!s.steps.length){toast('並べ替える手順がありません');return;}
+  const s=stars.find(x=>x.id===detailSid);if(!s)return;
+  const has=(s.steps&&s.steps.length)||(s.groups||[]).some(g=>g.steps&&g.steps.length);
+  if(!has){toast('並べ替える手順がありません');return;}
   const sortArr=arr=>{
     arr.sort((a,b)=>{
       if(a.due&&b.due)return a.due<b.due?-1:a.due>b.due?1:0;
@@ -1454,7 +1832,8 @@ document.getElementById('sortByDue').addEventListener('click',async()=>{
     });
     arr.forEach(st=>{if(st.children&&st.children.length)sortArr(st.children);});
   };
-  sortArr(s.steps);
+  if(s.steps)sortArr(s.steps);
+  (s.groups||[]).forEach(g=>{if(g.steps)sortArr(g.steps);});
   await ss();renderStepsTree();renderStars();toast('期日順に整えました');
 });
 
@@ -1513,12 +1892,15 @@ async function finalizeComplete(withNote){
       metricLogs.push({id:uid(),starId:detailSid,metricId:inp.dataset.mid,val:v,ts:Date.now()});
     });
   }
-  diffs.push({id:uid(),text:node.text,memo:note||null,starId:detailSid,ts:Date.now(),fromTask:true,repeat:isRep});
+  // 中分類IDを判定（pathが['g',groupId,...]形式なら）
+  const groupId=path[0]==='g'?path[1]:null;
+  diffs.push({id:uid(),text:node.text,memo:note||null,starId:detailSid,groupId,ts:Date.now(),fromTask:true,repeat:isRep});
   if(isRep){
     // 繰り返し：消さず done を立てずに「次の期日」へ更新して残す
     node.due=nextDue(node);
   }else{
-    getParentArr(s,path).splice(path[path.length-1],1);
+    const np=getNumericPath(path);
+    getParentArr(s,path).splice(np[np.length-1],1);
   }
   await ss();await sd();await sml();renderStepsTree();renderStars();renderTrail();renderWeek();renderCal();renderMetricsOnStar();
   toast(isRep?'積み重ねました <span class="ts">✦</span>':'成し遂げました <span class="ts">★</span> 軌跡に灯りました');
@@ -1549,7 +1931,15 @@ document.getElementById('cConfirm').addEventListener('click',()=>finalizeComplet
 document.getElementById('cSkipNote').addEventListener('click',()=>finalizeComplete(false));
 
 /* ===== events (暦専用予定) ===== */
-let eEditId=null, eRepState='none', eWdState=[], eMdState=[];
+let eEditId=null, eRepState='none', eWdState=[], eMdState=[], eKindState='event';
+function setEKind(k){
+  eKindState=k;
+  document.querySelectorAll('#eKindRow .rep-opt').forEach(b=>b.classList.toggle('active',b.dataset.ekind===k));
+  document.getElementById('eSword').textContent=k==='task'?'TASK':'EVENT';
+  document.getElementById('eHead').textContent=eEditId?(k==='task'?'タスクを編集':'予定を編集'):(k==='task'?'タスクを加える':'予定を加える');
+  document.getElementById('eTextLabel').textContent=k==='task'?'なにのタスク':'なにの予定';
+  document.getElementById('eText').placeholder=k==='task'?'例：書類を出す／病院の予約をする':'例：歯医者／打ち合わせ／ライブ';
+}
 function setERep(r){
   eRepState=r;
   document.querySelectorAll('#eRepRow .rep-opt').forEach(b=>b.classList.toggle('active',b.dataset.erep===r));
@@ -1569,17 +1959,32 @@ function refreshEStarSelect(){
   sel.innerHTML=`<option value="">— 紐づけない（ただの予定）</option>`+stars.map(s=>`<option value="${s.id}">★ ${esc(s.dir)}</option>`).join('');
   sel.value=cur;
 }
+function refreshEGroupSelect(){
+  const sid=document.getElementById('eStar').value;
+  const zone=document.getElementById('eGroupZone');
+  const sel=document.getElementById('eGroup');
+  if(!sid){zone.style.display='none';sel.innerHTML='';return;}
+  const s=stars.find(x=>x.id===sid);
+  const groups=s&&s.groups?s.groups:[];
+  if(!groups.length){zone.style.display='none';sel.innerHTML='';return;}
+  const cur=sel.value;
+  zone.style.display='block';
+  sel.innerHTML=`<option value="">— 中分類なし（北極星の直下）</option>`+groups.map(g=>`<option value="${g.id}">▸ ${esc(g.name)}</option>`).join('');
+  sel.value=cur;
+}
 function openEventEditor(ev,defaultDue,defaultTime){
   refreshEStarSelect();
   eEditId=ev?ev.id:null;
-  document.getElementById('eHead').textContent=ev?'予定を編集':'予定を加える';
   document.getElementById('eText').value=ev?ev.text:'';
   document.getElementById('eMemo').value=ev?(ev.memo||''):'';
   document.getElementById('eDue').value=ev?ev.due:(defaultDue||iso(new Date()));
   document.getElementById('eFrom').value=ev?(ev.from||''):(defaultTime?(defaultTime.from||''):'');
   document.getElementById('eTo').value=ev?(ev.to||''):(defaultTime?(defaultTime.to||''):'');
   document.getElementById('eStar').value=ev?(ev.starId||''):'';
+  refreshEGroupSelect();
+  document.getElementById('eGroup').value='';
   setERep(ev?(ev.rep||'none'):'none');setEWd(ev?(ev.wd||[]):[]);setEMd(ev?(ev.md||[]):[]);
+  setEKind(ev&&ev.kind==='task'?'task':'event');
   updateEDur();
   document.getElementById('eDelete').style.display=ev?'block':'none';
   document.getElementById('eSave').textContent=ev?'保存する':'加える';
@@ -1587,6 +1992,8 @@ function openEventEditor(ev,defaultDue,defaultTime){
 }
 document.getElementById('addEvent').addEventListener('click',()=>openEventEditor(null,iso(calAnchor||new Date())));
 document.getElementById('ebg').addEventListener('click',()=>closeSheet('ebg','esheet'));
+document.getElementById('eStar').addEventListener('change',refreshEGroupSelect);
+document.getElementById('eKindRow').addEventListener('click',e=>{const b=e.target.closest('[data-ekind]');if(b)setEKind(b.dataset.ekind);});
 document.getElementById('eRepRow').addEventListener('click',e=>{const b=e.target.closest('[data-erep]');if(b)setERep(b.dataset.erep);});
 document.getElementById('eWeekdayRow').addEventListener('click',e=>{const b=e.target.closest('[data-ewd]');if(!b)return;const d=+b.dataset.ewd;if(eWdState.includes(d))eWdState=eWdState.filter(x=>x!==d);else eWdState.push(d);setEWd(eWdState);});
 document.getElementById('eMonthDayGrid').addEventListener('click',e=>{const b=e.target.closest('[data-emd]');if(!b)return;const d=+b.dataset.emd;if(eMdState.includes(d))eMdState=eMdState.filter(x=>x!==d);else eMdState.push(d);setEMd(eMdState);});
@@ -1630,6 +2037,30 @@ document.querySelectorAll('#esheet .dur-p').forEach(b=>{
     updateEDur();
   });
 });
+/* 手順の所要分（暦と同じプリセット式） */
+function updateStepDur(){
+  const fH=hrFromHm(document.getElementById('stepFrom').value);
+  const tH=hrFromHm(document.getElementById('stepTo').value);
+  const el=document.getElementById('stepDurCalc');
+  const hidden=document.getElementById('stepDur');
+  if(fH==null||tH==null||tH<=fH){el.textContent='—';hidden.value='';return;}
+  const mins=Math.round((tH-fH)*60);
+  el.textContent=mins>=60?`${Math.floor(mins/60)}時間${mins%60?(mins%60)+'分':''}`:`${mins}分`;
+  hidden.value=mins;
+}
+document.getElementById('stepFrom').addEventListener('input',updateStepDur);
+document.getElementById('stepTo').addEventListener('input',updateStepDur);
+document.querySelectorAll('#ssheet .dur-p').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const fH=hrFromHm(document.getElementById('stepFrom').value);
+    if(fH==null){toast('まず開始時刻を入れてください');return;}
+    const m=+b.dataset.stepdur;
+    const totalMin=Math.round(fH*60)+m;
+    const h=Math.floor(totalMin/60)%24;const mm=totalMin%60;
+    document.getElementById('stepTo').value=`${h}:${String(mm).padStart(2,'0')}`;
+    updateStepDur();
+  });
+});
 function normalizeTime(v){
   if(!v)return null;v=v.trim();
   // "9", "9:00", "0900", "09:00" などを許容
@@ -1640,30 +2071,30 @@ function normalizeTime(v){
   return null;
 }
 document.getElementById('eSave').addEventListener('click',async()=>{
-  const txt=document.getElementById('eText').value.trim();if(!txt){toast('予定の内容を書いてください');return;}
+  const txt=document.getElementById('eText').value.trim();if(!txt){toast(eKindState==='task'?'タスクの内容を書いてください':'予定の内容を書いてください');return;}
   const due=document.getElementById('eDue').value;if(!due){toast('日付を選んでください');return;}
   const from=normalizeTime(document.getElementById('eFrom').value);
   const to=normalizeTime(document.getElementById('eTo').value);
   const starId=document.getElementById('eStar').value||null;
-  const obj={text:txt,memo:document.getElementById('eMemo').value.trim()||null,due,from,to,rep:eRepState,wd:eRepState==='weekly'?eWdState.slice():[],md:eRepState==='monthly'?eMdState.slice():[]};
+  const groupId=document.getElementById('eGroup').value||null;
+  const obj={text:txt,memo:document.getElementById('eMemo').value.trim()||null,due,from,to,rep:eRepState,wd:eRepState==='weekly'?eWdState.slice():[],md:eRepState==='monthly'?eMdState.slice():[],kind:eKindState};
   if(starId){
-    // A案：紐づけられたら手順として保存
-    const s=stars.find(x=>x.id===starId);if(!s)return;if(!s.steps)s.steps=[];
-    if(eEditId){
-      // 既存予定→手順へ転換 or 既に手順だった場合は更新
-      // event由来は events から削除し、新規手順として追加
-      events=events.filter(x=>x.id!==eEditId);
-      s.steps.push({id:uid(),...obj,done:false,children:[]});
-      await ss();await sev();
+    const s=stars.find(x=>x.id===starId);if(!s)return;if(!s.steps)s.steps=[];if(!s.groups)s.groups=[];
+    if(eEditId)events=events.filter(x=>x.id!==eEditId);
+    const ns={id:uid(),...obj,done:false,children:[]};
+    if(groupId){
+      const g=s.groups.find(x=>x.id===groupId);
+      if(g){if(!g.steps)g.steps=[];g.steps.push(ns);}
+      else s.steps.push(ns);
     }else{
-      s.steps.push({id:uid(),...obj,done:false,children:[]});
-      await ss();
+      s.steps.push(ns);
     }
-    renderStars();renderCal();closeSheet('ebg','esheet');toast('★ 手順として加えました');return;
+    await ss();await sev();
+    renderStars();renderCal();closeSheet('ebg','esheet');toast(groupId?'★ 中分類に手順として加えました':'★ 手順として加えました');return;
   }
   if(eEditId){const ev=events.find(x=>x.id===eEditId);Object.assign(ev,obj);}
-  else events.push({id:uid(),...obj});
-  await sev();renderCal();closeSheet('ebg','esheet');toast('予定を加えました');
+  else events.push({id:uid(),done:false,...obj});
+  await sev();renderCal();closeSheet('ebg','esheet');toast(eKindState==='task'?'タスクを加えました':'予定を加えました');
 });
 document.getElementById('eDelete').addEventListener('click',async()=>{
   if(!eEditId)return;
@@ -1717,13 +2148,19 @@ function collectStepInput(){
 }
 document.getElementById('stepSave').addEventListener('click',async()=>{
   const inp=collectStepInput();if(!inp){toast('やることを書いてください');return;}
-  const s=stars.find(x=>x.id===stepCtx.sid);if(!s)return;if(!s.steps)s.steps=[];
+  const s=stars.find(x=>x.id===stepCtx.sid);if(!s)return;if(!s.steps)s.steps=[];if(!s.groups)s.groups=[];
   if(stepCtx.editPath){
     const node=getStepByPath(s,stepCtx.editPath);Object.assign(node,inp);
     await ss();renderStepsTree();renderStars();renderCal();closeSheet('sbg','ssheet');toast('保存しました');return;
   }
   const ns={id:uid(),...inp,done:false,children:[]};
-  if(stepCtx.parentPath){const p=getStepByPath(s,stepCtx.parentPath);if(!p.children)p.children=[];p.children.push(ns);}else s.steps.push(ns);
+  if(stepCtx.parentPath){
+    const p=getStepByPath(s,stepCtx.parentPath);if(!p.children)p.children=[];p.children.push(ns);
+  }else if(stepCtx.groupId){
+    const g=s.groups.find(x=>x.id===stepCtx.groupId);if(g){if(!g.steps)g.steps=[];g.steps.push(ns);}
+  }else{
+    s.steps.push(ns);
+  }
   await ss();renderStepsTree();renderStars();renderCal();closeSheet('sbg','ssheet');toast('手順を加えました');
 });
 
@@ -1738,12 +2175,24 @@ function refreshDiffMetrics(){
   });
   box.innerHTML=h;
 }
-document.getElementById('diffStar').addEventListener('change',refreshDiffMetrics);
+function refreshDiffGroup(){
+  const starId=document.getElementById('diffStar').value;
+  const zone=document.getElementById('diffGroupZone');
+  const sel=document.getElementById('diffGroup');
+  if(!starId){zone.style.display='none';sel.innerHTML='<option value="">— 中分類なし</option>';return;}
+  const s=stars.find(x=>x.id===starId);
+  const groups=s&&s.groups?s.groups:[];
+  if(!groups.length){zone.style.display='none';sel.innerHTML='<option value="">— 中分類なし</option>';return;}
+  zone.style.display='block';
+  sel.innerHTML=`<option value="">— 中分類なし（任意）</option>`+groups.map(g=>`<option value="${g.id}">▸ ${esc(g.name)}</option>`).join('');
+}
+document.getElementById('diffStar').addEventListener('change',()=>{refreshDiffMetrics();refreshDiffGroup();});
 
 document.getElementById('addDiff').addEventListener('click',async()=>{
   const ta=document.getElementById('diffText');const v=ta.value.trim();if(!v)return;
   const starId=document.getElementById('diffStar').value;
-  diffs.push({id:uid(),text:v,starId:starId,ts:Date.now()});
+  const groupId=document.getElementById('diffGroup').value||null;
+  diffs.push({id:uid(),text:v,starId:starId,groupId:starId?groupId:null,ts:Date.now()});
   // 指標の数値入力を保存
   if(starId){
     document.querySelectorAll('#diffMetrics input[data-mid]').forEach(inp=>{
@@ -1754,6 +2203,7 @@ document.getElementById('addDiff').addEventListener('click',async()=>{
   }
   ta.value='';
   document.getElementById('diffMetrics').innerHTML='';
+  document.getElementById('diffGroup').value='';
   await sd();await sml();renderTrail();renderWeek();renderStars();toast('記しました <span class="ts">✦</span> 軌跡が伸びました');
 });
 
@@ -1805,14 +2255,28 @@ function calShift(dir){
 }
 document.getElementById('calPrev').addEventListener('click',()=>calShift(-1));
 document.getElementById('calNext').addEventListener('click',()=>calShift(1));
-document.getElementById('v-cal').addEventListener('click',e=>{
+document.getElementById('v-cal').addEventListener('click',async e=>{
   if(e.target.closest('a.ulink'))return; // リンクは普通に開く
+  const cb=e.target.closest('[data-taskdone]');
+  if(cb){
+    e.stopPropagation();
+    const id=cb.dataset.taskdone;
+    const ev=events.find(x=>x.id===id);if(!ev)return;
+    ev.done=!ev.done;
+    if(ev.done){
+      diffs.unshift({id:uid(),ts:Date.now(),text:ev.text,starId:null,fromTask:true,memo:null});
+      await sd();
+      toast('完了 ★');
+    }
+    await sev();renderCal();renderTrail();renderWeek();
+    return;
+  }
   const t=e.target.closest('[data-editev]');
   if(t){const ev=events.find(x=>x.id===t.dataset.editev);if(ev)openEventEditor(ev);return;}
   const tt=e.target.closest('[data-edittask]');
   if(tt){
     const[sid,pathStr]=tt.dataset.edittask.split('::');
-    const path=pathStr.split(',').map(Number);
+    const path=decPath(pathStr);
     detailSid=sid;
     openStepEditor(sid,null,path);
     return;
