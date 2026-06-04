@@ -9,7 +9,9 @@
 <meta name="theme-color" content="#f4f1ea">
 <title>Polaris</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;500;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;500;700;800&family=Zen+Maru+Gothic:wght@300;400;500&display=swap');
+  /* 源柔ゴシック L（Web用最適化版、shogo82148/genjyuugothic-subsets経由） */
+  @import url('https://cdn.jsdelivr.net/gh/shogo82148/genjyuugothic-subsets@main/fonts/GenJyuuGothicL-Regular.css');
   :root{
     --ink:#1a1d24; --ink-soft:#4a4f5c; --ink-faint:#9498a6;
     --paper:#f4f1ea; --paper-warm:#eceadf; --line:#e0dbcf;
@@ -75,7 +77,7 @@
   .star-open-hint{font-size:11px;color:var(--star);margin-top:12px;letter-spacing:0.04em;}
   .star-open-hint::after{content:' ›';}
   /* step preview on star card */
-  .star-preview{margin-top:13px;padding-top:13px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:7px;}
+  .star-preview{margin-top:13px;padding-top:0;border-top:none;display:flex;flex-direction:column;gap:7px;}
   .pvrow{display:flex;align-items:baseline;gap:8px;font-size:12.5px;color:var(--ink-soft);line-height:1.4;}
   .pvrow .pvdot{color:var(--star);font-size:8px;flex-shrink:0;}
   .pvrow .pvdue{font-size:10px;color:var(--ink-faint);margin-left:auto;flex-shrink:0;letter-spacing:0.03em;}
@@ -301,6 +303,8 @@
   .step-group .sadd-sub-in-group:hover{color:var(--star);}
   /* 移動先オプション */
   .mv-opt{display:block;width:100%;text-align:left;font-family:inherit;background:none;border:1px solid var(--line);border-radius:11px;padding:13px 16px;cursor:pointer;color:var(--ink);font-size:14px;letter-spacing:0.02em;}
+  .mv-back{position:absolute;top:18px;left:18px;background:none;border:none;font-family:inherit;font-size:11px;color:var(--ink-faint);font-weight:300;letter-spacing:0.05em;cursor:pointer;padding:6px 8px;border-radius:4px;z-index:2;}
+  .mv-back:hover{color:var(--star);}
   .mv-opt:hover{border-color:var(--star);background:rgba(201,162,39,0.08);}
   .mv-opt.current{opacity:0.4;cursor:default;}
   .mv-opt.current:hover{border-color:var(--line);background:none;}
@@ -486,6 +490,284 @@
   .flash{position:absolute;pointer-events:none;width:80px;height:80px;border-radius:50%;z-index:90;background:radial-gradient(circle,rgba(255,247,214,0.9),rgba(227,212,160,0.6) 35%,rgba(201,162,39,0.2) 60%,transparent 75%);transform:translate(-50%,-50%) scale(0.2);opacity:0;}
   .flash.go{animation:flashPop 0.85s ease-out forwards;}
   @keyframes flashPop{0%{opacity:0;transform:translate(-50%,-50%) scale(0.2);}30%{opacity:1;transform:translate(-50%,-50%) scale(1.1);}100%{opacity:0;transform:translate(-50%,-50%) scale(1.5);}}
+  /* ===== zen overrides：白基調、引き算の禅デザイン ===== */
+  body{background:#e8e5dc;}
+  :root{
+    --ink:#2d3038;
+    --ink-soft:#6a6d75;
+    --ink-faint:#a0a3ab;
+    --line:#e4e0d3;
+    --line-soft:#efebdf;
+    --paper:#ffffff;
+    --card:#ffffff;
+    --paper-warm:#fbfaf6;
+    --star:#a8893f;
+    --star-soft:#c4b78a;
+  }
+  /* iPhone枠の中身を真っ白に */
+  .phone{background:#ffffff;}
+
+  /* ===== フォント：全部細く、密度を下げる ===== */
+  /* タイトル・タブ・見出しは GenJyuuGothic L（源柔）でやわらかく */
+  .titlebar h1, h1, h2, .tab .lb, .lcard .word, .star-dir, .detail-dir, .star-meta, .star-open-hint, .sub, .chip-label, .field-label{
+    font-family:'GenJyuuGothicL','Zen Maru Gothic','Hiragino Sans','M PLUS 1',sans-serif;
+  }
+  body, input, textarea, select, button, .lcard *, .step *, .titlebar *{
+    font-weight:300;
+    letter-spacing:0.02em;
+  }
+  /* タイトル：細く、控えめに */
+  .titlebar h1, h1{
+    font-weight:400 !important;
+    font-size:24px !important;
+    letter-spacing:0.02em;
+    color:var(--ink);
+  }
+  h2{font-weight:400 !important;letter-spacing:0.02em;}
+  .titlebar .sub, .sub{
+    font-size:10px;
+    color:var(--ink-faint);
+    font-weight:300;
+    letter-spacing:0.2em;
+    margin-top:8px;
+  }
+  /* テーマ名・タスク名は中くらいの太さ */
+  .lcard .word, .star-dir, .detail-dir, .ci-task, .step .what{
+    font-weight:400 !important;
+    letter-spacing:0.01em;
+  }
+  /* リード文・補助テキストは超軽く */
+  .lead, .due-note, .hint, .empty, .section-note, .cal-day-label, .star-meta, .star-open-hint{
+    font-weight:300;
+    line-height:2;
+    color:var(--ink-soft);
+  }
+
+  /* ===== タブバー：左下のタブも細く ===== */
+  .tabbar{
+    background:rgba(255,255,255,0.94);
+    border-top:1px solid var(--line);
+  }
+  .tab{color:var(--ink-faint);}
+  .tab .lb{font-weight:300 !important;letter-spacing:0.05em;}
+  .tab.active{color:var(--star);}
+  .tab.active .lb{font-weight:400 !important;}
+  .tab.active .ic{color:var(--star);}
+
+  /* タイトルバー右上のボタン（仮置き・アーカイブ） */
+  .archive-btn{font-weight:300;color:var(--ink-faint);}
+  .archive-btn:active{color:var(--star);}
+
+  /* ===== 英字ラベル（GOAL, VALUE, INBOX等）：ほぼ消えそうに薄く ===== */
+  .sword, .detail-toward, .star-toward, .field-label, .chip-label{
+    font-weight:300 !important;
+    font-size:9px !important;
+    letter-spacing:0.35em !important;
+    color:var(--ink-faint) !important;
+    text-transform:uppercase;
+    opacity:0.7;
+  }
+
+  /* ===== カード・入力欄：枠線撤去、下線だけ ===== */
+  .lcard{
+    border:none;
+    background:transparent;
+    border-bottom:1px solid var(--line);
+    border-radius:0;
+    padding:28px 4px;
+  }
+  .lcard:first-child{border-top:1px solid var(--line);}
+  .lcards{gap:0;margin-bottom:24px;}
+  .lcard .word{font-size:17px;}
+  .star-dir{font-size:18px;}
+  .star-meta{font-size:11px;color:var(--ink-faint);margin-top:8px;letter-spacing:0.04em;}
+  .star-open-hint{font-size:10px;color:var(--ink-faint);letter-spacing:0.2em;text-transform:uppercase;margin-top:14px;}
+
+  /* 入力欄：枠を細く、もしくは下線だけ */
+  input[type=text], input[type=date], input[type=number], select{
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--line);
+    border-radius:0;
+    padding:10px 2px;
+    font-weight:300;
+    color:var(--ink);
+  }
+  textarea{
+    background:transparent;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:14px;
+    font-weight:300;
+    color:var(--ink);
+    line-height:1.85;
+  }
+  textarea:focus, input:focus, select:focus{
+    border-bottom-color:var(--star);
+    border-color:var(--star);
+    outline:none;
+  }
+  ::placeholder{color:var(--ink-faint);opacity:0.6;font-weight:300;}
+
+  /* ===== ボタン ===== */
+  .btn-full{
+    background:var(--ink);
+    color:#fdfcf8;
+    border:none;
+    border-radius:4px;
+    padding:15px;
+    font-weight:400;
+    letter-spacing:0.12em;
+    font-size:12px;
+  }
+  .btn-ghost{font-weight:300;color:var(--ink-soft);}
+  .vcustom-btn, .sadd-root{
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--line);
+    border-radius:0;
+    color:var(--ink-soft);
+    padding:18px 4px;
+    text-align:left;
+    font-weight:300;
+    letter-spacing:0.02em;
+  }
+  .vcustom-btn:hover, .sadd-root:hover{
+    color:var(--star);
+    border-bottom-color:var(--star);
+  }
+  .vcustom-btn .p, .sadd-root .p{
+    color:var(--star);
+    font-weight:400;
+  }
+
+  /* ===== チップ（ことばの候補） ===== */
+  .chip{
+    background:transparent;
+    border:none;
+    border-bottom:1px solid transparent;
+    border-radius:0;
+    padding:6px 0;
+    margin-right:24px;
+    font-weight:300;
+    color:var(--ink-soft);
+    font-size:13px;
+    transition:all 0.5s ease;
+  }
+  .chip:hover, .chip:active{
+    background:transparent;
+    border-bottom-color:var(--star);
+    color:var(--ink);
+  }
+  .chip::before{color:var(--ink-faint);font-weight:300;}
+  .chips{gap:0;}
+  .chip-zone{margin-bottom:48px;}
+
+  /* ===== ステップ・サブタスク ===== */
+  .scheck{border-color:var(--star);}
+  .stext{font-weight:300;}
+  .step .what{font-weight:300;font-size:13px;}
+  .schildren{border-left:1px solid var(--line);}
+
+  /* ===== 軌跡（ジャーナル） ===== */
+  .trail-star{
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--line);
+    border-radius:0;
+    padding:24px 4px;
+    margin-bottom:0;
+  }
+  .trail-head{
+    border-bottom:none;
+    padding-bottom:14px;
+    margin-bottom:10px;
+  }
+  .trail-head .name{font-weight:400;font-size:13px;color:var(--ink);}
+  .trail-head .n{font-size:10px;color:var(--ink-faint);letter-spacing:0.1em;}
+  .step{padding:12px 0;}
+  .step .what{font-weight:300;}
+  .step::before{border-color:var(--star-soft);}
+
+  /* ===== カレンダー ===== */
+  .mt-bar{font-weight:400;letter-spacing:0;}
+  .cal-cell{border-color:transparent;}
+  .cal-cell.has{background:transparent;}
+  .cal-cell.today{border-color:var(--star);}
+  .cal-cell .dn{font-weight:300;}
+  .cal-cell.today .dn{font-weight:500;}
+  .cal-dow{font-weight:300;color:var(--ink-faint);letter-spacing:0.1em;}
+
+  /* ===== シート ===== */
+  .sheet{
+    padding:32px 26px 36px;
+    border-radius:14px 14px 0 0;
+    background:var(--paper);
+  }
+  .sheet h2{font-weight:400;font-size:18px;margin-bottom:10px;}
+  .grip{background:var(--line);}
+
+  /* ===== 仮置きの入力 ===== */
+  .inbox-input-row{
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--line);
+    border-radius:0;
+    padding:4px 2px;
+    margin-top:12px;
+  }
+  .inbox-input-row:focus-within{border-bottom-color:var(--star);}
+  #inboxInput{font-weight:300;background:transparent;}
+  .inbox-hint{font-weight:300;color:var(--ink-faint);letter-spacing:0.04em;}
+
+  /* ===== セクション間の余白を全体に広げる ===== */
+  .screen{padding:24px 22px 60px;}
+  .titlebar{padding:32px 22px 20px;}
+  .lead{font-size:12.5px;margin-bottom:32px;}
+
+  /* テーマ詳細のアーカイブメニュー */
+  .archive-zone{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);}
+  .archive-toggle{
+    background:none;border:none;font-family:inherit;
+    color:var(--ink-faint);font-size:11px;
+    letter-spacing:0.25em;text-transform:uppercase;
+    font-weight:300;padding:6px 0;cursor:pointer;
+    transition:color 0.3s ease;
+  }
+  .archive-toggle:hover{color:var(--star);}
+  .archive-menu{margin-top:8px;display:flex;flex-direction:column;gap:0;}
+  .archive-item{
+    background:none;border:none;font-family:inherit;
+    text-align:left;padding:14px 4px;
+    color:var(--ink-soft);font-weight:300;font-size:13px;
+    border-bottom:1px solid var(--line-soft);
+    cursor:pointer;letter-spacing:0.04em;
+    transition:color 0.3s ease;
+  }
+  .archive-item:hover{color:var(--star);}
+  .archive-item.danger:hover{color:#b85555;}
+
+  /* テーマカードのトグル＋カテゴリ表示 */
+  .lcard-head{display:flex;align-items:center;gap:6px;}
+  .lcard-head .toggle-btn{font-size:10px;padding:2px 6px 2px 0;color:var(--ink-faint);}
+  .lcard.collapsed{padding-bottom:24px;}
+  .lcard .pvgroup{color:var(--star);font-weight:300;letter-spacing:0.02em;}
+  .lcard .pvcount{color:var(--ink-faint);font-size:11px;margin-left:6px;letter-spacing:0.05em;}
+  /* テーマカード内タスクのチェックボックス */
+  .pv-check{
+    width:16px;height:16px;
+    border:1px solid var(--star);
+    border-radius:50%;
+    background:transparent;
+    padding:0;cursor:pointer;
+    flex-shrink:0;margin-right:8px;
+    transition:background 0.2s ease;
+  }
+  .pv-check:hover{background:rgba(168,137,63,0.15);}
+  .pv-task-text{flex:1;}
+
+  /* スクロールバー */
+  ::-webkit-scrollbar{width:0;background:transparent;}
 </style>
 </head>
 <body>
@@ -494,7 +776,6 @@
   <div class="statusbar"><span id="clock">9:41</span><span class="right">●●● ▾ ▮</span></div>
   <div class="titlebar">
     <div class="tleft">
-      <div class="small">★ POLARIS</div>
       <h1 id="screenTitle">価値観</h1>
       <div class="sub" id="screenSub">自分が大事にしたいこと</div>
     </div>
@@ -506,44 +787,40 @@
 
   <div class="screen">
     <section class="view active" id="v-values">
-      <p class="lead">自分が大事にしたいことを書き留めておく場所。下のことばから選んでも、自分で書いてもOK。</p>
+      
       <div class="chip-zone" id="chipZone"><div class="chip-label">こんなことば、どうですか</div><div class="chips" id="chips"></div></div>
       <div class="lcards" id="vcards"></div>
       <button class="vcustom-btn" id="addValue"><span class="p">+</span> 自分のことばを作る</button>
     </section>
 
     <section class="view" id="v-stars">
-      <p class="lead">テーマを追加場所。タップでタスクを追加できる。</p>
+      
       <div class="lcards" id="starsList"></div>
       <div class="inbox-input-row" style="margin-top:8px;">
         <input type="text" id="inboxInput" placeholder="仮タスクを追加" autocomplete="off">
         <button class="inbox-more" id="inboxMore" title="詳しく書く">⋯</button>
       </div>
-      <div class="inbox-hint">Enterで仮置きに追加</div>
+      
       <button class="vcustom-btn" id="addStar" style="margin-top:14px;"><span class="p">+</span> 新しいテーマを追加</button>
-      <p class="hint"></p>
+      
     </section>
 
     <section class="view" id="v-log">
-      <div class="weekly-card" style="text-align:left;padding:20px;">
-        <div style="font-size:16px;font-weight:700;color:var(--ink);margin-bottom:14px;text-align:center;">今日の記録：<br>何が変わった？</div>
-        <textarea id="diffText" placeholder="今日やったこと、気づいたこと。"></textarea>
-        <div style="margin-top:12px;"><select id="diffStar"><option value="">（テーマに紐づけない）</option></select></div>
-        <div id="diffGroupZone" style="margin-top:8px;display:none;"><select id="diffGroup"><option value="">— カテゴリなし</option></select></div>
-        <div id="diffMetrics" style="margin-top:10px;"></div>
-      </div>
-      <button class="btn-full" id="addDiff">記録</button>
-      <p class="hint">やったことだけを記録する場所。</p>
+      <textarea id="diffText" placeholder="" style="width:100%;min-height:120px;"></textarea>
+      <div style="margin-top:14px;"><select id="diffStar"><option value="">（未分類）</option></select></div>
+      <div id="diffGroupZone" style="margin-top:10px;display:none;"><select id="diffGroup"><option value="">— 未分類</option></select></div>
+      <div id="diffMetrics" style="margin-top:10px;"></div>
+      <button class="btn-full" id="addDiff" style="margin-top:18px;">記録</button>
     </section>
 
     <section class="view" id="v-trail">
-      <p class="lead">これまでの記録の一覧。</p>
+      
       <div class="trail-filter" id="trailFilter"></div>
       <div id="trailBody"></div>
     </section>
 
     <section class="view" id="v-cal">
-      <p class="lead">すべての方向の「いつ」を、ひとつのカレンダーに。期日のあるタスクだけが、ここに集まります。</p>
+      
       <div class="cal-seg" id="calSeg">
         <button class="seg active" data-mode="month">月</button>
         <button class="seg" data-mode="week">3日</button>
@@ -557,14 +834,13 @@
     </section>
 
     <section class="view" id="v-week">
-      <p class="lead">この期間の振り返り場所。<br><span style="color:var(--ink-faint);">※振り返り振り返りの本機能はまだ準備中です。</span></p>
+      
       <div class="weekly-card"><div class="wbig" id="weekCount">0</div><div class="wlabel">この7日間で動いた記録</div></div>
       <div id="metricsBlock"></div>
-      <div class="weekly-soon">ここに、この一週間のジャーナルをふりかえる仕組みが入ります。<br>「どの方向に、どれだけ動けたか」を、責めずに眺められるように。<br>— 設計はこれから、一緒に。</div>
     </section>
 
     <section class="view" id="v-archive">
-      <p class="lead">たどり着いた方向と、置いていった言葉。<br>画面からは消えても、ここに残ります。</p>
+      
       <div id="archiveBody"></div>
       <button class="btn-ghost" id="archiveBack" style="margin-top:20px;">← 戻る</button>
     </section>
@@ -598,7 +874,6 @@
   <div class="sheet-bg" id="dbg"></div>
   <div class="sheet" id="dsheet">
     <div class="grip"></div>
-    <div class="detail-GOAL">GOAL</div>
     <div class="detail-dir" id="dDir">—</div>
     <div class="detail-memo" id="dMemo" style="display:none;"></div>
     <button class="btn-ghost" id="dEdit" style="margin-top:4px;padding:6px;font-size:12px;color:var(--star);">このテーマを編集 ›</button>
@@ -607,9 +882,14 @@
     <div class="steps-tree" id="stepsTree"></div>
     <button class="sadd-root" id="addRootStep"><span class="p">+</span> タスクを追加する</button>
     <button class="sadd-root" id="addGroup" style="margin-top:8px;"><span class="p">+</span> カテゴリを追加（例：運動・食事）</button>
-    <button class="btn-ghost" id="dArchive" style="margin-top:18px;">★ このテーマを達成にする</button>
-    <button class="btn-ghost" id="dHold">いまは目指さない（保留）</button>
-    <button class="btn-ghost danger" id="dDelete">この方向を削除する</button>
+    <div class="archive-zone">
+      <button class="archive-toggle" id="archiveToggle">アーカイブ</button>
+      <div class="archive-menu" id="archiveMenu" style="display:none;">
+        <button class="archive-item" id="dArchive">達成</button>
+        <button class="archive-item" id="dHold">保留</button>
+        <button class="archive-item danger" id="dDelete">削除</button>
+      </div>
+    </div>
   </div>
 
   <!-- star create/edit sheet -->
@@ -620,15 +900,15 @@
     <h2 style="font-size:19px;" id="starHead">新しいテーマを追加</h2>
     <label>テーマ</label>
     <input type="text" id="starDir" placeholder="なりたい自分／テーマ／叶えたい夢" style="margin-top:6px;">
-    <p class="due-note">大きくても、ふわっとしていてもいい。</p>
+    
 
-    <label style="display:block;margin-top:14px;">メモ（任意）</label>
-    <textarea id="starMemo" style="min-height:70px;margin-top:6px;" placeholder="なぜこの方向か、どんな状態を目指すか、いまの気持ち——なんでも。"></textarea>
+    <label style="display:block;margin-top:14px;">メモ</label>
+    <textarea id="starMemo" style="min-height:70px;margin-top:6px;" placeholder=""></textarea>
 
     <label style="display:block;margin-top:18px;">数値の指標（任意）</label>
-    <p class="due-note" style="margin-bottom:6px;">進捗を数値で追いたい場合だけ。</p>
+    
     <div id="starMetricsEditor"></div>
-    <button class="vcustom-btn" id="addStarMetric" style="margin-top:6px;"><span class="p">+</span> 指標を加える</button>
+    <button class="vcustom-btn" id="addStarMetric" style="margin-top:6px;"><span class="p">+</span> グラフ追加</button>
 
     <button class="btn-full" id="starSave" style="margin-top:18px;">置く</button>
   </div>
@@ -638,13 +918,13 @@
     <div class="grip"></div>
     <div class="sword" id="stepKind">STEP</div>
     <h2 style="font-size:17px;" id="stepHead">タスクを加える</h2>
-    <label>やること（終えるとジャーナルになります）</label>
+    <label>やること</label>
     <textarea id="stepText" style="min-height:60px;" placeholder="例：過去問を10年分そろえる"></textarea>
 
-    <label style="display:block;margin-top:14px;">メモ（任意）</label>
+    <label style="display:block;margin-top:14px;">メモ</label>
     <textarea id="stepMemo" style="min-height:54px;" placeholder="補足や、やり方のメモなど"></textarea>
 
-    <label style="display:block;margin-top:14px;">いつ（任意）</label>
+    <label style="display:block;margin-top:14px;">いつ</label>
     <div class="due-row"><input type="date" id="stepDue"><button class="due-clear" id="stepDueClear">なし</button></div>
     <div class="time-row" id="timeRow">
       <input type="text" id="stepFrom" inputmode="numeric" placeholder="9:00" maxlength="5"><span class="time-sep">〜</span><input type="text" id="stepTo" inputmode="numeric" placeholder="10:00" maxlength="5">
@@ -659,9 +939,9 @@
       </div>
     </div>
     <input type="hidden" id="stepDur">
-    <p class="due-note"></p>
+    
 
-    <label style="display:block;margin-top:14px;">繰り返し（任意）</label>
+    <label style="display:block;margin-top:14px;">繰り返し</label>
     <div class="rep-row" id="repRow">
       <button class="rep-opt active" data-rep="none">なし</button>
       <button class="rep-opt" data-rep="daily">毎日</button>
@@ -672,10 +952,11 @@
       <button class="wd" data-wd="0">日</button><button class="wd" data-wd="1">月</button><button class="wd" data-wd="2">火</button><button class="wd" data-wd="3">水</button><button class="wd" data-wd="4">木</button><button class="wd" data-wd="5">金</button><button class="wd" data-wd="6">土</button>
     </div>
     <div class="monthday-zone" id="monthDayZone" style="display:none;">
-      <p class="due-note" style="margin:8px 0;">毎月の何日を選択（複数選べます）</p>
+      
       <div class="monthday-grid" id="monthDayGrid"></div>
     </div>
-    <p class="due-note" id="repNote" style="display:none;">繰り返しは、達成すると次が自動で入ります。ジャーナルには淡く積み重なります。</p>
+    <div class="due-note" id="repNote" style="display:none;">繰り返し設定中です。</div>
+    
 
     <button class="btn-full" id="stepSave">加える</button>
   </div>
@@ -698,7 +979,7 @@
   <div class="sheet" id="msheet">
     <div class="grip"></div>
     <div class="sword" id="metricKind">METRIC</div>
-    <h2 style="font-size:18px;" id="metricHead">指標を加える</h2>
+    <h2 style="font-size:18px;" id="metricHead">グラフ追加</h2>
     <label>なんの指標？</label>
     <input type="text" id="metricName" placeholder="例：体重／模試の点数／貯金額／本を読んだ数" style="margin-top:6px;">
     <label style="display:block;margin-top:14px;">単位</label>
@@ -719,7 +1000,7 @@
       </button>
     </div>
     <button class="btn-full" id="metricSave">加える</button>
-    <button class="btn-ghost danger" id="metricDelete" style="display:none;">この指標を削除する</button>
+    <button class="btn-ghost danger" id="metricDelete" style="display:none;">このグラフを削除する</button>
   </div>
 
   <!-- event editor sheet -->
@@ -730,21 +1011,21 @@
     <h2 style="font-size:17px;" id="eHead">予定を加える</h2>
     <div class="rep-row" id="eKindRow" style="margin-bottom:14px;">
       <button class="rep-opt active" data-ekind="event">予定</button>
-      <button class="rep-opt" data-ekind="task">タスク（完了できる）</button>
+      <button class="rep-opt" data-ekind="task">タスク</button>
     </div>
     <label id="eTextLabel">なにの予定</label>
     <textarea id="eText" style="min-height:54px;" placeholder="例：歯医者／打ち合わせ／ライブ"></textarea>
-    <label style="display:block;margin-top:14px;">メモ（任意）</label>
+    <label style="display:block;margin-top:14px;">メモ</label>
     <textarea id="eMemo" style="min-height:48px;" placeholder="場所、相手、持ち物など"></textarea>
     <label style="display:block;margin-top:14px;">テーマに紐づける（任意）</label>
     <select id="eStar" style="margin-top:6px;">
-      <option value="">— 紐づけない（ただの予定）</option>
+      <option value="">— 未分類</option>
     </select>
-    <p class="due-note" style="margin-top:6px;">紐づけると、この予定はタスクになります。完了で記録に残ります。</p>
+    
     <div id="eGroupZone" style="display:none;">
       <label style="display:block;margin-top:10px;">カテゴリに入れる（任意）</label>
       <select id="eGroup" style="margin-top:6px;">
-        <option value="">— カテゴリなし（テーマの直下）</option>
+        <option value="">— 未分類（テーマの直下）</option>
       </select>
     </div>
     <label style="display:block;margin-top:14px;">いつ</label>
@@ -761,7 +1042,7 @@
         <button class="dur-p" data-dur="120">2時間</button>
       </div>
     </div>
-    <label style="display:block;margin-top:14px;">繰り返し（任意）</label>
+    <label style="display:block;margin-top:14px;">繰り返し</label>
     <div class="rep-row" id="eRepRow">
       <button class="rep-opt active" data-erep="none">なし</button>
       <button class="rep-opt" data-erep="daily">毎日</button>
@@ -772,7 +1053,7 @@
       <button class="wd" data-ewd="0">日</button><button class="wd" data-ewd="1">月</button><button class="wd" data-ewd="2">火</button><button class="wd" data-ewd="3">水</button><button class="wd" data-ewd="4">木</button><button class="wd" data-ewd="5">金</button><button class="wd" data-ewd="6">土</button>
     </div>
     <div class="monthday-zone" id="eMonthDayZone" style="display:none;">
-      <p class="due-note" style="margin:8px 0;">毎月の何日を選択（複数選べます）</p>
+      
       <div class="monthday-grid" id="eMonthDayGrid"></div>
     </div>
     <button class="btn-full" id="eSave">加える</button>
@@ -786,7 +1067,7 @@
     <div class="vfull-inner">
       <div class="sword">INBOX</div>
       <h2 style="font-size:22px;">仮置き</h2>
-      <p class="due-note" style="margin-top:6px;">思いついたタスクをとりあえず置く場所。後からテーマに紐づけられる。</p>
+      
       <div class="steps-tree" id="ibStepsTree" style="margin-top:18px;"></div>
       <button class="sadd-root" id="ibAddRoot" style="margin-top:18px;"><span class="p">+</span> タスクを追加する</button>
       <button class="sadd-root" id="ibAddGroup" style="margin-top:8px;"><span class="p">+</span> カテゴリを追加</button>
@@ -816,9 +1097,9 @@
   <div class="sheet-bg" id="mvbg"></div>
   <div class="sheet" id="mvsheet">
     <div class="grip"></div>
-    <div class="sword">MOVE</div>
-    <h2 style="font-size:17px;">どこへ移動しますか？</h2>
-    <p class="due-note" style="margin-top:8px;">このタスクを、別の場所へ動かします。中身の手順もまるごと一緒に動きます。</p>
+    
+    <h2 style="font-size:17px;">移動先（テーマ）</h2>
+    
     <div id="mvTargets" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;"></div>
     <button class="btn-ghost" id="mvCancel" style="margin-top:14px;">やめる</button>
   </div>
@@ -831,10 +1112,11 @@
     <h2 style="font-size:17px;" id="gpHead">カテゴリを追加</h2>
     <label>名前</label>
     <input type="text" id="gpName" placeholder="例：運動／食事／声掛け" style="margin-top:6px;">
-    <p class="due-note" style="margin-top:8px;">テーマの中で、タスクをまとめるカテゴリです。後から名前を変えたり、削除もできます。</p>
+    
     <button class="btn-full" id="gpSave">置く</button>
+    <div class="due-note" id="gpDelNote" style="display:none;">カテゴリを削除しても、中のタスクは「未分類」に戻ります。</div>
     <button class="btn-ghost danger" id="gpDelete" style="display:none;">このカテゴリを削除する</button>
-    <p class="due-note" id="gpDelNote" style="display:none;margin-top:8px;">削除しても、中にあるタスクはテーマの直下に戻ります。手順は消えません。</p>
+    
   </div>
 
   <!-- diff edit sheet -->
@@ -846,7 +1128,7 @@
     <label>内容</label>
     <textarea id="dfText" style="min-height:70px;"></textarea>
     <div id="dfMemoZone">
-      <label style="display:block;margin-top:14px;">メモ（任意）</label>
+      <label style="display:block;margin-top:14px;">メモ</label>
       <textarea id="dfMemo" style="min-height:60px;" placeholder="ひとこと。空でもいい。"></textarea>
     </div>
     <button class="btn-full" id="dfSave">保存する</button>
@@ -887,12 +1169,17 @@ const SEED=['ロールモデル','理想的な職場','10年後','大事にし�
 const TITLES={
   values:['価値観','自分が大事にしたいこと'],
   stars:['テーマ','テーマとタスクを管理'],
-  log:['記録','今日やったことを記録'],
+  log:['記録','やったことを記録'],
   trail:['ジャーナル','これまでの記録の一覧'],
-  cal:['カレンダー','タスクと予定をまとめて'],
-  week:['振り返り','この期間の振り返り'],
+  cal:['カレンダー',''],
+  week:['振り返り',''],
   archive:['アーカイブ','達成・保留・過去の価値観']
 };
+
+// テーマカードの折りたたみ状態（永続化）
+let collapsedStarCards={};
+async function saveCollapsedStarCards(){try{await window.storage.set('polaris:collapsed_stars',JSON.stringify(collapsedStarCards));}catch(e){}}
+async function loadCollapsedStarCards(){try{const r=await window.storage.get('polaris:collapsed_stars');if(r)collapsedStarCards=JSON.parse(r.value);}catch(e){}}
 
 async function load(){
   try{const r=await window.storage.get(K.v);if(r)values=JSON.parse(r.value);}catch(e){}
@@ -905,6 +1192,7 @@ async function load(){
   try{const r=await window.storage.get(K.ml);if(r)metricLogs=JSON.parse(r.value);}catch(e){}
   try{const r=await window.storage.get(K.ib);if(r){const o=JSON.parse(r.value);inbox.steps=o.steps||[];inbox.groups=o.groups||[];}}catch(e){}
   await loadCollapsed();
+  await loadCollapsedStarCards();
   values=values||[];stars=stars||[];diffs=diffs||[];valuesArch=valuesArch||[];starsArch=starsArch||[];starsHold=starsHold||[];events=events||[];metricLogs=metricLogs||[];
   // 旧データ正規化：tasks→steps、children補完
   stars.forEach(s=>{
@@ -975,26 +1263,35 @@ function countOpenAll(s){
 }
 function renderStars(){
   const l=document.getElementById('starsList');
-  if(!stars.length){l.innerHTML=`<div class="empty"><span class="em-glyph">☆</span>テーマはまだありません。<br>最初のテーマを追加してみよう。</div>`;return;}
+  if(!stars.length){l.innerHTML=`<div class="empty"><span class="em-glyph">☆</span><br></div>`;return;}
   l.innerHTML=stars.map(s=>{
-    const open=countOpenAll(s);const moves=countMoves(s.id);
-    let meta=[];if(moves)meta.push(`このテーマへ ${moves} の記録`);if(open)meta.push(`タスク ${open}`);
-    const groupCount=(s.groups||[]).length;
-    if(groupCount)meta.push(`カテゴリ ${groupCount}`);
-    // preview: top-level steps, up to 3
-    let preview='';
+    const isCol=collapsedStarCards[s.id];
+    const tri=isCol?'▶':'▼';
+    // 直下のタスク
     const top=(s.steps||[]);
-    if(top.length){
+    // カテゴリ
+    const groups=(s.groups||[]);
+    let body='';
+    if(!isCol){
+      let parts=[];
+      // カテゴリ一覧（▸ カテゴリ名 (N)）
+      groups.forEach(g=>{
+        const n=countOpenSteps(g.steps||[]);
+        parts.push(`<div class="pvrow"><span class="pvgroup">▸ ${esc(g.name)}</span>${n?`<span class="pvcount">(${n})</span>`:''}</div>`);
+      });
+      // 直下のタスク（最大3件）
       const shown=top.slice(0,3);
-      preview='<div class="star-preview">'+shown.map(st=>{
+      shown.forEach((st,i)=>{
         let due='';
         if(st.due){const past=isPast(st.due);due=`<span class="pvdue${past?' past':''}">${fmtDue(st.due)}</span>`;}
-        return `<div class="pvrow"><span class="pvdot">●</span><span>${esc(st.text)}</span>${due}</div>`;
-      }).join('');
-      if(top.length>3)preview+=`<div class="pvmore">ほか ${top.length-3} 件…</div>`;
-      preview+='</div>';
+        const cbId=`${s.id}::${encPath([i])}`;
+        parts.push(`<div class="pvrow"><button class="pv-check" data-sccheck="${cbId}"></button><span class="pv-task-text">${esc(st.text)}</span>${due}</div>`);
+      });
+      if(top.length>3)parts.push(`<div class="pvmore">ほか ${top.length-3} 件…</div>`);
+      if(parts.length)body=`<div class="star-preview">${parts.join('')}</div>`;
+      body+=`<div class="star-open-hint">タップしてタスクを組む</div>`;
     }
-    return `<div class="lcard" data-sid="${s.id}"><div class="star-GOAL">GOAL</div><div class="star-dir">${esc(s.dir)}</div><div class="star-meta">${meta.length?meta.join('　/　'):'まだ記録はありません'}</div>${preview}<div class="star-open-hint">タップしてタスクを組む</div></div>`;
+    return `<div class="lcard${isCol?' collapsed':''}" data-sid="${s.id}"><div class="lcard-head"><button class="toggle-btn" data-togglestar="${s.id}">${tri}</button><div class="star-dir">${esc(s.dir)}</div></div>${body}</div>`;
   }).join('');
 }
 let detailSid=null;
@@ -1013,6 +1310,7 @@ function openDetail(s){
   const memoEl=document.getElementById('dMemo');
   if(s.memo){memoEl.textContent=s.memo;memoEl.style.display='block';}
   else{memoEl.style.display='none';}
+  document.getElementById('archiveMenu').style.display='none';
   renderStepsTree();renderMetricsOnStar();openSheet('dbg','dsheet');
 }
 
@@ -1047,7 +1345,7 @@ function openMetricEditor(starId,metricIdOrIndex){
     m=metricIdOrIndex?(s.metrics||[]).find(x=>x.id===metricIdOrIndex):null;
   }
   document.getElementById('metricKind').textContent=m?'EDIT METRIC':'NEW METRIC';
-  document.getElementById('metricHead').textContent=m?'指標を編集':'指標を加える';
+  document.getElementById('metricHead').textContent=m?'グラフを編集':'グラフ追加';
   document.getElementById('metricName').value=m?m.name:'';
   document.getElementById('metricUnitField').value=m?(m.unit||''):'';
   setMKindActive(m?m.kind:'up');
@@ -1067,9 +1365,9 @@ function renderStepsTree(){
   if(!s.groups)s.groups=[];
   const hasGroups=s.groups.length>0;
   const hasRootSteps=s.steps&&s.steps.length>0;
-  if(!hasGroups&&!hasRootSteps){tree.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);text-align:center;padding:14px 0;line-height:1.7;">タスクはまだありません。<br></div>`;return;}
+  if(!hasGroups&&!hasRootSteps){tree.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);text-align:center;padding:14px 0;line-height:1.7;"><br></div>`;return;}
   let html='';
-  // カテゴリなしのタスク
+  // 未分類のタスク
   if(hasRootSteps){
     html+=renderStepNodes(s.steps,[]);
   }
@@ -1202,7 +1500,7 @@ function collectStepInput(){
 /* DIFF select */
 function renderStarSelect(){
   const sel=document.getElementById('diffStar');const cur=sel.value;
-  sel.innerHTML=`<option value="">（テーマに紐づけない）</option>`+stars.map(s=>`<option value="${s.id}">★ ${esc(s.dir)}</option>`).join('');
+  sel.innerHTML=`<option value="">（未分類）</option>`+stars.map(s=>`<option value="${s.id}">★ ${esc(s.dir)}</option>`).join('');
   sel.value=cur;
   if(typeof refreshDiffMetrics==='function')refreshDiffMetrics();
   if(typeof refreshDiffGroup==='function')refreshDiffGroup();
@@ -1219,11 +1517,11 @@ function renderTrail(){
   if(trailFullStar){renderTrailFull(b);return;}
   // 一覧ビューに戻ったらカテゴリフィルタはリセット
   trailFilterGroups=[];
-  if(!diffs.length){b.innerHTML=`<div class="empty"><span class="em-glyph">✦</span>記録はまだありません。<br>やったことを記録すると、ここに溜まっていきます。</div>`;return;}
+  if(!diffs.length){b.innerHTML=`<div class="empty"><span class="em-glyph">✦</span><br></div>`;return;}
   const single=stars.length<=1;let h='';
   stars.forEach(s=>{const ds=diffs.filter(d=>d.starId===s.id).sort((a,b)=>b.ts-a.ts);if(ds.length)h+=trailBlock(s.id,'★ '+esc(s.dir),ds,single);});
   const loose=diffs.filter(d=>!d.starId||!stars.find(s=>s.id===d.starId)).sort((a,b)=>b.ts-a.ts);
-  if(loose.length)h+=trailBlock('__loose__','— テーマに紐づかない記録',loose,single);
+  if(loose.length)h+=trailBlock('__loose__','— 未分類',loose,single);
   b.innerHTML=h;
 }
 function trailBlock(key,title,ds,showAll){
@@ -1255,7 +1553,7 @@ function renderTrailFull(b){
   const key=trailFullStar;
   let title='',ds=[];const isLoose=key==='__loose__';
   let starObj=null;
-  if(isLoose){title='— テーマに紐づかない記録';ds=diffs.filter(d=>!d.starId||!stars.find(s=>s.id===d.starId));}
+  if(isLoose){title='— 未分類';ds=diffs.filter(d=>!d.starId||!stars.find(s=>s.id===d.starId));}
   else{starObj=stars.find(x=>x.id===key);if(!starObj){trailFullStar=null;renderTrail();return;}title='★ '+esc(starObj.dir);ds=diffs.filter(d=>d.starId===key);}
   // カテゴリフィルタ（複数選択：OR検索）
   if(trailFilterGroups.length&&starObj){
@@ -1269,8 +1567,8 @@ function renderTrailFull(b){
       const on=trailFilterGroups.includes(g.id);
       return `<button class="fchip${on?' on':''}" data-tfg="${g.id}">${esc(g.name)}</button>`;
     }).join('');
-    const summary=trailFilterGroups.length?`<div class="trail-filter-summary">${ds.length} 件の動き　・　もう一度押すと解除</div>`:`<div class="trail-filter-summary">押して絞り込み。複数選択OK。</div>`;
-    filterUI=`<div class="trail-filter" style="margin-bottom:18px;"><div class="tf-label">カテゴリで絞り込み</div><div class="chips">${chips}</div>${summary}</div>`;
+    const summary=trailFilterGroups.length?`<div class="trail-filter-summary">${ds.length} 件の動き　・　</div>`:`<div class="trail-filter-summary"></div>`;
+    filterUI=`<div class="trail-filter" style="margin-bottom:18px;"><div class="tf-label"></div><div class="chips">${chips}</div>${summary}</div>`;
   }
   const steps=ds.length?ds.map(stepHtml).join(''):`<div class="empty" style="padding:24px 0;">この絞り込みでの記録はありません。</div>`;
   b.innerHTML=`<button class="trail-more" data-backtrail style="margin-bottom:14px;padding-left:0;">‹ ジャーナルの一覧へ戻る</button>${filterUI}<div class="trail-star"><div class="trail-head"><span class="name">${title}</span><span class="n">${ds.length} steps</span></div><div class="trail-line">${steps}</div></div>`;
@@ -1293,7 +1591,7 @@ function renderArchive(){
       const moves=(s.diffsSnapshot||[]).length;
       return `<div class="trophy" data-revive-arch="${s.id}"><div class="star">★</div><div class="tribbon">reached</div><div class="tdir">${esc(s.dir)}</div><div class="tmeta">${s.archivedAt?fmtDate(s.archivedAt):''}<br>${moves} のジャーナルを残した</div></div>`;
     }).join('')+`</div><div class="section-note" style="padding:6px 0 0;">タップで、また現役に戻せます</div>`;
-  }else h+=`<div class="section-note">まだありません。テーマを達成したら、ここに星が増えていきます。</div>`;
+  }else h+=`<div class="section-note">まだありません。</div>`;
 
   h+=`<div class="field-label" style="margin-top:26px;">⏸ 保留 — いまは目指さない方向</div>`;
   if(starsHold.length){
@@ -1301,12 +1599,12 @@ function renderArchive(){
       const moves=(s.diffsSnapshot||[]).length;
       return `<div class="lcard" data-revive-hold="${s.id}"><div class="star-GOAL" style="color:var(--ink-faint);">on hold</div><div class="star-dir">${esc(s.dir)}</div><div class="star-meta">${moves?`${moves} のジャーナルを保管中　/　`:''}タップで現役に戻す</div></div>`;
     }).join('');
-  }else h+=`<div class="section-note">まだありません。いま離れておきたい方向は、ここで静かに待ちます。</div>`;
+  }else h+=`<div class="section-note">まだありません。</div>`;
 
   h+=`<div class="field-label" style="margin-top:26px;">◆ 過去の価値観</div>`;
   if(valuesArch.length){
     h+=valuesArch.map(v=>`<div class="lcard"><div class="word">${esc(v.word)}</div>${v.def?`<div class="def">${esc(v.def)}</div>`:''}</div>`).join('');
-  }else h+=`<div class="section-note">まだありません。移り変わった言葉は、ここに残ります。</div>`;
+  }else h+=`<div class="section-note">まだありません。</div>`;
   document.getElementById('archiveBody').innerHTML=h;
 }
 
@@ -1793,7 +2091,7 @@ function renderInboxTree(){
   if(!inbox.groups)inbox.groups=[];
   const hasGroups=inbox.groups.length>0;
   const hasRootSteps=inbox.steps&&inbox.steps.length>0;
-  if(!hasGroups&&!hasRootSteps){tree.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);text-align:center;padding:14px 0;line-height:1.7;">仮タスクはまだありません。<br>上の入力欄から追加できます。</div>`;return;}
+  if(!hasGroups&&!hasRootSteps){tree.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);text-align:center;padding:14px 0;line-height:1.7;">仮<br></div>`;return;}
   let html='';
   if(hasRootSteps)html+=renderStepNodes(inbox.steps,[]);
   inbox.groups.forEach(g=>{
@@ -1868,7 +2166,28 @@ document.getElementById('starMetricsEditor').addEventListener('click',e=>{
   const ed=e.target.closest('[data-editdraft]');if(ed){openMetricEditor('__draft__',+ed.dataset.editdraft);return;}
   const dl=e.target.closest('[data-deldraft]');if(dl){starDraftMetrics.splice(+dl.dataset.deldraft,1);renderStarMetricsEditor();}
 });
-document.getElementById('starsList').addEventListener('click',e=>{const c=e.target.closest('[data-sid]');if(c){const s=stars.find(x=>x.id===c.dataset.sid);if(s)openDetail(s);}});
+document.getElementById('starsList').addEventListener('click',e=>{
+  const tg=e.target.closest('[data-togglestar]');
+  if(tg){
+    e.stopPropagation();
+    const sid=tg.dataset.togglestar;
+    collapsedStarCards[sid]=!collapsedStarCards[sid];
+    saveCollapsedStarCards();renderStars();
+    return;
+  }
+  // テーマカード内のタスクチェックボックス
+  const cb=e.target.closest('[data-sccheck]');
+  if(cb){
+    e.stopPropagation();
+    const[sid,pathStr]=cb.dataset.sccheck.split('::');
+    const path=decPath(pathStr);
+    detailSid=sid;
+    completeStep(cb,path);
+    return;
+  }
+  const c=e.target.closest('[data-sid]');
+  if(c){const s=stars.find(x=>x.id===c.dataset.sid);if(s)openDetail(s);}
+});
 
 document.getElementById('dbg').addEventListener('click',()=>closeSheet('dbg','dsheet'));
 document.getElementById('mbg').addEventListener('click',()=>closeSheet('mbg','msheet'));
@@ -1885,7 +2204,7 @@ document.getElementById('metricSave').addEventListener('click',async()=>{
     }else{
       starDraftMetrics.push(m);
     }
-    renderStarMetricsEditor();closeSheet('mbg','msheet');toast('指標を加えました');
+    renderStarMetricsEditor();closeSheet('mbg','msheet');toast('グラフを追加しました');
     return;
   }
   const s=stars.find(x=>x.id===metricEditCtx.starId);if(!s)return;
@@ -1895,18 +2214,18 @@ document.getElementById('metricSave').addEventListener('click',async()=>{
   }else{
     s.metrics.push({id:uid(),name,unit,kind});
   }
-  await ss();renderMetricsOnStar();renderStars();closeSheet('mbg','msheet');toast('指標を加えました');
+  await ss();renderMetricsOnStar();renderStars();closeSheet('mbg','msheet');toast('グラフを追加しました');
 });
 document.getElementById('metricDelete').addEventListener('click',async()=>{
   if(metricEditCtx.draft){
     if(metricEditCtx.index==null)return;
-    const ok=await confirmAsk('この指標を削除しますか？','まだ保存していなければ、確定前に外すだけです。');if(!ok)return;
+    const ok=await confirmAsk('このグラフを削除しますか？','まだ保存していなければ、確定前に外すだけです。');if(!ok)return;
     starDraftMetrics.splice(metricEditCtx.index,1);
     renderStarMetricsEditor();closeSheet('mbg','msheet');toast('外しました');return;
   }
   if(!metricEditCtx.metricId)return;
   const s=stars.find(x=>x.id===metricEditCtx.starId);if(!s)return;
-  const ok=await confirmAsk('この指標を削除しますか？','過去に記録した数値も一緒に消えます。元に戻せません。');if(!ok)return;
+  const ok=await confirmAsk('このグラフを削除しますか？','過去に記録した数値も一緒に消えます。元に戻せません。');if(!ok)return;
   s.metrics=(s.metrics||[]).filter(x=>x.id!==metricEditCtx.metricId);
   metricLogs=metricLogs.filter(l=>!(l.starId===metricEditCtx.starId&&l.metricId===metricEditCtx.metricId));
   await ss();await sml();renderMetricsOnStar();renderWeek();closeSheet('mbg','msheet');toast('削除しました');
@@ -2092,19 +2411,19 @@ function renderMvStep1(){
   // ステップ1：移動先の「箱」を選ぶ（テーマ or 仮置き）
   const target=document.getElementById('mvTargets');
   const fromSid=moveCtx.fromSid;
-  document.querySelector('#mvsheet h2').textContent='どこへ移動しますか？';
-  document.querySelector('#mvsheet .due-note').textContent='まず、どのテーマ（または仮置き）へ動かすかを選びます。';
+  const h2=document.querySelector('#mvsheet h2');if(h2)h2.textContent='移動先（テーマ）';
+  const note=document.querySelector('#mvsheet .due-note');if(note)note.textContent='';
   let html='';
   stars.forEach(s=>{
     const cur=s.id===fromSid;
-    html+=`<button class="mv-opt" data-mvstar="${s.id}">${cur?'<span style="color:var(--ink-faint);font-size:11px;margin-right:6px;">いま、ここ →</span>':''}★ ${esc(s.dir)}</button>`;
+    html+=`<button class="mv-opt" data-mvstar="${s.id}">★ ${esc(s.dir)}${cur?'<span style="color:var(--ink-faint);font-size:10px;margin-left:8px;letter-spacing:0.15em;">(now)</span>':''}</button>`;
   });
   const curInbox=fromSid==='__inbox__';
-  html+=`<button class="mv-opt" data-mvstar="__inbox__">${curInbox?'<span style="color:var(--ink-faint);font-size:11px;margin-right:6px;">いま、ここ →</span>':''}□ 仮置き</button>`;
+  html+=`<button class="mv-opt" data-mvstar="__inbox__">□ 仮置き${curInbox?'<span style="color:var(--ink-faint);font-size:10px;margin-left:8px;letter-spacing:0.15em;">(now)</span>':''}</button>`;
   target.innerHTML=html;
 }
 function renderMvStep2(){
-  // ステップ2：選んだ箱の中で、直下 or カテゴリ を選ぶ
+  // ステップ2：選んだ箱の中で、直下 or カテゴリ or タスクの子 を選ぶ
   const target=document.getElementById('mvTargets');
   const destSid=moveCtx.destSid;
   const dest=getContainer(destSid);
@@ -2113,27 +2432,92 @@ function renderMvStep2(){
   const isCurInGroup=moveCtx.path[0]==='g';
   const curGroupId=isCurInGroup?moveCtx.path[1]:null;
   const destName=destSid==='__inbox__'?'仮置き':('★ '+(stars.find(x=>x.id===destSid)||{}).dir);
-  document.querySelector('#mvsheet h2').textContent=destName+' の、どこへ？';
-  document.querySelector('#mvsheet .due-note').textContent='カテゴリを選ぶか、直下に置くかを選びます。';
-  let html=`<button class="mv-opt" data-mvback>‹ 移動先を選び直す</button>`;
+  const h2=document.querySelector('#mvsheet h2');if(h2)h2.textContent=destName+'　カテゴリ選択';
+  const note=document.querySelector('#mvsheet .due-note');if(note)note.textContent='';
+  let html=`<button class="mv-back" data-mvback>‹ 戻る</button>`;
   const directCur=sameBox&&!isCurInGroup;
-  html+=`<button class="mv-opt ${directCur?'current':''}" data-mv="root">${directCur?'<span class="mv-mark">●</span>':''}直下に置く（カテゴリなし）${directCur?'<span style="color:var(--ink-faint);font-size:11px;margin-left:6px;">いま、ここ</span>':''}</button>`;
+  html+=`<button class="mv-opt ${directCur?'current':''}" data-mv="root">${directCur?'<span class="mv-mark">●</span>':''}（未分類）${directCur?'<span style="color:var(--ink-faint);font-size:10px;margin-left:8px;letter-spacing:0.15em;">(now)</span>':''}</button>`;
   (dest.groups||[]).forEach(g=>{
     const cur=sameBox&&g.id===curGroupId;
-    html+=`<button class="mv-opt ${cur?'current':''}" data-mv="${g.id}">${cur?'<span class="mv-mark">●</span>':''}▸ ${esc(g.name)}${cur?'<span style="color:var(--ink-faint);font-size:11px;margin-left:6px;">いま、ここ</span>':''}</button>`;
+    html+=`<button class="mv-opt ${cur?'current':''}" data-mv="${g.id}">${cur?'<span class="mv-mark">●</span>':''}▸ ${esc(g.name)}${cur?'<span style="color:var(--ink-faint);font-size:10px;margin-left:8px;letter-spacing:0.15em;">(now)</span>':''}</button>`;
   });
-  if(!(dest.groups||[]).length){
-    html+=`<p class="due-note" style="margin-top:6px;">この場所にはまだカテゴリがありません。直下に置くこともできます。</p>`;
+  // 別のタスクの中に入れる
+  html+=`<button class="mv-opt" data-mvinside>タスク選択</button>`;
+  target.innerHTML=html;
+}
+function renderMvStep3(){
+  // ステップ3：親タスクを選ぶ
+  const target=document.getElementById('mvTargets');
+  const destSid=moveCtx.destSid;
+  const dest=getContainer(destSid);
+  document.querySelector('#mvsheet h2') && (document.querySelector('#mvsheet h2').textContent='タスク選択');
+  const note3=document.querySelector('#mvsheet .due-note');if(note3)note3.textContent='';
+  let html=`<button class="mv-back" data-mvback2>‹ 戻る</button>`;
+  // 全タスクをフラット化（自分自身と、自分の子孫は除外）
+  const movingPath=moveCtx.path;
+  const fromContainer=getContainer(moveCtx.fromSid);
+  const movingNode=getStepByPath(fromContainer,movingPath);
+  const movingId=movingNode?movingNode.id:null;
+  const candidates=[];
+  function walk(steps,prefix){
+    (steps||[]).forEach((st,i)=>{
+      // 自分自身、または自分の子孫は除外（同じテーマ内のみ）
+      if(st.id===movingId)return;
+      const newPath=prefix.concat(i);
+      candidates.push({node:st,path:newPath,depth:prefix.length});
+      walk(st.children,newPath);
+    });
+  }
+  walk(dest.steps||[],[]);
+  (dest.groups||[]).forEach(g=>walk(g.steps||[],['g',g.id]));
+  if(!candidates.length){
+    html+=`<p style="color:var(--ink-faint);font-size:12px;padding:14px 4px;">親にできるタスクがありません。</p>`;
+  }else{
+    candidates.forEach(c=>{
+      const indent=c.depth*14;
+      html+=`<button class="mv-opt" data-mvparent="${encPath(c.path)}" style="padding-left:${16+indent}px;">└ ${esc(c.node.text)}</button>`;
+    });
   }
   target.innerHTML=html;
 }
 document.getElementById('mvbg').addEventListener('click',()=>closeSheet('mvbg','mvsheet'));
 document.getElementById('mvCancel').addEventListener('click',()=>closeSheet('mvbg','mvsheet'));
 document.getElementById('mvTargets').addEventListener('click',async e=>{
+  // 戻るボタン（step1へ）
   if(e.target.closest('[data-mvback]')){moveCtx.step=1;moveCtx.destSid=null;renderMvStep1();return;}
+  // 戻るボタン（step2へ）
+  if(e.target.closest('[data-mvback2]')){moveCtx.step=2;renderMvStep2();return;}
+  // 「タスク選択」ボタン → step3へ
+  if(e.target.closest('[data-mvinside]')){moveCtx.step=3;renderMvStep3();return;}
+  // テーマ or 仮置き選択（step1→step2）
   const sb=e.target.closest('[data-mvstar]');
   if(sb){moveCtx.destSid=sb.dataset.mvstar;moveCtx.step=2;renderMvStep2();return;}
-  const b=e.target.closest('[data-mv]');if(!b||b.classList.contains('current'))return;
+  // 親タスクを選んだ：子として入れる
+  const pp=e.target.closest('[data-mvparent]');
+  if(pp){
+    const parentPath=decPath(pp.dataset.mvparent);
+    const fromContainer=getContainer(moveCtx.fromSid);
+    const destContainer=getContainer(moveCtx.destSid);
+    if(!fromContainer||!destContainer)return;
+    const path=moveCtx.path;
+    const arr=getParentArr(fromContainer,path);
+    const np=getNumericPath(path);
+    const idx=np[np.length-1];
+    const node=arr.splice(idx,1)[0];
+    // 親ノードの children に入れる
+    const parentNode=getStepByPath(destContainer,parentPath);
+    if(!parentNode){toast('親タスクが見つかりません');return;}
+    if(!parentNode.children)parentNode.children=[];
+    parentNode.children.push(node);
+    await ss();await sib();
+    if(moveCtx.fromSid==='__inbox__'||moveCtx.destSid==='__inbox__')renderInboxTree();
+    renderStepsTree();renderStars();renderCal();closeSheet('mvbg','mvsheet');toast('タスクの中に入れました');
+    moveCtx=null;return;
+  }
+  // 通常の移動先選択（root or カテゴリID）
+  const b=e.target.closest('[data-mv]');
+  if(!b)return;
+  if(b.classList.contains('current'))return;
   const dest=b.dataset.mv;
   const fromContainer=getContainer(moveCtx.fromSid);
   const destContainer=getContainer(moveCtx.destSid);
@@ -2296,7 +2680,7 @@ function renderEMonthDayGrid(){
 }
 function refreshEStarSelect(){
   const sel=document.getElementById('eStar');const cur=sel.value;
-  sel.innerHTML=`<option value="">— 紐づけない（ただの予定）</option>`+stars.map(s=>`<option value="${s.id}">★ ${esc(s.dir)}</option>`).join('');
+  sel.innerHTML=`<option value="">— 未分類</option>`+stars.map(s=>`<option value="${s.id}">★ ${esc(s.dir)}</option>`).join('');
   sel.value=cur;
 }
 function refreshEGroupSelect(){
@@ -2309,7 +2693,7 @@ function refreshEGroupSelect(){
   if(!groups.length){zone.style.display='none';sel.innerHTML='';return;}
   const cur=sel.value;
   zone.style.display='block';
-  sel.innerHTML=`<option value="">— カテゴリなし（テーマの直下）</option>`+groups.map(g=>`<option value="${g.id}">▸ ${esc(g.name)}</option>`).join('');
+  sel.innerHTML=`<option value="">— 未分類（テーマの直下）</option>`+groups.map(g=>`<option value="${g.id}">▸ ${esc(g.name)}</option>`).join('');
   sel.value=cur;
 }
 function openEventEditor(ev,defaultDue,defaultTime){
@@ -2442,6 +2826,10 @@ document.getElementById('eDelete').addEventListener('click',async()=>{
   events=events.filter(x=>x.id!==eEditId);await sev();renderCal();closeSheet('ebg','esheet');toast('削除しました');
 });
 
+document.getElementById('archiveToggle').addEventListener('click',()=>{
+  const m=document.getElementById('archiveMenu');
+  m.style.display=m.style.display==='none'?'flex':'none';
+});
 document.getElementById('dArchive').addEventListener('click',async()=>{
   const s=getContainer(detailSid);if(!s)return;const moves=countMoves(s.id);
   const ok=await confirmAsk('この方向に、達成しましたか？',`「${esc(s.dir)}」を達成としてアーカイブに納めます。<br>この方向のジャーナル ${moves} 件も一緒に保管され、画面からは消えます。あとで現役に戻すこともできます。`);if(!ok)return;
@@ -2509,7 +2897,7 @@ function refreshDiffMetrics(){
   const box=document.getElementById('diffMetrics');
   if(!starId){box.innerHTML='';return;}
   const s=stars.find(x=>x.id===starId);if(!s||!s.metrics||!s.metrics.length){box.innerHTML='';return;}
-  let h=`<div style="font-size:11px;color:var(--ink-faint);letter-spacing:0.06em;margin:8px 0 4px;">指標に数値を入れる（任意）</div>`;
+  let h=`<div style="font-size:11px;color:var(--ink-faint);letter-spacing:0.06em;margin:8px 0 4px;"></div>`;
   s.metrics.forEach(m=>{
     h+=`<div class="metric-input-row" style="margin-top:6px;"><span style="font-size:12px;color:var(--ink-soft);min-width:78px;">${esc(m.name)}</span><input type="text" inputmode="decimal" data-mid="${m.id}" placeholder="数字" style="font-size:14px;padding:10px 12px;"><span class="metric-unit-label">${esc(m.unit||'')}</span></div>`;
   });
@@ -2519,12 +2907,12 @@ function refreshDiffGroup(){
   const starId=document.getElementById('diffStar').value;
   const zone=document.getElementById('diffGroupZone');
   const sel=document.getElementById('diffGroup');
-  if(!starId){zone.style.display='none';sel.innerHTML='<option value="">— カテゴリなし</option>';return;}
+  if(!starId){zone.style.display='none';sel.innerHTML='<option value="">— 未分類</option>';return;}
   const s=stars.find(x=>x.id===starId);
   const groups=s&&s.groups?s.groups:[];
-  if(!groups.length){zone.style.display='none';sel.innerHTML='<option value="">— カテゴリなし</option>';return;}
+  if(!groups.length){zone.style.display='none';sel.innerHTML='<option value="">— 未分類</option>';return;}
   zone.style.display='block';
-  sel.innerHTML=`<option value="">— カテゴリなし（任意）</option>`+groups.map(g=>`<option value="${g.id}">▸ ${esc(g.name)}</option>`).join('');
+  sel.innerHTML=`<option value="">— 未分類</option>`+groups.map(g=>`<option value="${g.id}">▸ ${esc(g.name)}</option>`).join('');
 }
 document.getElementById('diffStar').addEventListener('change',()=>{refreshDiffMetrics();refreshDiffGroup();});
 
