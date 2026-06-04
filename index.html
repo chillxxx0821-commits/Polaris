@@ -34,8 +34,19 @@
   .titlebar .tleft .small{font-size:13px;letter-spacing:0.3em;color:var(--star);font-weight:700;}
   .titlebar h1{font-size:28px;font-weight:800;letter-spacing:0.02em;color:var(--ink);margin-top:2px;}
   .titlebar .sub{font-size:12px;color:var(--ink-faint);margin-top:3px;}
-  .archive-btn{background:none;border:none;font-family:inherit;font-size:11px;color:var(--ink-faint);letter-spacing:0.06em;padding:6px 4px;flex-shrink:0;}
+  .archive-btn{background:none;border:none;font-family:inherit;font-size:11px;color:var(--ink-faint);letter-spacing:0.06em;padding:6px 4px;flex-shrink:0;cursor:pointer;}
   .archive-btn:active{color:var(--star);}
+  .archive-btn:hover{color:var(--star);}
+  .title-right{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+
+  /* 仮タスク入力 */
+  .inbox-input-row{display:flex;gap:6px;align-items:stretch;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:4px 4px 4px 14px;transition:border-color 0.2s;}
+  .inbox-input-row:focus-within{border-color:var(--star);}
+  #inboxInput{flex:1;background:none;border:none;padding:9px 0;font-size:13.5px;color:var(--ink);font-family:inherit;outline:none;min-width:0;}
+  #inboxInput::placeholder{color:var(--ink-faint);}
+  .inbox-more{background:none;border:none;color:var(--ink-faint);font-family:inherit;font-size:18px;width:32px;cursor:pointer;border-radius:7px;letter-spacing:0;}
+  .inbox-more:hover{color:var(--star);background:rgba(201,162,39,0.08);}
+  .inbox-hint{font-size:10.5px;color:var(--ink-faint);margin-top:6px;letter-spacing:0.02em;text-align:right;padding-right:4px;}
   .screen{flex:1;overflow-y:auto;padding:4px 22px 24px;-webkit-overflow-scrolling:touch;}
   .screen::-webkit-scrollbar{display:none;}
   .view{display:none;animation:fade 0.35s ease;}
@@ -58,7 +69,7 @@
   .lcard .def.empty{color:var(--ink-faint);}
   .lcard .badge{position:absolute;top:16px;right:17px;font-size:11px;color:var(--star);}
 
-  .star-toward{font-size:10px;letter-spacing:0.28em;color:var(--star);text-transform:uppercase;margin-bottom:5px;font-weight:700;}
+  .star-GOAL{font-size:10px;letter-spacing:0.28em;color:var(--star);text-transform:uppercase;margin-bottom:5px;font-weight:700;}
   .star-dir{font-size:17px;font-weight:700;color:var(--ink);line-height:1.45;padding-right:20px;}
   .star-meta{font-size:11px;color:var(--ink-faint);margin-top:10px;}
   .star-open-hint{font-size:11px;color:var(--star);margin-top:12px;letter-spacing:0.04em;}
@@ -97,6 +108,9 @@
   .hint{font-size:11.5px;color:var(--ink-faint);margin-top:12px;line-height:1.7;}
 
   .sheet-bg{position:absolute;inset:0;background:rgba(20,22,28,0.4);z-index:200;display:none;}
+  /* 全画面シート（仮置き・価値観編集）より上に出る編集系モーダル */
+  #cbg, #sbg, #mvbg, #ebg, #gpbg, #dfbg, #ssbg, #dbg{z-index:399;}
+  #csheet, #ssheet, #mvsheet, #esheet, #gpsheet, #dfsheet, #sssheet, #dsheet{z-index:400 !important;}
   .sheet-bg.open{display:block;}
   .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--paper);border-radius:24px 24px 0 0;padding:20px 22px 30px;transform:translateY(100%);transition:transform 0.35s cubic-bezier(.2,.8,.2,1);z-index:201;max-height:90%;overflow-y:auto;visibility:hidden;}
   .sheet.open{transform:translateY(0);visibility:visible;}
@@ -148,13 +162,22 @@
   .cal-nav:active{border-color:var(--star);color:var(--star);}
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
   .cal-dow{text-align:center;font-size:10px;color:var(--ink-faint);padding:4px 0;}
-  .cal-cell{aspect-ratio:1;border-radius:9px;border:1px solid transparent;padding:4px;display:flex;flex-direction:column;font-size:11px;color:var(--ink-soft);position:relative;}
+  .cal-cell{aspect-ratio:0.85;border-radius:9px;border:1px solid transparent;padding:4px;display:flex;flex-direction:column;font-size:11px;color:var(--ink-soft);position:relative;overflow:hidden;min-width:0;}
   .cal-cell.has{background:var(--card);border-color:var(--line);}
   .cal-cell.today{border-color:var(--star);}
   .cal-cell .dn{font-size:10px;color:var(--ink-faint);}
   .cal-cell.today .dn{color:var(--star);font-weight:700;}
   .cal-dots{display:flex;flex-wrap:wrap;gap:2px;margin-top:2px;}
   .cal-dot{width:5px;height:5px;border-radius:50%;background:var(--star);}
+  /* 月セル内のタイトル表示 */
+  .mt-items{display:flex;flex-direction:column;gap:2px;margin-top:3px;min-width:0;}
+  .mt-bar{font-size:9.5px;line-height:1.25;padding:2px 4px;border-radius:3px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0;}
+  .mt-bar.mt-event{background:#6a8cb0;}
+  .mt-bar.mt-task{background:#7a9b7a;}
+  .mt-bar.mt-task.done{opacity:0.4;text-decoration:line-through;}
+  .mt-bar.mt-step{background:linear-gradient(150deg,var(--star),#b89020);color:#fff;}
+  .mt-more{font-size:9px;color:var(--ink-faint);padding-left:3px;letter-spacing:0;}
+  .cal-cell{overflow:hidden;}
   .cal-list{margin-top:18px;}
   .cal-day-group{margin-bottom:16px;}
   .cal-day-label{font-size:12px;font-weight:700;color:var(--ink);padding-bottom:6px;border-bottom:1px solid var(--line);margin-bottom:8px;}
@@ -239,7 +262,7 @@
   .cal-dot.event{background:#6a8cb0;}
   .vad-chip.event{background:#6a8cb0;}
 
-  /* 中分類グループ */
+  /* カテゴリグループ */
   .step-group{
     margin-top:24px;
     border-top:1px solid var(--line);
@@ -290,7 +313,7 @@
   .snode.collapsed > .schildren{display:none;}
   .snode.collapsed > .sadd-sub{display:none;}
 
-  /* 軌跡フィルタ */
+  /* ジャーナルフィルタ */
   .trail-filter{margin-bottom:18px;}
   .trail-filter .tf-label{font-size:11px;color:var(--ink-faint);letter-spacing:0.14em;margin-bottom:10px;}
   .trail-filter .chips{display:flex;flex-wrap:wrap;gap:7px;}
@@ -352,7 +375,7 @@
     line-height:1;
   }
   .vclose-btn:hover{background:var(--paper-warm);color:var(--ink);}
-  /* 暦タスク（task）：緑系で区別 */
+  /* カレンダータスク（task）：緑系で区別 */
   .vev.task{background:linear-gradient(150deg,#7a9b7a,#5e7e5e);box-shadow:0 1px 4px rgba(110,150,110,0.3);}
   .vad-chip.task{background:#7a9b7a;}
   .cal-dot.task{background:#7a9b7a;}
@@ -363,7 +386,7 @@
   .task-check:hover{background:rgba(122,155,122,0.15);}
   .task-check.done{background:#7a9b7a;}
   .task-check.done::after{content:'✓';color:#fff;font-size:13px;font-weight:700;display:block;text-align:center;line-height:15px;}
-  /* 北極星タスク用チェックボックス（金色） */
+  /* テーマのタスク用チェックボックス（金色） */
   .task-check.step-check{border-color:var(--star);}
   .task-check.step-check:hover{background:rgba(201,162,39,0.15);}
   .cal-item.task.done .ci-task{text-decoration:line-through;color:var(--ink-faint);}
@@ -374,7 +397,7 @@
   .cal-item.event .cdot{background:#6a8cb0;}
   .cal-item.event .ci-dir{color:#6a8cb0;}
 
-  .detail-toward{font-size:10px;letter-spacing:0.28em;color:var(--star);text-transform:uppercase;font-weight:700;margin-bottom:4px;}
+  .detail-GOAL{font-size:10px;letter-spacing:0.28em;color:var(--star);text-transform:uppercase;font-weight:700;margin-bottom:4px;}
   .detail-dir{font-size:21px;font-weight:800;color:var(--ink);line-height:1.4;}
   .detail-memo{font-size:12.5px;color:var(--ink-soft);line-height:1.7;margin-top:10px;padding:12px 14px;background:var(--paper-warm);border-radius:10px;white-space:pre-wrap;word-wrap:break-word;}
   .steps-tree{margin:18px 0 6px;}
@@ -433,8 +456,10 @@
   .weekly-soon{border:1px dashed var(--line);border-radius:14px;padding:18px;text-align:center;color:var(--ink-faint);font-size:12.5px;line-height:1.85;}
 
   .tabbar{flex-shrink:0;height:84px;padding-bottom:20px;background:rgba(244,241,234,0.92);backdrop-filter:blur(20px);border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:flex-start;padding-top:10px;}
-  .tab{background:none;border:none;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink-faint);flex:1;padding-top:4px;}
-  .tab .ic{font-size:17px;line-height:1;}
+  .tab{background:none;border:none;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink-faint);flex:1;padding-top:4px;cursor:pointer;}
+  .tab .ic{font-size:20px;line-height:24px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-family:'M PLUS 1','Hiragino Sans',sans-serif;font-variant-emoji:text;}
+  /* カレンダー▦は字面が左寄りなので微調整 */
+  .tab[data-v="cal"] .ic{padding-left:1px;}
   .tab .lb{font-size:9px;letter-spacing:0.01em;}
   .tab.active{color:var(--star);}
   .tab.active .lb{font-weight:700;}
@@ -471,46 +496,54 @@
     <div class="tleft">
       <div class="small">★ POLARIS</div>
       <h1 id="screenTitle">価値観</h1>
-      <div class="sub" id="screenSub">自分とは何者か、を言葉にしておく地層</div>
+      <div class="sub" id="screenSub">自分が大事にしたいこと</div>
     </div>
-    <button class="archive-btn" id="archiveBtn" style="display:none;">アーカイブ</button>
+    <div class="title-right" id="titleRight">
+      <button class="archive-btn" id="inboxBtn" style="display:none;">仮置き</button>
+      <button class="archive-btn" id="archiveBtn" style="display:none;">アーカイブ</button>
+    </div>
   </div>
 
   <div class="screen">
     <section class="view active" id="v-values">
-      <p class="lead">自分の言葉を、置いておく場所。最初は空でいい。下のことばは、よかったら拾える。拾わなくてもいい。</p>
+      <p class="lead">自分が大事にしたいことを書き留めておく場所。下のことばから選んでも、自分で書いてもOK。</p>
       <div class="chip-zone" id="chipZone"><div class="chip-label">こんなことば、どうですか</div><div class="chips" id="chips"></div></div>
       <div class="lcards" id="vcards"></div>
       <button class="vcustom-btn" id="addValue"><span class="p">+</span> 自分のことばを作る</button>
     </section>
 
     <section class="view" id="v-stars">
-      <p class="lead">向かいたい方を、ゆるく置いておく場所。達成率も期限もない。目移りしたとき、ここに戻ってこられればいい。カードをひらくと、手順をぶら下げられる。</p>
+      <p class="lead">テーマを追加場所。タップでタスクを追加できる。</p>
       <div class="lcards" id="starsList"></div>
-      <button class="vcustom-btn" id="addStar" style="margin-top:8px;"><span class="p">+</span> あたらしい方向を置く</button>
-      <p class="hint">大きくても、ふわっとしていてもいい。ここは「いつやるか」を決める場所ではありません。</p>
+      <div class="inbox-input-row" style="margin-top:8px;">
+        <input type="text" id="inboxInput" placeholder="仮タスクを追加" autocomplete="off">
+        <button class="inbox-more" id="inboxMore" title="詳しく書く">⋯</button>
+      </div>
+      <div class="inbox-hint">Enterで仮置きに追加</div>
+      <button class="vcustom-btn" id="addStar" style="margin-top:14px;"><span class="p">+</span> 新しいテーマを追加</button>
+      <p class="hint"></p>
     </section>
 
     <section class="view" id="v-log">
       <div class="weekly-card" style="text-align:left;padding:20px;">
-        <div style="font-size:16px;font-weight:700;color:var(--ink);margin-bottom:14px;text-align:center;">きのうまでの自分と、<br>何が変わった？</div>
-        <textarea id="diffText" placeholder="やったこと、気づいたこと、わからないとわかったこと——なんでもいい。"></textarea>
-        <div style="margin-top:12px;"><select id="diffStar"><option value="">（どの方向にも紐づけない）</option></select></div>
-        <div id="diffGroupZone" style="margin-top:8px;display:none;"><select id="diffGroup"><option value="">— 中分類なし</option></select></div>
+        <div style="font-size:16px;font-weight:700;color:var(--ink);margin-bottom:14px;text-align:center;">今日の記録：<br>何が変わった？</div>
+        <textarea id="diffText" placeholder="今日やったこと、気づいたこと。"></textarea>
+        <div style="margin-top:12px;"><select id="diffStar"><option value="">（テーマに紐づけない）</option></select></div>
+        <div id="diffGroupZone" style="margin-top:8px;display:none;"><select id="diffGroup"><option value="">— カテゴリなし</option></select></div>
         <div id="diffMetrics" style="margin-top:10px;"></div>
       </div>
-      <button class="btn-full" id="addDiff">記す</button>
-      <p class="hint">「すべきこと」は一つも要求されません。すでに動いた分だけを、後ろ向きに記録します。</p>
+      <button class="btn-full" id="addDiff">記録</button>
+      <p class="hint">やったことだけを記録する場所。</p>
     </section>
 
     <section class="view" id="v-trail">
-      <p class="lead">溜まった差分が、線になる場所。「終点まであと何%」は出ません。出発点からどれだけ動いたか、だけ。</p>
+      <p class="lead">これまでの記録の一覧。</p>
       <div class="trail-filter" id="trailFilter"></div>
       <div id="trailBody"></div>
     </section>
 
     <section class="view" id="v-cal">
-      <p class="lead">すべての方向の「いつ」を、ひとつの暦に。期日のあるタスクだけが、ここに集まります。</p>
+      <p class="lead">すべての方向の「いつ」を、ひとつのカレンダーに。期日のあるタスクだけが、ここに集まります。</p>
       <div class="cal-seg" id="calSeg">
         <button class="seg active" data-mode="month">月</button>
         <button class="seg" data-mode="week">3日</button>
@@ -524,10 +557,10 @@
     </section>
 
     <section class="view" id="v-week">
-      <p class="lead">一週間を、ふりかえる場所。<br><span style="color:var(--ink-faint);">※週次振り返りの本機能はまだ準備中です。</span></p>
-      <div class="weekly-card"><div class="wbig" id="weekCount">0</div><div class="wlabel">この7日間で動いた差分</div></div>
+      <p class="lead">この期間の振り返り場所。<br><span style="color:var(--ink-faint);">※振り返り振り返りの本機能はまだ準備中です。</span></p>
+      <div class="weekly-card"><div class="wbig" id="weekCount">0</div><div class="wlabel">この7日間で動いた記録</div></div>
       <div id="metricsBlock"></div>
-      <div class="weekly-soon">ここに、この一週間の軌跡をふりかえる仕組みが入ります。<br>「どの方向に、どれだけ動けたか」を、責めずに眺められるように。<br>— 設計はこれから、一緒に。</div>
+      <div class="weekly-soon">ここに、この一週間のジャーナルをふりかえる仕組みが入ります。<br>「どの方向に、どれだけ動けたか」を、責めずに眺められるように。<br>— 設計はこれから、一緒に。</div>
     </section>
 
     <section class="view" id="v-archive">
@@ -538,12 +571,12 @@
   </div>
 
   <div class="tabbar">
-    <button class="tab active" data-v="values"><span class="ic">◆</span><span class="lb">価値観</span></button>
-    <button class="tab" data-v="stars"><span class="ic">★</span><span class="lb">北極星</span></button>
-    <button class="tab" data-v="log"><span class="ic">✎</span><span class="lb">差分</span></button>
-    <button class="tab" data-v="trail"><span class="ic">✦</span><span class="lb">軌跡</span></button>
-    <button class="tab" data-v="cal"><span class="ic">▦</span><span class="lb">暦</span></button>
-    <button class="tab" data-v="week"><span class="ic">◷</span><span class="lb">週次</span></button>
+    <button class="tab active" data-v="values"><span class="ic">◆&#xFE0E;</span><span class="lb">価値観</span></button>
+    <button class="tab" data-v="stars"><span class="ic">★&#xFE0E;</span><span class="lb">テーマ</span></button>
+    <button class="tab" data-v="log"><span class="ic">✎&#xFE0E;</span><span class="lb">記録</span></button>
+    <button class="tab" data-v="trail"><span class="ic">✦&#xFE0E;</span><span class="lb">ジャーナル</span></button>
+    <button class="tab" data-v="cal"><span class="ic">▦&#xFE0E;</span><span class="lb">カレンダー</span></button>
+    <button class="tab" data-v="week"><span class="ic">◐&#xFE0E;</span><span class="lb">振り返り</span></button>
   </div>
 
   <div class="sheet-bg" id="vbg"></div>
@@ -556,7 +589,7 @@
       <textarea id="vDef" placeholder="この言葉が、あなたにとって何を意味するか。空のままでもいい。
 
 ゆっくり、長く書いてもいい。改行も箇条書きも自由に。"></textarea>
-      <button class="btn-full" id="vSave">書きとめる</button>
+      <button class="btn-full" id="vSave">保存</button>
       <button class="btn-ghost" id="vArchive">この言葉を、過去の価値観へ</button>
       <button class="btn-ghost danger" id="vDelete">完全に削除する</button>
     </div>
@@ -565,16 +598,16 @@
   <div class="sheet-bg" id="dbg"></div>
   <div class="sheet" id="dsheet">
     <div class="grip"></div>
-    <div class="detail-toward">toward</div>
+    <div class="detail-GOAL">GOAL</div>
     <div class="detail-dir" id="dDir">—</div>
     <div class="detail-memo" id="dMemo" style="display:none;"></div>
-    <button class="btn-ghost" id="dEdit" style="margin-top:4px;padding:6px;font-size:12px;color:var(--star);">この方向を編集する ›</button>
+    <button class="btn-ghost" id="dEdit" style="margin-top:4px;padding:6px;font-size:12px;color:var(--star);">このテーマを編集 ›</button>
     <div class="metrics-on-star" id="metricsOnStar"></div>
     <div class="sort-row" style="margin-top:14px;"><button class="sort-btn" id="sortByDue">期日順に整える</button></div>
     <div class="steps-tree" id="stepsTree"></div>
-    <button class="sadd-root" id="addRootStep"><span class="p">+</span> タスクをぶら下げる</button>
-    <button class="sadd-root" id="addGroup" style="margin-top:8px;"><span class="p">+</span> 中分類を加える（例：運動・食事）</button>
-    <button class="btn-ghost" id="dArchive" style="margin-top:18px;">★ この方向に、たどり着いた（達成）</button>
+    <button class="sadd-root" id="addRootStep"><span class="p">+</span> タスクを追加する</button>
+    <button class="sadd-root" id="addGroup" style="margin-top:8px;"><span class="p">+</span> カテゴリを追加（例：運動・食事）</button>
+    <button class="btn-ghost" id="dArchive" style="margin-top:18px;">★ このテーマを達成にする</button>
     <button class="btn-ghost" id="dHold">いまは目指さない（保留）</button>
     <button class="btn-ghost danger" id="dDelete">この方向を削除する</button>
   </div>
@@ -584,16 +617,16 @@
   <div class="sheet" id="sssheet">
     <div class="grip"></div>
     <div class="sword" id="starKind">NEW</div>
-    <h2 style="font-size:19px;" id="starHead">あたらしい方向を置く</h2>
-    <label>向かいたい方向</label>
-    <input type="text" id="starDir" placeholder="なりたい自分／向かいたい方向／叶えたい夢" style="margin-top:6px;">
-    <p class="due-note">大きくても、ふわっとしていてもいい。「いつやるか」を決める場所ではありません。</p>
+    <h2 style="font-size:19px;" id="starHead">新しいテーマを追加</h2>
+    <label>テーマ</label>
+    <input type="text" id="starDir" placeholder="なりたい自分／テーマ／叶えたい夢" style="margin-top:6px;">
+    <p class="due-note">大きくても、ふわっとしていてもいい。</p>
 
     <label style="display:block;margin-top:14px;">メモ（任意）</label>
     <textarea id="starMemo" style="min-height:70px;margin-top:6px;" placeholder="なぜこの方向か、どんな状態を目指すか、いまの気持ち——なんでも。"></textarea>
 
     <label style="display:block;margin-top:18px;">数値の指標（任意）</label>
-    <p class="due-note" style="margin-bottom:6px;">この方向の進み具合を、数値でも追いたい場合だけ。</p>
+    <p class="due-note" style="margin-bottom:6px;">進捗を数値で追いたい場合だけ。</p>
     <div id="starMetricsEditor"></div>
     <button class="vcustom-btn" id="addStarMetric" style="margin-top:6px;"><span class="p">+</span> 指標を加える</button>
 
@@ -605,7 +638,7 @@
     <div class="grip"></div>
     <div class="sword" id="stepKind">STEP</div>
     <h2 style="font-size:17px;" id="stepHead">タスクを加える</h2>
-    <label>やること（終えると軌跡になります）</label>
+    <label>やること（終えるとジャーナルになります）</label>
     <textarea id="stepText" style="min-height:60px;" placeholder="例：過去問を10年分そろえる"></textarea>
 
     <label style="display:block;margin-top:14px;">メモ（任意）</label>
@@ -626,7 +659,7 @@
       </div>
     </div>
     <input type="hidden" id="stepDur">
-    <p class="due-note">期限も時間も、ただの目印です。過ぎても責められません。通知も、赤い表示もありません。</p>
+    <p class="due-note"></p>
 
     <label style="display:block;margin-top:14px;">繰り返し（任意）</label>
     <div class="rep-row" id="repRow">
@@ -642,7 +675,7 @@
       <p class="due-note" style="margin:8px 0;">毎月の何日を選択（複数選べます）</p>
       <div class="monthday-grid" id="monthDayGrid"></div>
     </div>
-    <p class="due-note" id="repNote" style="display:none;">繰り返しは、達成すると次が自動で入ります。軌跡には淡く積み重なります。</p>
+    <p class="due-note" id="repNote" style="display:none;">繰り返しは、達成すると次が自動で入ります。ジャーナルには淡く積み重なります。</p>
 
     <button class="btn-full" id="stepSave">加える</button>
   </div>
@@ -657,7 +690,7 @@
     <label>ひとこと残す（任意）</label>
     <textarea id="cNote" placeholder="その日の手応え、気づき、なんでも。空でもいい。"></textarea>
     <button class="btn-full" id="cConfirm">成し遂げた ★</button>
-    <button class="btn-ghost" id="cSkipNote">メモなしで記す</button>
+    <button class="btn-ghost" id="cSkipNote">メモなしで記録</button>
   </div>
 
   <!-- metric editor sheet -->
@@ -703,15 +736,15 @@
     <textarea id="eText" style="min-height:54px;" placeholder="例：歯医者／打ち合わせ／ライブ"></textarea>
     <label style="display:block;margin-top:14px;">メモ（任意）</label>
     <textarea id="eMemo" style="min-height:48px;" placeholder="場所、相手、持ち物など"></textarea>
-    <label style="display:block;margin-top:14px;">向かいたい方向に紐づける（任意）</label>
+    <label style="display:block;margin-top:14px;">テーマに紐づける（任意）</label>
     <select id="eStar" style="margin-top:6px;">
       <option value="">— 紐づけない（ただの予定）</option>
     </select>
-    <p class="due-note" style="margin-top:6px;">紐づけると、この予定は「タスク」になります。完了すると軌跡に刻まれます。</p>
+    <p class="due-note" style="margin-top:6px;">紐づけると、この予定はタスクになります。完了で記録に残ります。</p>
     <div id="eGroupZone" style="display:none;">
-      <label style="display:block;margin-top:10px;">中分類に入れる（任意）</label>
+      <label style="display:block;margin-top:10px;">カテゴリに入れる（任意）</label>
       <select id="eGroup" style="margin-top:6px;">
-        <option value="">— 中分類なし（北極星の直下）</option>
+        <option value="">— カテゴリなし（テーマの直下）</option>
       </select>
     </div>
     <label style="display:block;margin-top:14px;">いつ</label>
@@ -744,6 +777,20 @@
     </div>
     <button class="btn-full" id="eSave">加える</button>
     <button class="btn-ghost danger" id="eDelete" style="display:none;">この予定を削除する</button>
+  </div>
+
+  <!-- inbox sheet（仮置き：テーマと同じ構造、方向なし） -->
+  <div class="sheet-bg" id="ibbg"></div>
+  <div class="sheet vsheet-full" id="ibsheet">
+    <button class="vclose-btn" id="ibClose" title="閉じる">×</button>
+    <div class="vfull-inner">
+      <div class="sword">INBOX</div>
+      <h2 style="font-size:22px;">仮置き</h2>
+      <p class="due-note" style="margin-top:6px;">思いついたタスクをとりあえず置く場所。後からテーマに紐づけられる。</p>
+      <div class="steps-tree" id="ibStepsTree" style="margin-top:18px;"></div>
+      <button class="sadd-root" id="ibAddRoot" style="margin-top:18px;"><span class="p">+</span> タスクを追加する</button>
+      <button class="sadd-root" id="ibAddGroup" style="margin-top:8px;"><span class="p">+</span> カテゴリを追加</button>
+    </div>
   </div>
 
   <!-- task detail sheet（タスクの中身を見る・サブタスクを足す） -->
@@ -781,13 +828,13 @@
   <div class="sheet" id="gpsheet">
     <div class="grip"></div>
     <div class="sword" id="gpKind">NEW</div>
-    <h2 style="font-size:17px;" id="gpHead">中分類を加える</h2>
+    <h2 style="font-size:17px;" id="gpHead">カテゴリを追加</h2>
     <label>名前</label>
     <input type="text" id="gpName" placeholder="例：運動／食事／声掛け" style="margin-top:6px;">
-    <p class="due-note" style="margin-top:8px;">北極星の中で、手順をまとめる箱です。後から名前を変えたり、削除もできます。</p>
+    <p class="due-note" style="margin-top:8px;">テーマの中で、タスクをまとめるカテゴリです。後から名前を変えたり、削除もできます。</p>
     <button class="btn-full" id="gpSave">置く</button>
-    <button class="btn-ghost danger" id="gpDelete" style="display:none;">この中分類を削除する</button>
-    <p class="due-note" id="gpDelNote" style="display:none;margin-top:8px;">削除しても、中にあるタスクは北極星の直下に戻ります。手順は消えません。</p>
+    <button class="btn-ghost danger" id="gpDelete" style="display:none;">このカテゴリを削除する</button>
+    <p class="due-note" id="gpDelNote" style="display:none;margin-top:8px;">削除しても、中にあるタスクはテーマの直下に戻ります。手順は消えません。</p>
   </div>
 
   <!-- diff edit sheet -->
@@ -795,7 +842,7 @@
   <div class="sheet" id="dfsheet">
     <div class="grip"></div>
     <div class="sword">EDIT</div>
-    <h2 style="font-size:17px;">軌跡を編集</h2>
+    <h2 style="font-size:17px;">ジャーナルを編集</h2>
     <label>内容</label>
     <textarea id="dfText" style="min-height:70px;"></textarea>
     <div id="dfMemoZone">
@@ -832,17 +879,19 @@ if(typeof window.storage==='undefined'||!window.storage){
     }
   };
 }
-const K={v:'polaris:values',s:'polaris:stars',d:'polaris:diffs',va:'polaris:values_arch',sa:'polaris:stars_arch',sh:'polaris:stars_hold',ev:'polaris:events',ml:'polaris:metric_logs'};
+const K={v:'polaris:values',s:'polaris:stars',d:'polaris:diffs',va:'polaris:values_arch',sa:'polaris:stars_arch',sh:'polaris:stars_hold',ev:'polaris:events',ml:'polaris:metric_logs',ib:'polaris:inbox'};
+// 仮置き：テーマと同じ構造（steps, groups）を持つ単一オブジェクト
+let inbox={id:'__inbox__',steps:[],groups:[]};
 let values=[], stars=[], diffs=[], valuesArch=[], starsArch=[], starsHold=[], events=[], metricLogs=[];
 const SEED=['ロールモデル','理想的な職場','10年後','大事にしたい時間','機嫌よくいられる条件','ゆずれないこと','憧れの人','心地よい暮らし','手放したいこと','すり減ること'];
 const TITLES={
-  values:['価値観','自分とは何者か、を言葉にしておく地層'],
-  stars:['北極星','向かう方向。ひらけばタスクをぶら下げられる'],
-  log:['きょうの差分','すでに動いた分だけを記す'],
-  trail:['軌跡','始まった場所から測られる距離'],
-  cal:['暦','すべての方向の「いつ」を、ひとつに'],
-  week:['週次','一週間を、ふりかえる'],
-  archive:['アーカイブ','たどり着いたもの、いまは離れたもの、移ろったもの']
+  values:['価値観','自分が大事にしたいこと'],
+  stars:['テーマ','テーマとタスクを管理'],
+  log:['記録','今日やったことを記録'],
+  trail:['ジャーナル','これまでの記録の一覧'],
+  cal:['カレンダー','タスクと予定をまとめて'],
+  week:['振り返り','この期間の振り返り'],
+  archive:['アーカイブ','達成・保留・過去の価値観']
 };
 
 async function load(){
@@ -854,6 +903,7 @@ async function load(){
   try{const r=await window.storage.get(K.sh);if(r)starsHold=JSON.parse(r.value);}catch(e){}
   try{const r=await window.storage.get(K.ev);if(r)events=JSON.parse(r.value);}catch(e){}
   try{const r=await window.storage.get(K.ml);if(r)metricLogs=JSON.parse(r.value);}catch(e){}
+  try{const r=await window.storage.get(K.ib);if(r){const o=JSON.parse(r.value);inbox.steps=o.steps||[];inbox.groups=o.groups||[];}}catch(e){}
   await loadCollapsed();
   values=values||[];stars=stars||[];diffs=diffs||[];valuesArch=valuesArch||[];starsArch=starsArch||[];starsHold=starsHold||[];events=events||[];metricLogs=metricLogs||[];
   // 旧データ正規化：tasks→steps、children補完
@@ -868,7 +918,7 @@ async function load(){
   renderAll();
 }
 async function save(k,val){try{await window.storage.set(K[k],JSON.stringify(val));}catch(e){}}
-const sv=()=>save('v',values), ss=()=>save('s',stars), sd=()=>save('d',diffs), sva=()=>save('va',valuesArch), ssa=()=>save('sa',starsArch), ssh=()=>save('sh',starsHold), sev=()=>save('ev',events), sml=()=>save('ml',metricLogs);
+const sv=()=>save('v',values), ss=async()=>{await save('s',stars);await save('ib',{steps:inbox.steps,groups:inbox.groups});}, sd=()=>save('d',diffs), sva=()=>save('va',valuesArch), ssa=()=>save('sa',starsArch), ssh=()=>save('sh',starsHold), sev=()=>save('ev',events), sml=()=>save('ml',metricLogs), sib=()=>save('ib',{steps:inbox.steps,groups:inbox.groups});
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 function esc(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function linkify(s){
@@ -925,12 +975,12 @@ function countOpenAll(s){
 }
 function renderStars(){
   const l=document.getElementById('starsList');
-  if(!stars.length){l.innerHTML=`<div class="empty"><span class="em-glyph">☆</span>まだ北極星はありません。<br>向かいたい方を、ひとつ置いてみてください。</div>`;return;}
+  if(!stars.length){l.innerHTML=`<div class="empty"><span class="em-glyph">☆</span>テーマはまだありません。<br>最初のテーマを追加してみよう。</div>`;return;}
   l.innerHTML=stars.map(s=>{
     const open=countOpenAll(s);const moves=countMoves(s.id);
-    let meta=[];if(moves)meta.push(`この方へ ${moves} の差分`);if(open)meta.push(`タスク ${open}`);
+    let meta=[];if(moves)meta.push(`このテーマへ ${moves} の記録`);if(open)meta.push(`タスク ${open}`);
     const groupCount=(s.groups||[]).length;
-    if(groupCount)meta.push(`中分類 ${groupCount}`);
+    if(groupCount)meta.push(`カテゴリ ${groupCount}`);
     // preview: top-level steps, up to 3
     let preview='';
     const top=(s.steps||[]);
@@ -944,10 +994,19 @@ function renderStars(){
       if(top.length>3)preview+=`<div class="pvmore">ほか ${top.length-3} 件…</div>`;
       preview+='</div>';
     }
-    return `<div class="lcard" data-sid="${s.id}"><div class="star-toward">toward</div><div class="star-dir">${esc(s.dir)}</div><div class="star-meta">${meta.length?meta.join('　/　'):'まだ軌跡はありません'}</div>${preview}<div class="star-open-hint">ひらいてタスクを組む</div></div>`;
+    return `<div class="lcard" data-sid="${s.id}"><div class="star-GOAL">GOAL</div><div class="star-dir">${esc(s.dir)}</div><div class="star-meta">${meta.length?meta.join('　/　'):'まだ記録はありません'}</div>${preview}<div class="star-open-hint">タップしてタスクを組む</div></div>`;
   }).join('');
 }
 let detailSid=null;
+// detailSid が __inbox__ なら inbox オブジェクトを、それ以外は対応する star を返す
+function getContainer(sid){
+  if(sid==='__inbox__')return inbox;
+  return stars.find(x=>x.id===sid);
+}
+async function saveContainer(sid){
+  if(sid==='__inbox__')return sib();
+  return ss();
+}
 function openDetail(s){
   detailSid=s.id;
   document.getElementById('dDir').textContent=s.dir;
@@ -959,7 +1018,7 @@ function openDetail(s){
 
 function renderMetricsOnStar(){
   const box=document.getElementById('metricsOnStar');if(!box)return;
-  const s=stars.find(x=>x.id===detailSid);if(!s){box.innerHTML='';return;}
+  const s=getContainer(detailSid);if(!s){box.innerHTML='';return;}
   const ms=(s.metrics||[]);
   if(!ms.length){box.innerHTML='';return;}
   const glyph={up:'↗',down:'↘',sum:'∑',flat:'—'};
@@ -1003,18 +1062,18 @@ async function saveCollapsed(){try{await window.storage.set('polaris:collapsed',
 async function loadCollapsed(){try{const r=await window.storage.get('polaris:collapsed');if(r){const o=JSON.parse(r.value);collapsedGroups=o.g||{};collapsedSteps=o.s||{};}}catch(e){}}
 
 function renderStepsTree(){
-  const s=stars.find(x=>x.id===detailSid);const tree=document.getElementById('stepsTree');
+  const s=getContainer(detailSid);const tree=document.getElementById('stepsTree');
   if(!s){tree.innerHTML='';return;}
   if(!s.groups)s.groups=[];
   const hasGroups=s.groups.length>0;
   const hasRootSteps=s.steps&&s.steps.length>0;
-  if(!hasGroups&&!hasRootSteps){tree.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);text-align:center;padding:14px 0;line-height:1.7;">まだタスクはありません。<br>タスクが見える方向にだけ、ぶら下げればいい。</div>`;return;}
+  if(!hasGroups&&!hasRootSteps){tree.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);text-align:center;padding:14px 0;line-height:1.7;">タスクはまだありません。<br></div>`;return;}
   let html='';
-  // 中分類なしのタスク
+  // カテゴリなしのタスク
   if(hasRootSteps){
     html+=renderStepNodes(s.steps,[]);
   }
-  // 中分類ごとのタスク
+  // カテゴリごとのタスク
   s.groups.forEach((g,gi)=>{
     const n=countOpenSteps(g.steps||[]);
     const isCol=collapsedGroups[detailSid]&&collapsedGroups[detailSid][g.id];
@@ -1023,7 +1082,7 @@ function renderStepsTree(){
     if(g.steps&&g.steps.length){
       html+=renderStepNodes(g.steps,['g',g.id]);
     }
-    html+=`<button class="sadd-sub-in-group" data-addingroup="${g.id}"><span style="color:var(--star);font-weight:700;">+</span> この中分類にタスクを加える</button></div>`;
+    html+=`<button class="sadd-sub-in-group" data-addingroup="${g.id}"><span style="color:var(--star);font-weight:700;">+</span> このカテゴリにタスクを追加</button></div>`;
   });
   tree.innerHTML=html;
 }
@@ -1057,8 +1116,7 @@ function renderStepNodes(steps,path){
     const children=hasKids?`<div class="schildren">${renderStepNodes(st.children,path.concat(i))}</div>`:'';
     const upDis=i===0?'disabled':'';
     const downDis=i===steps.length-1?'disabled':'';
-    const isTopLevel=path.length===0||(path.length===2&&path[0]==='g');
-    const moveBtn=isTopLevel?`<button class="smini" data-movestep="${p}" title="中分類へ移動">⇄</button>`:'';
+    const moveBtn=`<button class="smini" data-movestep="${p}" title="移動">⇄</button>`;
     const toggleBtn=hasKids?`<button class="toggle-btn" data-togglestep="${st.id}">${isCol?'▶':'▼'}</button>`:'<span class="toggle-spacer" style="display:inline-block;width:16px;"></span>';
     const subCount=hasKids?`<span class="sub-count" style="font-size:10px;color:var(--ink-faint);margin-left:6px;">${countOpenSteps(st.children)}</span>`:'';
     return `<div class="snode${isCol?' collapsed':''}"><div class="srow"><button class="scheck" data-check="${p}"></button>${toggleBtn}<div class="stext" data-opentask="${p}">${esc(st.text)}${subCount}${metaLine}${memoLine}${repLine}</div><button class="smove" data-up="${p}" ${upDis}>↑</button><button class="smove" data-down="${p}" ${downDis}>↓</button>${moveBtn}<button class="smini" data-delstep="${p}">×</button></div>${children}</div>`;
@@ -1068,7 +1126,7 @@ function encPath(path){return path.join('|');}
 function decPath(str){return str.split('|').map(s=>/^-?\d+$/.test(s)?Number(s):s);}
 
 function getRootStepsByPath(s,path){
-  // pathが['g',groupId,...] で始まれば中分類内、それ以外は通常のsteps
+  // pathが['g',groupId,...] で始まればカテゴリ内、それ以外は通常のsteps
   if(path[0]==='g'){
     const g=(s.groups||[]).find(x=>x.id===path[1]);
     return g?g.steps:null;
@@ -1144,7 +1202,7 @@ function collectStepInput(){
 /* DIFF select */
 function renderStarSelect(){
   const sel=document.getElementById('diffStar');const cur=sel.value;
-  sel.innerHTML=`<option value="">（どの方向にも紐づけない）</option>`+stars.map(s=>`<option value="${s.id}">★ ${esc(s.dir)}</option>`).join('');
+  sel.innerHTML=`<option value="">（テーマに紐づけない）</option>`+stars.map(s=>`<option value="${s.id}">★ ${esc(s.dir)}</option>`).join('');
   sel.value=cur;
   if(typeof refreshDiffMetrics==='function')refreshDiffMetrics();
   if(typeof refreshDiffGroup==='function')refreshDiffGroup();
@@ -1152,20 +1210,20 @@ function renderStarSelect(){
 
 /* TRAIL */
 let trailExpanded={}; // 3→7
-let trailFullStar=null; // 個別ページ表示中の北極星ID（'__loose__'含む）
-let trailFilterGroups=[]; // フィルタ：中分類IDの配列（個別ページ内で使う、複数可）
+let trailFullStar=null; // 個別ページ表示中のテーマID（'__loose__'含む）
+let trailFilterGroups=[]; // フィルタ：カテゴリIDの配列（個別ページ内で使う、複数可）
 
 function renderTrail(){
   const fb=document.getElementById('trailFilter');if(fb)fb.innerHTML='';
   const b=document.getElementById('trailBody');
   if(trailFullStar){renderTrailFull(b);return;}
-  // 一覧ビューに戻ったら中分類フィルタはリセット
+  // 一覧ビューに戻ったらカテゴリフィルタはリセット
   trailFilterGroups=[];
-  if(!diffs.length){b.innerHTML=`<div class="empty"><span class="em-glyph">✦</span>まだ道はありません。<br>動いた分だけ、線が伸びていきます。</div>`;return;}
+  if(!diffs.length){b.innerHTML=`<div class="empty"><span class="em-glyph">✦</span>記録はまだありません。<br>やったことを記録すると、ここに溜まっていきます。</div>`;return;}
   const single=stars.length<=1;let h='';
   stars.forEach(s=>{const ds=diffs.filter(d=>d.starId===s.id).sort((a,b)=>b.ts-a.ts);if(ds.length)h+=trailBlock(s.id,'★ '+esc(s.dir),ds,single);});
   const loose=diffs.filter(d=>!d.starId||!stars.find(s=>s.id===d.starId)).sort((a,b)=>b.ts-a.ts);
-  if(loose.length)h+=trailBlock('__loose__','— どの方向にも紐づかない動き',loose,single);
+  if(loose.length)h+=trailBlock('__loose__','— テーマに紐づかない記録',loose,single);
   b.innerHTML=h;
 }
 function trailBlock(key,title,ds,showAll){
@@ -1176,7 +1234,7 @@ function trailBlock(key,title,ds,showAll){
   const steps=shown.map(stepHtml).join('');
   let more='';
   if(showAll){
-    // 単一の北極星：全件表示済み（折りたたみ不要）
+    // 単一のテーマ：全件表示済み（折りたたみ不要）
   }else if(!expanded&&ds.length>3){
     more=`<button class="trail-more" data-expand="${key}">のこり ${Math.min(ds.length-3,4)} 件を見る ›</button>`;
   }else if(expanded&&ds.length>7){
@@ -1197,25 +1255,25 @@ function renderTrailFull(b){
   const key=trailFullStar;
   let title='',ds=[];const isLoose=key==='__loose__';
   let starObj=null;
-  if(isLoose){title='— どの方向にも紐づかない動き';ds=diffs.filter(d=>!d.starId||!stars.find(s=>s.id===d.starId));}
+  if(isLoose){title='— テーマに紐づかない記録';ds=diffs.filter(d=>!d.starId||!stars.find(s=>s.id===d.starId));}
   else{starObj=stars.find(x=>x.id===key);if(!starObj){trailFullStar=null;renderTrail();return;}title='★ '+esc(starObj.dir);ds=diffs.filter(d=>d.starId===key);}
-  // 中分類フィルタ（複数選択：OR検索）
+  // カテゴリフィルタ（複数選択：OR検索）
   if(trailFilterGroups.length&&starObj){
     ds=ds.filter(d=>trailFilterGroups.includes(d.groupId));
   }
   ds=ds.sort((a,b)=>b.ts-a.ts);
-  // フィルタUI（中分類がある時だけ）
+  // フィルタUI（カテゴリがある時だけ）
   let filterUI='';
   if(!isLoose&&starObj&&starObj.groups&&starObj.groups.length){
     const chips=starObj.groups.map(g=>{
       const on=trailFilterGroups.includes(g.id);
       return `<button class="fchip${on?' on':''}" data-tfg="${g.id}">${esc(g.name)}</button>`;
     }).join('');
-    const summary=trailFilterGroups.length?`<div class="trail-filter-summary">${ds.length} 件の動き　・　もう一度押すと解除</div>`:`<div class="trail-filter-summary">押して、その中分類だけ振り返る。複数選んでもOK。</div>`;
-    filterUI=`<div class="trail-filter" style="margin-bottom:18px;"><div class="tf-label">中分類で絞る</div><div class="chips">${chips}</div>${summary}</div>`;
+    const summary=trailFilterGroups.length?`<div class="trail-filter-summary">${ds.length} 件の動き　・　もう一度押すと解除</div>`:`<div class="trail-filter-summary">押して絞り込み。複数選択OK。</div>`;
+    filterUI=`<div class="trail-filter" style="margin-bottom:18px;"><div class="tf-label">カテゴリで絞り込み</div><div class="chips">${chips}</div>${summary}</div>`;
   }
-  const steps=ds.length?ds.map(stepHtml).join(''):`<div class="empty" style="padding:24px 0;">この分類の動きはまだありません。</div>`;
-  b.innerHTML=`<button class="trail-more" data-backtrail style="margin-bottom:14px;padding-left:0;">‹ 軌跡の一覧へ戻る</button>${filterUI}<div class="trail-star"><div class="trail-head"><span class="name">${title}</span><span class="n">${ds.length} steps</span></div><div class="trail-line">${steps}</div></div>`;
+  const steps=ds.length?ds.map(stepHtml).join(''):`<div class="empty" style="padding:24px 0;">この絞り込みでの記録はありません。</div>`;
+  b.innerHTML=`<button class="trail-more" data-backtrail style="margin-bottom:14px;padding-left:0;">‹ ジャーナルの一覧へ戻る</button>${filterUI}<div class="trail-star"><div class="trail-head"><span class="name">${title}</span><span class="n">${ds.length} steps</span></div><div class="trail-line">${steps}</div></div>`;
   // チップのイベント
   b.querySelectorAll('[data-tfg]').forEach(c=>{
     c.addEventListener('click',()=>{
@@ -1229,19 +1287,19 @@ function renderTrailFull(b){
 
 /* アーカイブ（達成・保留・過去の価値観） */
 function renderArchive(){
-  let h=`<div class="field-label">🏆 達成 — たどり着いた北極星</div>`;
+  let h=`<div class="field-label">🏆 達成したテーマ</div>`;
   if(starsArch.length){
     h+=`<div class="trophy-grid">`+starsArch.map(s=>{
       const moves=(s.diffsSnapshot||[]).length;
-      return `<div class="trophy" data-revive-arch="${s.id}"><div class="star">★</div><div class="tribbon">reached</div><div class="tdir">${esc(s.dir)}</div><div class="tmeta">${s.archivedAt?fmtDate(s.archivedAt):''}<br>${moves} の軌跡を残した</div></div>`;
+      return `<div class="trophy" data-revive-arch="${s.id}"><div class="star">★</div><div class="tribbon">reached</div><div class="tdir">${esc(s.dir)}</div><div class="tmeta">${s.archivedAt?fmtDate(s.archivedAt):''}<br>${moves} のジャーナルを残した</div></div>`;
     }).join('')+`</div><div class="section-note" style="padding:6px 0 0;">タップで、また現役に戻せます</div>`;
-  }else h+=`<div class="section-note">まだありません。北極星にたどり着いたら、ここに星が増えていきます。</div>`;
+  }else h+=`<div class="section-note">まだありません。テーマを達成したら、ここに星が増えていきます。</div>`;
 
   h+=`<div class="field-label" style="margin-top:26px;">⏸ 保留 — いまは目指さない方向</div>`;
   if(starsHold.length){
     h+=starsHold.map(s=>{
       const moves=(s.diffsSnapshot||[]).length;
-      return `<div class="lcard" data-revive-hold="${s.id}"><div class="star-toward" style="color:var(--ink-faint);">on hold</div><div class="star-dir">${esc(s.dir)}</div><div class="star-meta">${moves?`${moves} の軌跡を保管中　/　`:''}タップで現役に戻す</div></div>`;
+      return `<div class="lcard" data-revive-hold="${s.id}"><div class="star-GOAL" style="color:var(--ink-faint);">on hold</div><div class="star-dir">${esc(s.dir)}</div><div class="star-meta">${moves?`${moves} のジャーナルを保管中　/　`:''}タップで現役に戻す</div></div>`;
     }).join('');
   }else h+=`<div class="section-note">まだありません。いま離れておきたい方向は、ここで静かに待ちます。</div>`;
 
@@ -1322,6 +1380,10 @@ function gatherDated(){
     walk(s.steps,s,[],null,null);
     (s.groups||[]).forEach(g=>walk(g.steps,s,['g',g.id],g.id,g.name));
   });
+  // 仮置きの中のタスクも、日付があればカレンダーに出す
+  const inboxStar={id:'__inbox__',dir:'仮置き'};
+  walk(inbox.steps,inboxStar,[],null,null);
+  (inbox.groups||[]).forEach(g=>walk(g.steps,inboxStar,['g',g.id],g.id,g.name));
   return out;
 }
 // 予定を指定範囲に展開（繰り返しはオンザフライ展開）
@@ -1386,8 +1448,20 @@ function renderCalMonth(){
   for(let day=1;day<=daysInMonth;day++){
     const dIso=iso(new Date(calYear,calMonth,day));
     const dayItems=items.filter(it=>it.due===dIso);
-    const dots=dayItems.slice(0,4).map(it=>`<span class="cal-dot ${it.kind==='event'?'event':it.kind==='task'?'task':''}"></span>`).join('');
-    g+=`<div class="cal-cell ${dayItems.length?'has':''} ${dIso===todayIso?'today':''}" data-cellday="${dIso}"><span class="dn">${day}</span><div class="cal-dots">${dots}</div></div>`;
+    let inner='';
+    if(dayItems.length<=2){
+      // 1〜2件はタイトルを直接表示
+      inner=dayItems.map(it=>{
+        const cls=it.kind==='event'?'mt-event':it.kind==='task'?(it.done?'mt-task done':'mt-task'):'mt-step';
+        return `<div class="mt-bar ${cls}">${esc(it.text)}</div>`;
+      }).join('');
+    }else{
+      // 3件以上は最初の1件＋件数
+      const first=dayItems[0];
+      const cls=first.kind==='event'?'mt-event':first.kind==='task'?(first.done?'mt-task done':'mt-task'):'mt-step';
+      inner=`<div class="mt-bar ${cls}">${esc(first.text)}</div><div class="mt-more">+${dayItems.length-1}</div>`;
+    }
+    g+=`<div class="cal-cell ${dayItems.length?'has':''} ${dIso===todayIso?'today':''}" data-cellday="${dIso}"><span class="dn">${day}</span><div class="mt-items">${inner}</div></div>`;
   }
   document.getElementById('calGrid').innerHTML=g;
   const monthItems=items.filter(it=>{const d=new Date(it.due+'T00:00:00');return d.getFullYear()===calYear&&d.getMonth()===calMonth;}).sort((a,b)=>a.due<b.due?-1:1);
@@ -1595,6 +1669,7 @@ function goTab(v){
   document.getElementById('screenSub').textContent=TITLES[v][1];
   document.querySelector('.screen').scrollTop=0;
   document.getElementById('archiveBtn').style.display=(v==='values'||v==='stars')?'block':'none';
+  document.getElementById('inboxBtn').style.display=(v==='stars')?'block':'none';
   if(v!=='archive')prevTab=v;
   if(v==='trail')renderTrail();if(v==='log')renderStarSelect();if(v==='week')renderWeek();if(v==='archive')renderArchive();if(v==='cal')renderCal();
 }
@@ -1611,14 +1686,14 @@ document.getElementById('archiveBody').addEventListener('click',async e=>{
   const ra=e.target.closest('[data-revive-arch]');
   if(ra){
     const id=ra.dataset.reviveArch;const s=starsArch.find(x=>x.id===id);if(!s)return;
-    const ok=await confirmAsk('また、この方向を目指しますか？',`「${esc(s.dir)}」を達成棚から現役の北極星に戻します。保管していた軌跡も一緒に戻ります。`);
+    const ok=await confirmAsk('また、このテーマを再開しますか？',`「${esc(s.dir)}」を達成棚から現役のテーマに戻します。保管していたジャーナルも一緒に戻ります。`);
     if(!ok)return;
     revive(s,'arch');
   }
   const rh=e.target.closest('[data-revive-hold]');
   if(rh){
     const id=rh.dataset.reviveHold;const s=starsHold.find(x=>x.id===id);if(!s)return;
-    const ok=await confirmAsk('また、この方向を目指しますか？',`「${esc(s.dir)}」を現役の北極星に戻します。${(s.diffsSnapshot||[]).length?'保管していた軌跡も一緒に戻ります。':''}`);
+    const ok=await confirmAsk('また、このテーマを再開しますか？',`「${esc(s.dir)}」を現役のテーマに戻します。${(s.diffsSnapshot||[]).length?'保管していたジャーナルも一緒に戻ります。':''}`);
     if(!ok)return;
     revive(s,'hold');
   }
@@ -1671,7 +1746,7 @@ function openStarEditor(starId){
   starEditId=starId;
   const s=starId?stars.find(x=>x.id===starId):null;
   document.getElementById('starKind').textContent=s?'EDIT':'NEW';
-  document.getElementById('starHead').textContent=s?'方向を編集する':'あたらしい方向を置く';
+  document.getElementById('starHead').textContent=s?'テーマを編集':'新しいテーマを追加';
   document.getElementById('starDir').value=s?s.dir:'';
   document.getElementById('starMemo').value=s?(s.memo||''):'';
   starDraftMetrics=s?(s.metrics||[]).map(m=>({...m})):[];
@@ -1687,6 +1762,95 @@ function renderStarMetricsEditor(){
   box.innerHTML=starDraftMetrics.map((m,i)=>`<div class="mcard ${m.kind==='flat'?'flat':''}" style="margin-bottom:6px;"><span class="mg">${glyph[m.kind]||'•'}</span><div style="flex:1;"><div style="font-size:14px;font-weight:700;">${esc(m.name)}</div><div style="font-size:10.5px;color:var(--ink-faint);">${klab[m.kind]||''}${m.unit?` ・ ${esc(m.unit)}`:''}</div></div><button class="medit" data-editdraft="${i}">⋯</button><button class="medit" data-deldraft="${i}">×</button></div>`).join('');
 }
 document.getElementById('addStar').addEventListener('click',()=>openStarEditor(null));
+
+/* 仮タスク入力（Enterで投稿、⋯で詳細編集） */
+document.getElementById('inboxInput').addEventListener('keydown',async e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    const v=e.target.value.trim();if(!v)return;
+    inbox.steps.push({id:uid(),text:v,memo:null,due:null,from:null,to:null,rep:'none',wd:[],md:[],done:false,children:[]});
+    await sib();
+    e.target.value='';
+    renderStars();renderCal();
+    toast('仮置きに入れました <span class="ts">✦</span>');
+  }
+});
+document.getElementById('inboxMore').addEventListener('click',()=>{
+  // 既存の予定編集シートを kind='task' で開く（starId=null, 自動的に仮置きへ入る）
+  openEventEditor(null,null,null,{forInbox:true});
+});
+document.getElementById('inboxBtn').addEventListener('click',()=>openInbox());
+
+/* 仮置きシート */
+function openInbox(){
+  detailSid='__inbox__';
+  renderStepsTree(); // detailSidが__inbox__でも動くようrenderStepsTree内も対応済み
+  renderInboxTree();
+  openSheet('ibbg','ibsheet');
+}
+function renderInboxTree(){
+  const tree=document.getElementById('ibStepsTree');
+  if(!inbox.groups)inbox.groups=[];
+  const hasGroups=inbox.groups.length>0;
+  const hasRootSteps=inbox.steps&&inbox.steps.length>0;
+  if(!hasGroups&&!hasRootSteps){tree.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);text-align:center;padding:14px 0;line-height:1.7;">仮タスクはまだありません。<br>上の入力欄から追加できます。</div>`;return;}
+  let html='';
+  if(hasRootSteps)html+=renderStepNodes(inbox.steps,[]);
+  inbox.groups.forEach(g=>{
+    const n=countOpenSteps(g.steps||[]);
+    const isCol=collapsedGroups['__inbox__']&&collapsedGroups['__inbox__'][g.id];
+    const tri=isCol?'▶':'▼';
+    html+=`<div class="step-group${isCol?' collapsed':''}"><div class="step-group-head"><div class="step-group-name"><button class="toggle-btn" data-togglegroup="${g.id}">${tri}</button>${esc(g.name)}${n?`　<span style="color:var(--ink-faint);font-weight:400;font-size:11px;letter-spacing:0;">${n}</span>`:''}</div><button class="step-group-edit" data-editgroup="${g.id}">編集</button></div>`;
+    if(g.steps&&g.steps.length)html+=renderStepNodes(g.steps,['g',g.id]);
+    html+=`<button class="sadd-sub-in-group" data-addingroup="${g.id}"><span style="color:var(--star);font-weight:700;">+</span> このカテゴリにタスクを追加</button></div>`;
+  });
+  tree.innerHTML=html;
+}
+document.getElementById('ibbg').addEventListener('click',()=>closeSheet('ibbg','ibsheet'));
+document.getElementById('ibClose').addEventListener('click',()=>closeSheet('ibbg','ibsheet'));
+document.getElementById('ibAddRoot').addEventListener('click',()=>{detailSid='__inbox__';openStepEditor('__inbox__',null);});
+document.getElementById('ibAddGroup').addEventListener('click',()=>{detailSid='__inbox__';openGroupEditor(null);});
+// 仮置きシート内のタスク操作も、stepsTreeと同じハンドラを共有させる
+document.getElementById('ibStepsTree').addEventListener('click',async e=>{
+  // stepsTreeのハンドラのコピー：detailSid='__inbox__'で動く
+  const tg=e.target.closest('[data-togglegroup]');
+  if(tg){
+    const gid=tg.dataset.togglegroup;
+    if(!collapsedGroups['__inbox__'])collapsedGroups['__inbox__']={};
+    collapsedGroups['__inbox__'][gid]=!collapsedGroups['__inbox__'][gid];
+    saveCollapsed();renderInboxTree();return;
+  }
+  const ts=e.target.closest('[data-togglestep]');
+  if(ts){
+    const stepId=ts.dataset.togglestep;
+    if(!collapsedSteps['__inbox__'])collapsedSteps['__inbox__']={};
+    collapsedSteps['__inbox__'][stepId]=!collapsedSteps['__inbox__'][stepId];
+    saveCollapsed();renderInboxTree();return;
+  }
+  const eg=e.target.closest('[data-editgroup]');
+  if(eg){detailSid='__inbox__';openGroupEditor(eg.dataset.editgroup);return;}
+  const ag=e.target.closest('[data-addingroup]');
+  if(ag){detailSid='__inbox__';openStepEditor('__inbox__',null,null,ag.dataset.addingroup);return;}
+  const mv=e.target.closest('[data-movestep]');
+  if(mv){detailSid='__inbox__';openMoveSheet(decPath(mv.dataset.movestep));return;}
+  const up=e.target.closest('[data-up]');
+  if(up){detailSid='__inbox__';await moveStep(decPath(up.dataset.up),-1);renderInboxTree();return;}
+  const down=e.target.closest('[data-down]');
+  if(down){detailSid='__inbox__';await moveStep(decPath(down.dataset.down),1);renderInboxTree();return;}
+  const del=e.target.closest('[data-delstep]');
+  if(del){
+    detailSid='__inbox__';
+    const path=decPath(del.dataset.delstep);const node=getStepByPath(inbox,path);if(!node)return;
+    const hasKids=node.children&&node.children.length;
+    const ok=await confirmAsk('このタスクを削除しますか？',hasKids?'中にぶら下げたタスクも一緒に削除されます。':'このタスクを削除します。');if(!ok)return;
+    getParentArr(inbox,path).splice(getNumericPath(path)[getNumericPath(path).length-1],1);
+    await sib();renderInboxTree();renderCal();toast('タスクを削除しました');return;
+  }
+  const open=e.target.closest('[data-opentask]');
+  if(open){detailSid='__inbox__';openTaskDetail(decPath(open.dataset.opentask));return;}
+  const ck=e.target.closest('[data-check]');
+  if(ck){detailSid='__inbox__';await completeStep(ck,decPath(ck.dataset.check));renderInboxTree();return;}
+});
 document.getElementById('ssbg').addEventListener('click',()=>closeSheet('ssbg','sssheet'));
 document.getElementById('dEdit').addEventListener('click',()=>{closeSheet('dbg','dsheet');openStarEditor(detailSid);});
 document.getElementById('starSave').addEventListener('click',async()=>{
@@ -1697,7 +1861,7 @@ document.getElementById('starSave').addEventListener('click',async()=>{
   }else{
     stars.push({id:uid(),dir,memo,steps:[],metrics:starDraftMetrics,created:Date.now()});
   }
-  await ss();renderAll();closeSheet('ssbg','sssheet');toast(starEditId?'保存しました':'北極星を置きました <span class="ts">★</span>');
+  await ss();renderAll();closeSheet('ssbg','sssheet');toast(starEditId?'保存しました':'テーマを追加しました <span class="ts">★</span>');
 });
 document.getElementById('addStarMetric').addEventListener('click',()=>openMetricEditor('__draft__',null));
 document.getElementById('starMetricsEditor').addEventListener('click',e=>{
@@ -1776,7 +1940,7 @@ document.getElementById('stepsTree').addEventListener('click',async e=>{
   if(down){await moveStep(decPath(down.dataset.down),1);return;}
   const del=e.target.closest('[data-delstep]');
   if(del){
-    const path=decPath(del.dataset.delstep);const s=stars.find(x=>x.id===detailSid);const node=getStepByPath(s,path);
+    const path=decPath(del.dataset.delstep);const s=getContainer(detailSid);const node=getStepByPath(s,path);
     if(!node)return;
     const hasKids=node.children&&node.children.length;
     const ok=await confirmAsk('このタスクを削除しますか？',hasKids?'中にぶら下げたタスクも一緒に削除されます。':'このタスクを削除します。');if(!ok)return;
@@ -1787,7 +1951,7 @@ document.getElementById('stepsTree').addEventListener('click',async e=>{
   const ck=e.target.closest('[data-check]');if(ck)await completeStep(ck,decPath(ck.dataset.check));
 });
 async function moveStep(path,dir){
-  const s=stars.find(x=>x.id===detailSid);if(!s)return;
+  const s=getContainer(detailSid);if(!s)return;
   const arr=getParentArr(s,path);if(!arr)return;
   const np=getNumericPath(path);const i=np[np.length-1];const j=i+dir;
   if(j<0||j>=arr.length)return;
@@ -1798,7 +1962,7 @@ async function moveStep(path,dir){
 /* タスク詳細ページ */
 let taskDetailPath=null;
 function openTaskDetail(path){
-  const s=stars.find(x=>x.id===detailSid);if(!s)return;
+  const s=getContainer(detailSid);if(!s)return;
   const node=getStepByPath(s,path);if(!node)return;
   taskDetailPath=path;
   document.getElementById('tdTitle').textContent=node.text;
@@ -1817,7 +1981,7 @@ function openTaskDetail(path){
   openSheet('tdbg','tdsheet');
 }
 function renderTaskChildren(){
-  const s=stars.find(x=>x.id===detailSid);if(!s||!taskDetailPath)return;
+  const s=getContainer(detailSid);if(!s||!taskDetailPath)return;
   const node=getStepByPath(s,taskDetailPath);if(!node)return;
   const box=document.getElementById('tdChildren');
   if(!node.children||!node.children.length){
@@ -1851,7 +2015,7 @@ document.getElementById('tdAddSub').addEventListener('click',()=>{
 });
 // タスク詳細ページ内のサブタスク操作も同じハンドラを通したい→#tdChildrenにも#stepsTreeと同じ動作
 document.getElementById('tdChildren').addEventListener('click',async e=>{
-  // 中分類関係（detail-sheet外）は来ない。共通の動作だけ。
+  // カテゴリ関係（detail-sheet外）は来ない。共通の動作だけ。
   const eg=e.target.closest('[data-editgroup]');if(eg)return;
   const ag=e.target.closest('[data-addingroup]');if(ag)return;
   const tg=e.target.closest('[data-togglestep]');
@@ -1866,7 +2030,7 @@ document.getElementById('tdChildren').addEventListener('click',async e=>{
   const down=e.target.closest('[data-down]');if(down){await moveStep(decPath(down.dataset.down),1);renderTaskChildren();return;}
   const del=e.target.closest('[data-delstep]');
   if(del){
-    const path=decPath(del.dataset.delstep);const s=stars.find(x=>x.id===detailSid);const node=getStepByPath(s,path);if(!node)return;
+    const path=decPath(del.dataset.delstep);const s=getContainer(detailSid);const node=getStepByPath(s,path);if(!node)return;
     const hasKids=node.children&&node.children.length;
     const ok=await confirmAsk('このタスクを削除しますか？',hasKids?'中にぶら下げたタスクも一緒に削除されます。':'このタスクを削除します。');if(!ok)return;
     const np=getNumericPath(path);
@@ -1878,14 +2042,14 @@ document.getElementById('tdChildren').addEventListener('click',async e=>{
   const ck=e.target.closest('[data-check]');if(ck&&ck.dataset.check){await completeStep(ck,decPath(ck.dataset.check));renderTaskChildren();return;}
 });
 
-/* 中分類エディタ */
+/* カテゴリエディタ */
 let groupEditCtx=null;
 function openGroupEditor(groupId){
   groupEditCtx={starId:detailSid,groupId:groupId||null};
-  const s=stars.find(x=>x.id===detailSid);
+  const s=getContainer(detailSid);
   const g=groupId?(s.groups||[]).find(x=>x.id===groupId):null;
   document.getElementById('gpKind').textContent=g?'EDIT':'NEW';
-  document.getElementById('gpHead').textContent=g?'中分類を編集':'中分類を加える';
+  document.getElementById('gpHead').textContent=g?'カテゴリを編集':'カテゴリを追加';
   document.getElementById('gpName').value=g?g.name:'';
   document.getElementById('gpSave').textContent=g?'保存する':'置く';
   document.getElementById('gpDelete').style.display=g?'block':'none';
@@ -1901,11 +2065,11 @@ document.getElementById('gpSave').addEventListener('click',async()=>{
   }else{
     s.groups.push({id:uid(),name,steps:[]});
   }
-  await ss();renderStepsTree();renderStars();closeSheet('gpbg','gpsheet');toast(groupEditCtx.groupId?'保存しました':'中分類を加えました');
+  await ss();renderStepsTree();renderStars();closeSheet('gpbg','gpsheet');toast(groupEditCtx.groupId?'保存しました':'カテゴリを追加しました');
 });
 document.getElementById('gpDelete').addEventListener('click',async()=>{
   if(!groupEditCtx.groupId)return;
-  const ok=await confirmAsk('この中分類を削除しますか？','中にあるタスクは、北極星の直下に戻ります。タスク自体は消えません。');if(!ok)return;
+  const ok=await confirmAsk('このカテゴリを削除しますか？','中のタスクはテーマの直下に戻ります。タスクは消えません。');if(!ok)return;
   const s=stars.find(x=>x.id===groupEditCtx.starId);if(!s)return;
   const g=s.groups.find(x=>x.id===groupEditCtx.groupId);
   if(g&&g.steps&&g.steps.length){
@@ -1913,59 +2077,92 @@ document.getElementById('gpDelete').addEventListener('click',async()=>{
     s.steps=s.steps.concat(g.steps);
   }
   s.groups=s.groups.filter(x=>x.id!==groupEditCtx.groupId);
-  await ss();renderStepsTree();renderStars();renderCal();closeSheet('gpbg','gpsheet');toast('中分類を削除しました');
+  await ss();renderStepsTree();renderStars();renderCal();closeSheet('gpbg','gpsheet');toast('カテゴリを削除しました');
 });
 
-/* 手順を中分類に移動 */
+/* 手順をカテゴリに移動 */
 let moveCtx=null;
 function openMoveSheet(path){
-  const s=stars.find(x=>x.id===detailSid);if(!s)return;
-  moveCtx={path};
-  const isCurInGroup=path[0]==='g';
-  const curGroupId=isCurInGroup?path[1]:null;
+  const s=getContainer(detailSid);if(!s)return;
+  moveCtx={path,fromSid:detailSid,step:1,destSid:null};
+  renderMvStep1();
+  openSheet('mvbg','mvsheet');
+}
+function renderMvStep1(){
+  // ステップ1：移動先の「箱」を選ぶ（テーマ or 仮置き）
   const target=document.getElementById('mvTargets');
+  const fromSid=moveCtx.fromSid;
+  document.querySelector('#mvsheet h2').textContent='どこへ移動しますか？';
+  document.querySelector('#mvsheet .due-note').textContent='まず、どのテーマ（または仮置き）へ動かすかを選びます。';
   let html='';
-  // 直下オプション
-  const directCur=!isCurInGroup;
-  html+=`<button class="mv-opt ${directCur?'current':''}" data-mv="root">${directCur?'<span class="mv-mark">●</span>':''}北極星の直下（中分類なし）${directCur?'<span style="color:var(--ink-faint);font-size:11px;margin-left:6px;">いま、ここ</span>':''}</button>`;
-  // 中分類オプション
-  (s.groups||[]).forEach(g=>{
-    const cur=g.id===curGroupId;
+  stars.forEach(s=>{
+    const cur=s.id===fromSid;
+    html+=`<button class="mv-opt" data-mvstar="${s.id}">${cur?'<span style="color:var(--ink-faint);font-size:11px;margin-right:6px;">いま、ここ →</span>':''}★ ${esc(s.dir)}</button>`;
+  });
+  const curInbox=fromSid==='__inbox__';
+  html+=`<button class="mv-opt" data-mvstar="__inbox__">${curInbox?'<span style="color:var(--ink-faint);font-size:11px;margin-right:6px;">いま、ここ →</span>':''}□ 仮置き</button>`;
+  target.innerHTML=html;
+}
+function renderMvStep2(){
+  // ステップ2：選んだ箱の中で、直下 or カテゴリ を選ぶ
+  const target=document.getElementById('mvTargets');
+  const destSid=moveCtx.destSid;
+  const dest=getContainer(destSid);
+  const fromSid=moveCtx.fromSid;
+  const sameBox=fromSid===destSid;
+  const isCurInGroup=moveCtx.path[0]==='g';
+  const curGroupId=isCurInGroup?moveCtx.path[1]:null;
+  const destName=destSid==='__inbox__'?'仮置き':('★ '+(stars.find(x=>x.id===destSid)||{}).dir);
+  document.querySelector('#mvsheet h2').textContent=destName+' の、どこへ？';
+  document.querySelector('#mvsheet .due-note').textContent='カテゴリを選ぶか、直下に置くかを選びます。';
+  let html=`<button class="mv-opt" data-mvback>‹ 移動先を選び直す</button>`;
+  const directCur=sameBox&&!isCurInGroup;
+  html+=`<button class="mv-opt ${directCur?'current':''}" data-mv="root">${directCur?'<span class="mv-mark">●</span>':''}直下に置く（カテゴリなし）${directCur?'<span style="color:var(--ink-faint);font-size:11px;margin-left:6px;">いま、ここ</span>':''}</button>`;
+  (dest.groups||[]).forEach(g=>{
+    const cur=sameBox&&g.id===curGroupId;
     html+=`<button class="mv-opt ${cur?'current':''}" data-mv="${g.id}">${cur?'<span class="mv-mark">●</span>':''}▸ ${esc(g.name)}${cur?'<span style="color:var(--ink-faint);font-size:11px;margin-left:6px;">いま、ここ</span>':''}</button>`;
   });
-  if(!(s.groups||[]).length){
-    html+=`<p class="due-note" style="margin-top:6px;">中分類がまだありません。詳細画面で「中分類を加える」を押して、最初のひとつを作ってみてください。</p>`;
+  if(!(dest.groups||[]).length){
+    html+=`<p class="due-note" style="margin-top:6px;">この場所にはまだカテゴリがありません。直下に置くこともできます。</p>`;
   }
   target.innerHTML=html;
-  openSheet('mvbg','mvsheet');
 }
 document.getElementById('mvbg').addEventListener('click',()=>closeSheet('mvbg','mvsheet'));
 document.getElementById('mvCancel').addEventListener('click',()=>closeSheet('mvbg','mvsheet'));
 document.getElementById('mvTargets').addEventListener('click',async e=>{
+  if(e.target.closest('[data-mvback]')){moveCtx.step=1;moveCtx.destSid=null;renderMvStep1();return;}
+  const sb=e.target.closest('[data-mvstar]');
+  if(sb){moveCtx.destSid=sb.dataset.mvstar;moveCtx.step=2;renderMvStep2();return;}
   const b=e.target.closest('[data-mv]');if(!b||b.classList.contains('current'))return;
   const dest=b.dataset.mv;
-  const s=stars.find(x=>x.id===detailSid);if(!s||!moveCtx)return;
-  // 移動元の手順ノードを取り出す
+  const fromContainer=getContainer(moveCtx.fromSid);
+  const destContainer=getContainer(moveCtx.destSid);
+  if(!fromContainer||!destContainer||!moveCtx)return;
+  // 移動元から抜く
   const path=moveCtx.path;
-  const arr=getParentArr(s,path);
+  const arr=getParentArr(fromContainer,path);
   const np=getNumericPath(path);
   const idx=np[np.length-1];
   const node=arr.splice(idx,1)[0];
   // 移動先に追加
   if(dest==='root'){
-    if(!s.steps)s.steps=[];s.steps.push(node);
+    if(!destContainer.steps)destContainer.steps=[];destContainer.steps.push(node);
   }else{
-    if(!s.groups)s.groups=[];
-    const g=s.groups.find(x=>x.id===dest);
+    if(!destContainer.groups)destContainer.groups=[];
+    const g=destContainer.groups.find(x=>x.id===dest);
     if(g){if(!g.steps)g.steps=[];g.steps.push(node);}
-    else{if(!s.steps)s.steps=[];s.steps.push(node);}
+    else{if(!destContainer.steps)destContainer.steps=[];destContainer.steps.push(node);}
   }
-  await ss();renderStepsTree();renderStars();renderCal();closeSheet('mvbg','mvsheet');toast('移動しました');
+  // 保存（両方変わる可能性）
+  await ss();await sib();
+  // 再描画：開いてるシートに応じて
+  if(moveCtx.fromSid==='__inbox__'||moveCtx.destSid==='__inbox__')renderInboxTree();
+  renderStepsTree();renderStars();renderCal();closeSheet('mvbg','mvsheet');toast('移動しました');
   moveCtx=null;
 });
 /* sort by due: 期日ありを先頭(昇順)、期日なしは後ろ。同階層すべてに再帰適用 */
 document.getElementById('sortByDue').addEventListener('click',async()=>{
-  const s=stars.find(x=>x.id===detailSid);if(!s)return;
+  const s=getContainer(detailSid);if(!s)return;
   const has=(s.steps&&s.steps.length)||(s.groups||[]).some(g=>g.steps&&g.steps.length);
   if(!has){toast('並べ替えるタスクがありません');return;}
   const sortArr=arr=>{
@@ -1982,11 +2179,11 @@ document.getElementById('sortByDue').addEventListener('click',async()=>{
 
 let completeCtx=null; // {path, btn}
 function completeStep(btn,path){
-  const s=stars.find(x=>x.id===detailSid);const node=getStepByPath(s,path);if(!node)return;
+  const s=getContainer(detailSid);const node=getStepByPath(s,path);if(!node)return;
   completeCtx={path,btn};
   document.getElementById('cTask').textContent=node.text;
   document.getElementById('cNote').value='';
-  // 北極星の指標があれば入力欄を生成
+  // テーマの指標があれば入力欄を生成
   const zone=document.getElementById('cMetricZone');
   const metrics=(s.metrics||[]);
   if(metrics.length){
@@ -2006,9 +2203,9 @@ async function finalizeComplete(withNote){
   const {path,btn}=completeCtx;
   const note=withNote?document.getElementById('cNote').value.trim():'';
   closeSheet('cbg','csheet');
-  const s=stars.find(x=>x.id===detailSid);const node=getStepByPath(s,path);if(!node)return;
+  const s=getContainer(detailSid);const node=getStepByPath(s,path);if(!node)return;
   const isRep=node.rep&&node.rep!=='none';
-  // 演出（btnは閉じたシート裏なので、座標は北極星詳細のチェック位置を使えないことがある→中央寄せにフォールバック）
+  // 演出（btnは閉じたシート裏なので、座標は目標詳細のチェック位置を使えないことがある→中央寄せにフォールバック）
   const phone=document.querySelector('.phone');const prect=phone.getBoundingClientRect();
   let cx=prect.width/2, cy=prect.height/2;
   try{const r=btn.getBoundingClientRect();if(r.width){cx=r.left-prect.left+r.width/2;cy=r.top-prect.top+r.height/2;btn.classList.add('filling');}}catch(e){}
@@ -2025,9 +2222,9 @@ async function finalizeComplete(withNote){
     phone.appendChild(sp);requestAnimationFrame(()=>sp.classList.add('go'));setTimeout(()=>sp.remove(),2400);
   }
   await new Promise(r=>setTimeout(r,withNote||isRep?300:720));
-  // 軌跡へ（メモ込み、繰り返しフラグ込み）
-  // 北極星の指標に対する数値入力を拾ってmetricLogsに保存
-  const s2=stars.find(x=>x.id===detailSid);
+  // ジャーナルへ（メモ込み、繰り返しフラグ込み）
+  // テーマの指標に対する数値入力を拾ってmetricLogsに保存
+  const s2=getContainer(detailSid);
   if(s2&&s2.metrics){
     document.querySelectorAll('#cMetricZone input[data-mid]').forEach(inp=>{
       const raw=inp.value.trim();if(!raw)return;
@@ -2035,9 +2232,9 @@ async function finalizeComplete(withNote){
       metricLogs.push({id:uid(),starId:detailSid,metricId:inp.dataset.mid,val:v,ts:Date.now()});
     });
   }
-  // 中分類IDを判定（pathが['g',groupId,...]形式なら）
+  // カテゴリIDを判定（pathが['g',groupId,...]形式なら）
   const groupId=path[0]==='g'?path[1]:null;
-  diffs.push({id:uid(),text:node.text,memo:note||null,starId:detailSid,groupId,ts:Date.now(),fromTask:true,repeat:isRep});
+  diffs.push({id:uid(),text:node.text,memo:note||null,starId:detailSid==='__inbox__'?null:detailSid,groupId:detailSid==='__inbox__'?null:groupId,ts:Date.now(),fromTask:true,repeat:isRep});
   if(isRep){
     // 繰り返し：消さず done を立てずに「次の期日」へ更新して残す
     node.due=nextDue(node);
@@ -2046,7 +2243,7 @@ async function finalizeComplete(withNote){
     getParentArr(s,path).splice(np[np.length-1],1);
   }
   await ss();await sd();await sml();renderStepsTree();renderStars();renderTrail();renderWeek();renderCal();renderMetricsOnStar();
-  toast(isRep?'積み重ねました <span class="ts">✦</span>':'成し遂げました <span class="ts">★</span> 軌跡に灯りました');
+  toast(isRep?'記録しました <span class="ts">✦</span>':'完了 <span class="ts">★</span> ジャーナルに完了しました');
   completeCtx=null;
 }
 function nextDue(node){
@@ -2073,7 +2270,7 @@ document.getElementById('cbg').addEventListener('click',()=>closeSheet('cbg','cs
 document.getElementById('cConfirm').addEventListener('click',()=>finalizeComplete(true));
 document.getElementById('cSkipNote').addEventListener('click',()=>finalizeComplete(false));
 
-/* ===== events (暦専用予定) ===== */
+/* ===== events (カレンダー専用予定) ===== */
 let eEditId=null, eRepState='none', eWdState=[], eMdState=[], eKindState='event';
 function setEKind(k){
   eKindState=k;
@@ -2112,7 +2309,7 @@ function refreshEGroupSelect(){
   if(!groups.length){zone.style.display='none';sel.innerHTML='';return;}
   const cur=sel.value;
   zone.style.display='block';
-  sel.innerHTML=`<option value="">— 中分類なし（北極星の直下）</option>`+groups.map(g=>`<option value="${g.id}">▸ ${esc(g.name)}</option>`).join('');
+  sel.innerHTML=`<option value="">— カテゴリなし（テーマの直下）</option>`+groups.map(g=>`<option value="${g.id}">▸ ${esc(g.name)}</option>`).join('');
   sel.value=cur;
 }
 function openEventEditor(ev,defaultDue,defaultTime){
@@ -2180,7 +2377,7 @@ document.querySelectorAll('#esheet .dur-p').forEach(b=>{
     updateEDur();
   });
 });
-/* 手順の所要分（暦と同じプリセット式） */
+/* 手順の所要分（カレンダーと同じプリセット式） */
 function updateStepDur(){
   const fH=hrFromHm(document.getElementById('stepFrom').value);
   const tH=hrFromHm(document.getElementById('stepTo').value);
@@ -2233,7 +2430,7 @@ document.getElementById('eSave').addEventListener('click',async()=>{
       s.steps.push(ns);
     }
     await ss();await sev();
-    renderStars();renderCal();closeSheet('ebg','esheet');toast(groupId?'★ 中分類にタスクとして加えました':'★ タスクとして加えました');return;
+    renderStars();renderCal();closeSheet('ebg','esheet');toast(groupId?'★ カテゴリにタスクとして加えました':'★ タスクとして加えました');return;
   }
   if(eEditId){const ev=events.find(x=>x.id===eEditId);Object.assign(ev,obj);}
   else events.push({id:uid(),done:false,...obj});
@@ -2246,22 +2443,22 @@ document.getElementById('eDelete').addEventListener('click',async()=>{
 });
 
 document.getElementById('dArchive').addEventListener('click',async()=>{
-  const s=stars.find(x=>x.id===detailSid);if(!s)return;const moves=countMoves(s.id);
-  const ok=await confirmAsk('この方向に、たどり着きましたか？',`「${esc(s.dir)}」を達成としてアーカイブに納めます。<br>この方向の軌跡 ${moves} 件も一緒に保管され、画面からは消えます。あとで現役に戻すこともできます。`);if(!ok)return;
+  const s=getContainer(detailSid);if(!s)return;const moves=countMoves(s.id);
+  const ok=await confirmAsk('この方向に、達成しましたか？',`「${esc(s.dir)}」を達成としてアーカイブに納めます。<br>この方向のジャーナル ${moves} 件も一緒に保管され、画面からは消えます。あとで現役に戻すこともできます。`);if(!ok)return;
   starsArch.unshift({...s,archivedAt:Date.now(),diffsSnapshot:diffs.filter(d=>d.starId===s.id)});
   diffs=diffs.filter(d=>d.starId!==s.id);stars=stars.filter(x=>x.id!==s.id);
-  await ss();await sd();await ssa();renderAll();closeSheet('dbg','dsheet');toast('たどり着きました <span class="ts">★</span> アーカイブの達成棚へ');
+  await ss();await sd();await ssa();renderAll();closeSheet('dbg','dsheet');toast('達成しました <span class="ts">★</span> アーカイブの達成棚へ');
 });
 document.getElementById('dHold').addEventListener('click',async()=>{
-  const s=stars.find(x=>x.id===detailSid);if(!s)return;const moves=countMoves(s.id);
-  const ok=await confirmAsk('いまは目指さない、でいいですか？',`「${esc(s.dir)}」をアーカイブの保留棚へ移します。${moves?`軌跡 ${moves} 件も一緒に保管されます。`:''}<br>手放すわけではありません。いつでも現役に戻せます。`);if(!ok)return;
+  const s=getContainer(detailSid);if(!s)return;const moves=countMoves(s.id);
+  const ok=await confirmAsk('いまは目指さない、でいいですか？',`「${esc(s.dir)}」をアーカイブの保留棚へ移します。${moves?`ジャーナル ${moves} 件も一緒に保管されます。`:''}<br>手放すわけではありません。いつでも現役に戻せます。`);if(!ok)return;
   starsHold.unshift({...s,heldAt:Date.now(),diffsSnapshot:diffs.filter(d=>d.starId===s.id)});
   diffs=diffs.filter(d=>d.starId!==s.id);stars=stars.filter(x=>x.id!==s.id);
   await ss();await sd();await ssh();renderAll();closeSheet('dbg','dsheet');toast('保留棚へ移しました');
 });
 document.getElementById('dDelete').addEventListener('click',async()=>{
-  const s=stars.find(x=>x.id===detailSid);if(!s)return;const moves=countMoves(s.id);
-  const ok=await confirmAsk('この方向を削除しますか？',moves?`「${esc(s.dir)}」を削除します。<br><b>この方向に紐づく軌跡 ${moves} 件も一緒に削除されます。</b>元に戻せません。`:`「${esc(s.dir)}」を削除します。元に戻せません。`);if(!ok)return;
+  const s=getContainer(detailSid);if(!s)return;const moves=countMoves(s.id);
+  const ok=await confirmAsk('この方向を削除しますか？',moves?`「${esc(s.dir)}」を削除します。<br><b>この方向に紐づくジャーナル ${moves} 件も一緒に削除されます。</b>元に戻せません。`:`「${esc(s.dir)}」を削除します。元に戻せません。`);if(!ok)return;
   diffs=diffs.filter(d=>d.starId!==s.id);stars=stars.filter(x=>x.id!==s.id);
   await ss();await sd();renderAll();closeSheet('dbg','dsheet');toast('削除しました');
 });
@@ -2312,7 +2509,7 @@ function refreshDiffMetrics(){
   const box=document.getElementById('diffMetrics');
   if(!starId){box.innerHTML='';return;}
   const s=stars.find(x=>x.id===starId);if(!s||!s.metrics||!s.metrics.length){box.innerHTML='';return;}
-  let h=`<div style="font-size:11px;color:var(--ink-faint);letter-spacing:0.06em;margin:8px 0 4px;">この方向の指標に数値を入れる（任意）</div>`;
+  let h=`<div style="font-size:11px;color:var(--ink-faint);letter-spacing:0.06em;margin:8px 0 4px;">指標に数値を入れる（任意）</div>`;
   s.metrics.forEach(m=>{
     h+=`<div class="metric-input-row" style="margin-top:6px;"><span style="font-size:12px;color:var(--ink-soft);min-width:78px;">${esc(m.name)}</span><input type="text" inputmode="decimal" data-mid="${m.id}" placeholder="数字" style="font-size:14px;padding:10px 12px;"><span class="metric-unit-label">${esc(m.unit||'')}</span></div>`;
   });
@@ -2322,12 +2519,12 @@ function refreshDiffGroup(){
   const starId=document.getElementById('diffStar').value;
   const zone=document.getElementById('diffGroupZone');
   const sel=document.getElementById('diffGroup');
-  if(!starId){zone.style.display='none';sel.innerHTML='<option value="">— 中分類なし</option>';return;}
+  if(!starId){zone.style.display='none';sel.innerHTML='<option value="">— カテゴリなし</option>';return;}
   const s=stars.find(x=>x.id===starId);
   const groups=s&&s.groups?s.groups:[];
-  if(!groups.length){zone.style.display='none';sel.innerHTML='<option value="">— 中分類なし</option>';return;}
+  if(!groups.length){zone.style.display='none';sel.innerHTML='<option value="">— カテゴリなし</option>';return;}
   zone.style.display='block';
-  sel.innerHTML=`<option value="">— 中分類なし（任意）</option>`+groups.map(g=>`<option value="${g.id}">▸ ${esc(g.name)}</option>`).join('');
+  sel.innerHTML=`<option value="">— カテゴリなし（任意）</option>`+groups.map(g=>`<option value="${g.id}">▸ ${esc(g.name)}</option>`).join('');
 }
 document.getElementById('diffStar').addEventListener('change',()=>{refreshDiffMetrics();refreshDiffGroup();});
 
@@ -2347,7 +2544,7 @@ document.getElementById('addDiff').addEventListener('click',async()=>{
   ta.value='';
   document.getElementById('diffMetrics').innerHTML='';
   document.getElementById('diffGroup').value='';
-  await sd();await sml();renderTrail();renderWeek();renderStars();toast('記しました <span class="ts">✦</span> 軌跡が伸びました');
+  await sd();await sml();renderTrail();renderWeek();renderStars();toast('記しました <span class="ts">✦</span> ジャーナルが伸びました');
 });
 
 document.getElementById('trailBody').addEventListener('click',async e=>{
@@ -2368,7 +2565,7 @@ document.getElementById('trailBody').addEventListener('click',async e=>{
     return;
   }
   const dd=e.target.closest('[data-deldiff]');
-  if(dd){const ok=await confirmAsk('この軌跡を削除しますか？','一度きざんだ一歩を消します。元に戻せません。');if(!ok)return;diffs=diffs.filter(x=>x.id!==dd.dataset.deldiff);await sd();renderTrail();renderStars();renderWeek();toast('削除しました');}
+  if(dd){const ok=await confirmAsk('このジャーナルを削除しますか？','この記録を削除します。元に戻せません。');if(!ok)return;diffs=diffs.filter(x=>x.id!==dd.dataset.deldiff);await sd();renderTrail();renderStars();renderWeek();toast('削除しました');}
 });
 
 let diffEditId=null;
@@ -2400,7 +2597,7 @@ document.getElementById('calPrev').addEventListener('click',()=>calShift(-1));
 document.getElementById('calNext').addEventListener('click',()=>calShift(1));
 document.getElementById('v-cal').addEventListener('click',async e=>{
   if(e.target.closest('a.ulink'))return; // リンクは普通に開く
-  // 北極星タスクのチェックボックス
+  // テーマのタスクのチェックボックス
   const sck=e.target.closest('[data-stepdone]');
   if(sck){
     e.stopPropagation();
@@ -2419,7 +2616,7 @@ document.getElementById('v-cal').addEventListener('click',async e=>{
     if(ev.done){
       diffs.unshift({id:uid(),ts:Date.now(),text:ev.text,starId:null,fromTask:true,memo:null});
       await sd();
-      toast('完了 ★');
+      toast('完了');
     }
     await sev();renderCal();renderTrail();renderWeek();
     return;
