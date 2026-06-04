@@ -283,6 +283,13 @@
   .mv-opt.current:hover{border-color:var(--line);background:none;}
   .mv-opt .mv-mark{color:var(--star);margin-right:6px;}
 
+  /* トグル */
+  .toggle-btn{background:none;border:none;font-family:inherit;color:var(--ink-faint);font-size:11px;cursor:pointer;padding:0 4px;margin-right:4px;transition:transform 0.18s;display:inline-block;width:16px;text-align:center;}
+  .toggle-btn:hover{color:var(--star);}
+  .step-group.collapsed > *:not(.step-group-head){display:none;}
+  .snode.collapsed > .schildren{display:none;}
+  .snode.collapsed > .sadd-sub{display:none;}
+
   /* 軌跡フィルタ */
   .trail-filter{margin-bottom:18px;}
   .trail-filter .tf-label{font-size:11px;color:var(--ink-faint);letter-spacing:0.14em;margin-bottom:10px;}
@@ -356,6 +363,9 @@
   .task-check:hover{background:rgba(122,155,122,0.15);}
   .task-check.done{background:#7a9b7a;}
   .task-check.done::after{content:'✓';color:#fff;font-size:13px;font-weight:700;display:block;text-align:center;line-height:15px;}
+  /* 北極星タスク用チェックボックス（金色） */
+  .task-check.step-check{border-color:var(--star);}
+  .task-check.step-check:hover{background:rgba(201,162,39,0.15);}
   .cal-item.task.done .ci-task{text-decoration:line-through;color:var(--ink-faint);}
   .vev.task.done{opacity:0.5;}
   .vev.task .vev-check{display:inline-block;width:12px;height:12px;border:1.5px solid #fff;border-radius:3px;margin-right:5px;vertical-align:middle;background:transparent;}
@@ -500,7 +510,7 @@
     </section>
 
     <section class="view" id="v-cal">
-      <p class="lead">すべての方向の「いつ」を、ひとつの暦に。期日のある手順だけが、ここに集まります。</p>
+      <p class="lead">すべての方向の「いつ」を、ひとつの暦に。期日のあるタスクだけが、ここに集まります。</p>
       <div class="cal-seg" id="calSeg">
         <button class="seg active" data-mode="month">月</button>
         <button class="seg" data-mode="week">3日</button>
@@ -562,7 +572,7 @@
     <div class="metrics-on-star" id="metricsOnStar"></div>
     <div class="sort-row" style="margin-top:14px;"><button class="sort-btn" id="sortByDue">期日順に整える</button></div>
     <div class="steps-tree" id="stepsTree"></div>
-    <button class="sadd-root" id="addRootStep"><span class="p">+</span> 手順をぶら下げる</button>
+    <button class="sadd-root" id="addRootStep"><span class="p">+</span> タスクをぶら下げる</button>
     <button class="sadd-root" id="addGroup" style="margin-top:8px;"><span class="p">+</span> 中分類を加える（例：運動・食事）</button>
     <button class="btn-ghost" id="dArchive" style="margin-top:18px;">★ この方向に、たどり着いた（達成）</button>
     <button class="btn-ghost" id="dHold">いまは目指さない（保留）</button>
@@ -594,7 +604,7 @@
   <div class="sheet" id="ssheet">
     <div class="grip"></div>
     <div class="sword" id="stepKind">STEP</div>
-    <h2 style="font-size:17px;" id="stepHead">手順を加える</h2>
+    <h2 style="font-size:17px;" id="stepHead">タスクを加える</h2>
     <label>やること（終えると軌跡になります）</label>
     <textarea id="stepText" style="min-height:60px;" placeholder="例：過去問を10年分そろえる"></textarea>
 
@@ -697,7 +707,7 @@
     <select id="eStar" style="margin-top:6px;">
       <option value="">— 紐づけない（ただの予定）</option>
     </select>
-    <p class="due-note" style="margin-top:6px;">紐づけると、この予定は「手順」になります。完了すると軌跡に刻まれます。</p>
+    <p class="due-note" style="margin-top:6px;">紐づけると、この予定は「タスク」になります。完了すると軌跡に刻まれます。</p>
     <div id="eGroupZone" style="display:none;">
       <label style="display:block;margin-top:10px;">中分類に入れる（任意）</label>
       <select id="eGroup" style="margin-top:6px;">
@@ -736,13 +746,32 @@
     <button class="btn-ghost danger" id="eDelete" style="display:none;">この予定を削除する</button>
   </div>
 
+  <!-- task detail sheet（タスクの中身を見る・サブタスクを足す） -->
+  <div class="sheet-bg" id="tdbg"></div>
+  <div class="sheet vsheet-full" id="tdsheet">
+    <button class="vclose-btn" id="tdClose" title="閉じる">×</button>
+    <div class="vfull-inner">
+      <div class="sword">TASK</div>
+      <h2 id="tdTitle" style="font-size:22px;">—</h2>
+      <div id="tdMeta" style="font-size:12px;color:var(--ink-faint);margin-top:6px;line-height:1.7;"></div>
+      <div id="tdMemo" style="font-size:13.5px;color:var(--ink-soft);line-height:1.85;margin-top:14px;white-space:pre-wrap;word-wrap:break-word;display:none;"></div>
+      <div style="display:flex;gap:8px;margin-top:18px;">
+        <button class="btn-ghost" id="tdEdit" style="flex:1;color:var(--star);">このタスクを編集 ›</button>
+        <button class="scheck" id="tdComplete" style="margin-left:auto;align-self:center;"></button>
+      </div>
+      <div class="field-label" style="margin-top:24px;">サブタスク</div>
+      <div id="tdChildren"></div>
+      <button class="sadd-root" id="tdAddSub" style="margin-top:8px;"><span class="p">+</span> サブタスクを足す</button>
+    </div>
+  </div>
+
   <!-- step move sheet -->
   <div class="sheet-bg" id="mvbg"></div>
   <div class="sheet" id="mvsheet">
     <div class="grip"></div>
     <div class="sword">MOVE</div>
     <h2 style="font-size:17px;">どこへ移動しますか？</h2>
-    <p class="due-note" style="margin-top:8px;">この手順を、別の場所へ動かします。中身の手順もまるごと一緒に動きます。</p>
+    <p class="due-note" style="margin-top:8px;">このタスクを、別の場所へ動かします。中身の手順もまるごと一緒に動きます。</p>
     <div id="mvTargets" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;"></div>
     <button class="btn-ghost" id="mvCancel" style="margin-top:14px;">やめる</button>
   </div>
@@ -758,7 +787,7 @@
     <p class="due-note" style="margin-top:8px;">北極星の中で、手順をまとめる箱です。後から名前を変えたり、削除もできます。</p>
     <button class="btn-full" id="gpSave">置く</button>
     <button class="btn-ghost danger" id="gpDelete" style="display:none;">この中分類を削除する</button>
-    <p class="due-note" id="gpDelNote" style="display:none;margin-top:8px;">削除しても、中にある手順は北極星の直下に戻ります。手順は消えません。</p>
+    <p class="due-note" id="gpDelNote" style="display:none;margin-top:8px;">削除しても、中にあるタスクは北極星の直下に戻ります。手順は消えません。</p>
   </div>
 
   <!-- diff edit sheet -->
@@ -808,7 +837,7 @@ let values=[], stars=[], diffs=[], valuesArch=[], starsArch=[], starsHold=[], ev
 const SEED=['ロールモデル','理想的な職場','10年後','大事にしたい時間','機嫌よくいられる条件','ゆずれないこと','憧れの人','心地よい暮らし','手放したいこと','すり減ること'];
 const TITLES={
   values:['価値観','自分とは何者か、を言葉にしておく地層'],
-  stars:['北極星','向かう方向。ひらけば手順をぶら下げられる'],
+  stars:['北極星','向かう方向。ひらけばタスクをぶら下げられる'],
   log:['きょうの差分','すでに動いた分だけを記す'],
   trail:['軌跡','始まった場所から測られる距離'],
   cal:['暦','すべての方向の「いつ」を、ひとつに'],
@@ -825,6 +854,7 @@ async function load(){
   try{const r=await window.storage.get(K.sh);if(r)starsHold=JSON.parse(r.value);}catch(e){}
   try{const r=await window.storage.get(K.ev);if(r)events=JSON.parse(r.value);}catch(e){}
   try{const r=await window.storage.get(K.ml);if(r)metricLogs=JSON.parse(r.value);}catch(e){}
+  await loadCollapsed();
   values=values||[];stars=stars||[];diffs=diffs||[];valuesArch=valuesArch||[];starsArch=starsArch||[];starsHold=starsHold||[];events=events||[];metricLogs=metricLogs||[];
   // 旧データ正規化：tasks→steps、children補完
   stars.forEach(s=>{
@@ -898,7 +928,7 @@ function renderStars(){
   if(!stars.length){l.innerHTML=`<div class="empty"><span class="em-glyph">☆</span>まだ北極星はありません。<br>向かいたい方を、ひとつ置いてみてください。</div>`;return;}
   l.innerHTML=stars.map(s=>{
     const open=countOpenAll(s);const moves=countMoves(s.id);
-    let meta=[];if(moves)meta.push(`この方へ ${moves} の差分`);if(open)meta.push(`手順 ${open}`);
+    let meta=[];if(moves)meta.push(`この方へ ${moves} の差分`);if(open)meta.push(`タスク ${open}`);
     const groupCount=(s.groups||[]).length;
     if(groupCount)meta.push(`中分類 ${groupCount}`);
     // preview: top-level steps, up to 3
@@ -914,7 +944,7 @@ function renderStars(){
       if(top.length>3)preview+=`<div class="pvmore">ほか ${top.length-3} 件…</div>`;
       preview+='</div>';
     }
-    return `<div class="lcard" data-sid="${s.id}"><div class="star-toward">toward</div><div class="star-dir">${esc(s.dir)}</div><div class="star-meta">${meta.length?meta.join('　/　'):'まだ軌跡はありません'}</div>${preview}<div class="star-open-hint">ひらいて手順を組む</div></div>`;
+    return `<div class="lcard" data-sid="${s.id}"><div class="star-toward">toward</div><div class="star-dir">${esc(s.dir)}</div><div class="star-meta">${meta.length?meta.join('　/　'):'まだ軌跡はありません'}</div>${preview}<div class="star-open-hint">ひらいてタスクを組む</div></div>`;
   }).join('');
 }
 let detailSid=null;
@@ -966,26 +996,34 @@ function openMetricEditor(starId,metricIdOrIndex){
   openSheet('mbg','msheet');
 }
 
+/* トグル状態の永続化 */
+let collapsedGroups={}; // {starId: {groupId: true}}
+let collapsedSteps={};  // {starId: {stepId: true}}
+async function saveCollapsed(){try{await window.storage.set('polaris:collapsed',JSON.stringify({g:collapsedGroups,s:collapsedSteps}));}catch(e){}}
+async function loadCollapsed(){try{const r=await window.storage.get('polaris:collapsed');if(r){const o=JSON.parse(r.value);collapsedGroups=o.g||{};collapsedSteps=o.s||{};}}catch(e){}}
+
 function renderStepsTree(){
   const s=stars.find(x=>x.id===detailSid);const tree=document.getElementById('stepsTree');
   if(!s){tree.innerHTML='';return;}
   if(!s.groups)s.groups=[];
   const hasGroups=s.groups.length>0;
   const hasRootSteps=s.steps&&s.steps.length>0;
-  if(!hasGroups&&!hasRootSteps){tree.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);text-align:center;padding:14px 0;line-height:1.7;">まだ手順はありません。<br>手順が見える方向にだけ、ぶら下げればいい。</div>`;return;}
+  if(!hasGroups&&!hasRootSteps){tree.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);text-align:center;padding:14px 0;line-height:1.7;">まだタスクはありません。<br>タスクが見える方向にだけ、ぶら下げればいい。</div>`;return;}
   let html='';
-  // 中分類なしの手順
+  // 中分類なしのタスク
   if(hasRootSteps){
     html+=renderStepNodes(s.steps,[]);
   }
-  // 中分類ごとの手順
+  // 中分類ごとのタスク
   s.groups.forEach((g,gi)=>{
     const n=countOpenSteps(g.steps||[]);
-    html+=`<div class="step-group"><div class="step-group-head"><div class="step-group-name">${esc(g.name)}${n?`　<span style="color:var(--ink-faint);font-weight:400;font-size:11px;letter-spacing:0;">${n}</span>`:''}</div><button class="step-group-edit" data-editgroup="${g.id}">編集</button></div>`;
+    const isCol=collapsedGroups[detailSid]&&collapsedGroups[detailSid][g.id];
+    const tri=isCol?'▶':'▼';
+    html+=`<div class="step-group${isCol?' collapsed':''}"><div class="step-group-head"><div class="step-group-name"><button class="toggle-btn" data-togglegroup="${g.id}">${tri}</button>${esc(g.name)}${n?`　<span style="color:var(--ink-faint);font-weight:400;font-size:11px;letter-spacing:0;">${n}</span>`:''}</div><button class="step-group-edit" data-editgroup="${g.id}">編集</button></div>`;
     if(g.steps&&g.steps.length){
       html+=renderStepNodes(g.steps,['g',g.id]);
     }
-    html+=`<button class="sadd-sub-in-group" data-addingroup="${g.id}"><span style="color:var(--star);font-weight:700;">+</span> この中分類に手順を加える</button></div>`;
+    html+=`<button class="sadd-sub-in-group" data-addingroup="${g.id}"><span style="color:var(--star);font-weight:700;">+</span> この中分類にタスクを加える</button></div>`;
   });
   tree.innerHTML=html;
 }
@@ -1014,13 +1052,16 @@ function renderStepNodes(steps,path){
     const metaLine=meta.length?`<span class="smeta">${meta.join(' ・ ')}</span>`:'';
     const memoLine=st.memo?`<span class="smemo">${esc(st.memo)}</span>`:'';
     const rep=repLabel(st);const repLine=rep?`<span class="srep">↻ ${rep}</span>`:'';
-    const children=st.children&&st.children.length?`<div class="schildren">${renderStepNodes(st.children,path.concat(i))}</div>`:'';
+    const hasKids=st.children&&st.children.length;
+    const isCol=collapsedSteps[detailSid]&&collapsedSteps[detailSid][st.id];
+    const children=hasKids?`<div class="schildren">${renderStepNodes(st.children,path.concat(i))}</div>`:'';
     const upDis=i===0?'disabled':'';
     const downDis=i===steps.length-1?'disabled':'';
-    // 移動ボタンは最上位（pathが空 or ['g',gid]）のときだけ表示
     const isTopLevel=path.length===0||(path.length===2&&path[0]==='g');
     const moveBtn=isTopLevel?`<button class="smini" data-movestep="${p}" title="中分類へ移動">⇄</button>`:'';
-    return `<div class="snode"><div class="srow"><button class="scheck" data-check="${p}"></button><div class="stext" data-editstep="${p}">${esc(st.text)}${metaLine}${memoLine}${repLine}</div><button class="smove" data-up="${p}" ${upDis}>↑</button><button class="smove" data-down="${p}" ${downDis}>↓</button>${moveBtn}<button class="smini" data-delstep="${p}">×</button></div><button class="sadd-sub" data-addsub="${p}">この中に手順を足す</button>${children}</div>`;
+    const toggleBtn=hasKids?`<button class="toggle-btn" data-togglestep="${st.id}">${isCol?'▶':'▼'}</button>`:'<span class="toggle-spacer" style="display:inline-block;width:16px;"></span>';
+    const subCount=hasKids?`<span class="sub-count" style="font-size:10px;color:var(--ink-faint);margin-left:6px;">${countOpenSteps(st.children)}</span>`:'';
+    return `<div class="snode${isCol?' collapsed':''}"><div class="srow"><button class="scheck" data-check="${p}"></button>${toggleBtn}<div class="stext" data-opentask="${p}">${esc(st.text)}${subCount}${metaLine}${memoLine}${repLine}</div><button class="smove" data-up="${p}" ${upDis}>↑</button><button class="smove" data-down="${p}" ${downDis}>↓</button>${moveBtn}<button class="smini" data-delstep="${p}">×</button></div>${children}</div>`;
   }).join('');
 }
 function encPath(path){return path.join('|');}
@@ -1073,7 +1114,7 @@ function openStepEditor(sid,parentPath,editPath,groupId){
   stepCtx={sid,parentPath,editPath:editPath||null,groupId:groupId||null};
   const editing=!!editPath;
   document.getElementById('stepKind').textContent=editing?'EDIT':(parentPath?'SUB STEP':'STEP');
-  document.getElementById('stepHead').textContent=editing?'手順を編集':(parentPath?'この中に手順を足す':'手順を加える');
+  document.getElementById('stepHead').textContent=editing?'タスクを編集':(parentPath?'この中に手順を足す':'タスクを加える');
   let st=null;
   if(editing){const s=stars.find(x=>x.id===sid);st=getStepByPath(s,editPath);}
   document.getElementById('stepText').value=st?st.text:'';
@@ -1358,13 +1399,16 @@ function renderCalMonth(){
     let meta=[];const tm=fmtTime(it);if(tm)meta.push(tm);if(it.rep&&it.rep!=='none')meta.push('↻ '+(it.rep==='daily'?'毎日':it.rep==='weekly'?'毎週':'毎月'));
     const isEv=it.kind==='event';
     const isTask=it.kind==='task';
+    const isStep=it.kind==='step';
     const memoLine=(it.memo)?`<div class="ci-memo">${escLink(it.memo)}</div>`:'';
     const tail=isEv||isTask?'':`<div class="ci-dir">★ ${esc(it.dir)}</div>`;
     let click='';
     if(isEv)click=` data-editev="${it.id}"`;
     else if(isTask)click=` data-editev="${it.id}"`;
     else click=` data-edittask="${it.starId}::${encPath(it.path)}"`;
-    const checkbox=isTask?`<button class="task-check ${it.done?'done':''}" data-taskdone="${it.id}"></button>`:'';
+    let checkbox='';
+    if(isTask)checkbox=`<button class="task-check ${it.done?'done':''}" data-taskdone="${it.id}"></button>`;
+    else if(isStep)checkbox=`<button class="task-check step-check" data-stepdone="${it.starId}::${encPath(it.path)}"></button>`;
     const itemCls=isEv?'event':(isTask?`task ${it.done?'done':''}`:'');
     html+=`<div class="cal-item ${itemCls}"${click}>${checkbox}<span class="cdot"></span><div class="ci-body"><div class="ci-task">${esc(it.text)}</div>${meta.length?`<div class="ci-meta">${meta.join(' ・ ')}</div>`:''}${memoLine}${tail}</div></div>`;
   });
@@ -1424,7 +1468,9 @@ function renderCalWeek(){
       if(it.kind==='event'){cls='vev event';click=` data-editev="${it.id}"`;}
       else if(it.kind==='task'){cls=`vev task ${it.done?'done':''}`;click=` data-editev="${it.id}"`;}
       else{cls='vev';click=` data-edittask="${it.starId}::${encPath(it.path)}"`;}
-      const cb=it.kind==='task'?`<span class="vev-check"></span>`:'';
+      let cb='';
+      if(it.kind==='task')cb=`<span class="vev-check"></span>`;
+      else if(it.kind==='step')cb=`<span class="vev-check step" data-stepdone="${it.starId}::${encPath(it.path)}"></span>`;
       evtHtml+=`<div class="${cls}" style="top:${pos.top}px;height:${pos.height}px;left:${left};width:${width};"${click}>${cb}<span class="vev-t">${esc(it.text)}</span></div>`;
     });
   });
@@ -1462,7 +1508,9 @@ function renderCalDay(){
     if(it.kind==='event'){cls='vev event';click=` data-editev="${it.id}"`;tail=it.memo?` ・ ${esc(it.memo)}`:'';}
     else if(it.kind==='task'){cls=`vev task ${it.done?'done':''}`;click=` data-editev="${it.id}"`;tail=it.memo?` ・ ${esc(it.memo)}`:'';}
     else{cls='vev';click=` data-edittask="${it.starId}::${encPath(it.path)}"`;tail=` ・ ★${esc(it.dir)}`;}
-    const cb=it.kind==='task'?`<span class="vev-check"></span>`:'';
+    let cb='';
+    if(it.kind==='task')cb=`<span class="vev-check"></span>`;
+    else if(it.kind==='step')cb=`<span class="vev-check step" data-stepdone="${it.starId}::${encPath(it.path)}"></span>`;
     evtHtml+=`<div class="${cls}" style="top:${pos.top}px;height:${pos.height}px;left:2px;right:2px;width:auto;"${click}>${cb}<span class="vev-t">${esc(it.text)}</span>${meta.length||tail?`<span class="vev-m">${meta.join(' ・ ')}${tail}</span>`:''}</div>`;
   });
   let body=`<div class="vcal-body" style="height:${bodyH}px;">${hourLabels(1)}<div class="vcal-events">${evtHtml}</div><div class="vcal-cols"><div class="vcol" data-coliso="${dIso}" style="left:0;width:100%;"></div></div></div>`;
@@ -1702,6 +1750,20 @@ document.getElementById('metricDelete').addEventListener('click',async()=>{
 document.getElementById('addRootStep').addEventListener('click',()=>openStepEditor(detailSid,null));
 document.getElementById('addGroup').addEventListener('click',()=>openGroupEditor(null));
 document.getElementById('stepsTree').addEventListener('click',async e=>{
+  const tg=e.target.closest('[data-togglegroup]');
+  if(tg){
+    const gid=tg.dataset.togglegroup;
+    if(!collapsedGroups[detailSid])collapsedGroups[detailSid]={};
+    collapsedGroups[detailSid][gid]=!collapsedGroups[detailSid][gid];
+    saveCollapsed();renderStepsTree();return;
+  }
+  const ts=e.target.closest('[data-togglestep]');
+  if(ts){
+    const stepId=ts.dataset.togglestep;
+    if(!collapsedSteps[detailSid])collapsedSteps[detailSid]={};
+    collapsedSteps[detailSid][stepId]=!collapsedSteps[detailSid][stepId];
+    saveCollapsed();renderStepsTree();return;
+  }
   const eg=e.target.closest('[data-editgroup]');
   if(eg){openGroupEditor(eg.dataset.editgroup);return;}
   const ag=e.target.closest('[data-addingroup]');
@@ -1712,18 +1774,16 @@ document.getElementById('stepsTree').addEventListener('click',async e=>{
   if(up){await moveStep(decPath(up.dataset.up),-1);return;}
   const down=e.target.closest('[data-down]');
   if(down){await moveStep(decPath(down.dataset.down),1);return;}
-  const addsub=e.target.closest('[data-addsub]');
-  if(addsub){openStepEditor(detailSid,decPath(addsub.dataset.addsub));return;}
   const del=e.target.closest('[data-delstep]');
   if(del){
     const path=decPath(del.dataset.delstep);const s=stars.find(x=>x.id===detailSid);const node=getStepByPath(s,path);
     if(!node)return;
     const hasKids=node.children&&node.children.length;
-    const ok=await confirmAsk('この手順を削除しますか？',hasKids?'中にぶら下げた手順も一緒に削除されます。':'この手順を削除します。');if(!ok)return;
-    getParentArr(s,path).splice(getNumericPath(path)[getNumericPath(path).length-1],1);await ss();renderStepsTree();renderStars();renderCal();toast('手順を削除しました');return;
+    const ok=await confirmAsk('このタスクを削除しますか？',hasKids?'中にぶら下げたタスクも一緒に削除されます。':'このタスクを削除します。');if(!ok)return;
+    getParentArr(s,path).splice(getNumericPath(path)[getNumericPath(path).length-1],1);await ss();renderStepsTree();renderStars();renderCal();toast('タスクを削除しました');return;
   }
-  const edit=e.target.closest('[data-editstep]');
-  if(edit){openStepEditor(detailSid,null,decPath(edit.dataset.editstep));return;}
+  const open=e.target.closest('[data-opentask]');
+  if(open){openTaskDetail(decPath(open.dataset.opentask));return;}
   const ck=e.target.closest('[data-check]');if(ck)await completeStep(ck,decPath(ck.dataset.check));
 });
 async function moveStep(path,dir){
@@ -1734,6 +1794,89 @@ async function moveStep(path,dir){
   [arr[i],arr[j]]=[arr[j],arr[i]];
   await ss();renderStepsTree();renderStars();
 }
+
+/* タスク詳細ページ */
+let taskDetailPath=null;
+function openTaskDetail(path){
+  const s=stars.find(x=>x.id===detailSid);if(!s)return;
+  const node=getStepByPath(s,path);if(!node)return;
+  taskDetailPath=path;
+  document.getElementById('tdTitle').textContent=node.text;
+  // meta
+  let metaParts=[];
+  if(node.due){const past=isPast(node.due);metaParts.push(`${fmtDue(node.due)}${past?'（過ぎました）':''}`);}
+  const tm=fmtTime(node);if(tm)metaParts.push(tm);
+  const rep=repLabel(node);if(rep)metaParts.push('↻ '+rep);
+  document.getElementById('tdMeta').textContent=metaParts.join(' ・ ');
+  // memo
+  const memoEl=document.getElementById('tdMemo');
+  if(node.memo){memoEl.textContent=node.memo;memoEl.style.display='block';}
+  else{memoEl.style.display='none';}
+  // children
+  renderTaskChildren();
+  openSheet('tdbg','tdsheet');
+}
+function renderTaskChildren(){
+  const s=stars.find(x=>x.id===detailSid);if(!s||!taskDetailPath)return;
+  const node=getStepByPath(s,taskDetailPath);if(!node)return;
+  const box=document.getElementById('tdChildren');
+  if(!node.children||!node.children.length){
+    box.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);padding:10px 0;line-height:1.7;">まだサブタスクはありません。<br>必要なときだけ、ぶら下げればいい。</div>`;
+    return;
+  }
+  // renderStepNodesは detailSid/collapsed状態をベースに描く。pathを継いで描画
+  box.innerHTML=renderStepNodes(node.children,taskDetailPath);
+}
+document.getElementById('tdbg').addEventListener('click',()=>closeSheet('tdbg','tdsheet'));
+document.getElementById('tdClose').addEventListener('click',()=>closeSheet('tdbg','tdsheet'));
+document.getElementById('tdEdit').addEventListener('click',()=>{
+  if(!taskDetailPath)return;
+  closeSheet('tdbg','tdsheet');
+  setTimeout(()=>openStepEditor(detailSid,null,taskDetailPath),100);
+});
+document.getElementById('tdComplete').addEventListener('click',async e=>{
+  if(!taskDetailPath)return;
+  const path=taskDetailPath;
+  closeSheet('tdbg','tdsheet');
+  await new Promise(r=>setTimeout(r,200));
+  completeStep(e.target,path);
+});
+document.getElementById('tdAddSub').addEventListener('click',()=>{
+  if(!taskDetailPath)return;
+  closeSheet('tdbg','tdsheet');
+  setTimeout(()=>{
+    openStepEditor(detailSid,taskDetailPath);
+    // 加えた後にタスク詳細を再度開くため、stepSaveで反映済み
+  },100);
+});
+// タスク詳細ページ内のサブタスク操作も同じハンドラを通したい→#tdChildrenにも#stepsTreeと同じ動作
+document.getElementById('tdChildren').addEventListener('click',async e=>{
+  // 中分類関係（detail-sheet外）は来ない。共通の動作だけ。
+  const eg=e.target.closest('[data-editgroup]');if(eg)return;
+  const ag=e.target.closest('[data-addingroup]');if(ag)return;
+  const tg=e.target.closest('[data-togglestep]');
+  if(tg){
+    const sid=detailSid;const stepId=tg.dataset.togglestep;
+    if(!collapsedSteps[sid])collapsedSteps[sid]={};
+    collapsedSteps[sid][stepId]=!collapsedSteps[sid][stepId];
+    saveCollapsed();renderTaskChildren();return;
+  }
+  const mv=e.target.closest('[data-movestep]');if(mv){openMoveSheet(decPath(mv.dataset.movestep));return;}
+  const up=e.target.closest('[data-up]');if(up){await moveStep(decPath(up.dataset.up),-1);renderTaskChildren();return;}
+  const down=e.target.closest('[data-down]');if(down){await moveStep(decPath(down.dataset.down),1);renderTaskChildren();return;}
+  const del=e.target.closest('[data-delstep]');
+  if(del){
+    const path=decPath(del.dataset.delstep);const s=stars.find(x=>x.id===detailSid);const node=getStepByPath(s,path);if(!node)return;
+    const hasKids=node.children&&node.children.length;
+    const ok=await confirmAsk('このタスクを削除しますか？',hasKids?'中にぶら下げたタスクも一緒に削除されます。':'このタスクを削除します。');if(!ok)return;
+    const np=getNumericPath(path);
+    getParentArr(s,path).splice(np[np.length-1],1);
+    await ss();renderTaskChildren();renderStepsTree();renderStars();renderCal();toast('タスクを削除しました');return;
+  }
+  const open=e.target.closest('[data-opentask]');
+  if(open){openTaskDetail(decPath(open.dataset.opentask));return;}
+  const ck=e.target.closest('[data-check]');if(ck&&ck.dataset.check){await completeStep(ck,decPath(ck.dataset.check));renderTaskChildren();return;}
+});
 
 /* 中分類エディタ */
 let groupEditCtx=null;
@@ -1762,7 +1905,7 @@ document.getElementById('gpSave').addEventListener('click',async()=>{
 });
 document.getElementById('gpDelete').addEventListener('click',async()=>{
   if(!groupEditCtx.groupId)return;
-  const ok=await confirmAsk('この中分類を削除しますか？','中にある手順は、北極星の直下に戻ります。手順自体は消えません。');if(!ok)return;
+  const ok=await confirmAsk('この中分類を削除しますか？','中にあるタスクは、北極星の直下に戻ります。タスク自体は消えません。');if(!ok)return;
   const s=stars.find(x=>x.id===groupEditCtx.starId);if(!s)return;
   const g=s.groups.find(x=>x.id===groupEditCtx.groupId);
   if(g&&g.steps&&g.steps.length){
@@ -1824,7 +1967,7 @@ document.getElementById('mvTargets').addEventListener('click',async e=>{
 document.getElementById('sortByDue').addEventListener('click',async()=>{
   const s=stars.find(x=>x.id===detailSid);if(!s)return;
   const has=(s.steps&&s.steps.length)||(s.groups||[]).some(g=>g.steps&&g.steps.length);
-  if(!has){toast('並べ替える手順がありません');return;}
+  if(!has){toast('並べ替えるタスクがありません');return;}
   const sortArr=arr=>{
     arr.sort((a,b)=>{
       if(a.due&&b.due)return a.due<b.due?-1:a.due>b.due?1:0;
@@ -2090,7 +2233,7 @@ document.getElementById('eSave').addEventListener('click',async()=>{
       s.steps.push(ns);
     }
     await ss();await sev();
-    renderStars();renderCal();closeSheet('ebg','esheet');toast(groupId?'★ 中分類に手順として加えました':'★ 手順として加えました');return;
+    renderStars();renderCal();closeSheet('ebg','esheet');toast(groupId?'★ 中分類にタスクとして加えました':'★ タスクとして加えました');return;
   }
   if(eEditId){const ev=events.find(x=>x.id===eEditId);Object.assign(ev,obj);}
   else events.push({id:uid(),done:false,...obj});
@@ -2147,7 +2290,7 @@ function collectStepInput(){
   return {text:txt,memo,due,from,to,dur,rep,wd,md};
 }
 document.getElementById('stepSave').addEventListener('click',async()=>{
-  const inp=collectStepInput();if(!inp){toast('やることを書いてください');return;}
+  const inp=collectStepInput();if(!inp){toast('タスクの内容を書いてください');return;}
   const s=stars.find(x=>x.id===stepCtx.sid);if(!s)return;if(!s.steps)s.steps=[];if(!s.groups)s.groups=[];
   if(stepCtx.editPath){
     const node=getStepByPath(s,stepCtx.editPath);Object.assign(node,inp);
@@ -2161,7 +2304,7 @@ document.getElementById('stepSave').addEventListener('click',async()=>{
   }else{
     s.steps.push(ns);
   }
-  await ss();renderStepsTree();renderStars();renderCal();closeSheet('sbg','ssheet');toast('手順を加えました');
+  await ss();renderStepsTree();renderStars();renderCal();closeSheet('sbg','ssheet');toast('タスクを加えました');
 });
 
 function refreshDiffMetrics(){
@@ -2257,6 +2400,16 @@ document.getElementById('calPrev').addEventListener('click',()=>calShift(-1));
 document.getElementById('calNext').addEventListener('click',()=>calShift(1));
 document.getElementById('v-cal').addEventListener('click',async e=>{
   if(e.target.closest('a.ulink'))return; // リンクは普通に開く
+  // 北極星タスクのチェックボックス
+  const sck=e.target.closest('[data-stepdone]');
+  if(sck){
+    e.stopPropagation();
+    const[sid,pathStr]=sck.dataset.stepdone.split('::');
+    const path=decPath(pathStr);
+    detailSid=sid; // completeStepはdetailSidに依存
+    completeStep(sck,path);
+    return;
+  }
   const cb=e.target.closest('[data-taskdone]');
   if(cb){
     e.stopPropagation();
