@@ -765,6 +765,15 @@
   /* テーマカードのトグル＋カテゴリ表示 */
   .lcard-head{display:flex;align-items:center;gap:6px;}
   .lcard-head .toggle-btn{font-size:10px;padding:2px 6px 2px 0;color:var(--ink-faint);}
+  .lcard-head .star-dir{flex:1;cursor:text;padding:4px 6px;margin-left:-6px;border-radius:4px;transition:background 0.18s ease;}
+  .lcard-head .star-dir:hover{background:rgba(168,137,63,0.08);}
+  .lcard-head .star-open-btn{
+    background:none;border:none;font-family:inherit;
+    color:var(--ink-faint);font-size:20px;font-weight:300;
+    line-height:1;padding:4px 10px;cursor:pointer;
+    border-radius:4px;transition:color 0.2s ease;flex-shrink:0;
+  }
+  .lcard-head .star-open-btn:hover{color:var(--star);}
   .lcard.collapsed{padding-bottom:24px;}
   .lcard .pvgroup{color:var(--star);font-weight:300;letter-spacing:0.02em;}
   .lcard .pvcount{color:var(--ink-faint);font-size:11px;margin-left:6px;letter-spacing:0.05em;}
@@ -785,6 +794,16 @@
   }
   .pv-check:hover{background:rgba(168,137,63,0.15);}
   .pv-task-text{flex:1;}
+  .pv-task-text[contenteditable="true"]{
+    outline:none;cursor:text;
+    padding:1px 4px;margin-left:-4px;
+    border-radius:3px;min-height:1.2em;
+    transition:background 0.18s ease;
+  }
+  .pv-task-text[contenteditable="true"]:hover{background:rgba(168,137,63,0.06);}
+  .pv-task-text[contenteditable="true"]:focus{background:rgba(168,137,63,0.12);}
+  /* 空タスク：常時薄く背景 */
+  .pv-task-text[contenteditable="true"]:empty{background:rgba(168,137,63,0.08);}
 
   /* 記録タブのテーマ選び：価値観タイトルと同じフォントに */
   #v-log select{font-family:'GenJyuuGothicL','Zen Maru Gothic','Hiragino Sans','M PLUS 1',sans-serif;font-size:15px;font-weight:400;}
@@ -1095,7 +1114,10 @@
     <div class="metrics-on-star" id="metricsOnStar"></div>
     <div class="sort-row" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;"><button class="sort-btn" id="sortByDue">期日順に整える</button><button class="sort-btn" id="groupReorderBtn" style="display:none;">カテゴリ並べ替え</button></div>
     <div class="steps-tree" id="stepsTree"></div>
-    <button class="sadd-root" id="addRootStep"><span class="p">+</span> タスクを追加する</button>
+    <div class="inbox-input-row" style="margin-top:8px;">
+      <input type="text" id="addRootStepInput" placeholder="タスクを追加（+ Enter）" autocomplete="off">
+      <button class="inbox-more" id="addRootStepMore" title="詳しく書く">⋯</button>
+    </div>
     <button class="sadd-root" id="addGroup" style="margin-top:8px;"><span class="p">+</span> カテゴリを追加（例：運動・食事）</button>
     <div class="archive-zone">
       <button class="archive-toggle" id="archiveToggle">アーカイブ</button>
@@ -1554,19 +1576,18 @@ function renderStars(){
           });
         }
       });
-      // 直下のタスク（最大3件）
+      // 直下のタスク（最大3件）。すべてインライン編集可能
       const shown=top.slice(0,3);
       shown.forEach((st,i)=>{
         let due='';
         if(st.due){const past=isPast(st.due);due=`<span class="pvdue${past?' past':''}">${fmtDue(st.due)}</span>`;}
         const cbId=`${s.id}::${encPath([i])}`;
-        parts.push(`<div class="pvrow"><button class="pv-check" data-sccheck="${cbId}"></button><span class="pv-task-text">${esc(st.text)}</span>${due}</div>`);
+        parts.push(`<div class="pvrow"><button class="pv-check" data-sccheck="${cbId}"></button><span class="pv-task-text" data-themeeditname="${s.id}::${encPath([i])}" contenteditable="true" spellcheck="false">${esc(st.text)}</span>${due}</div>`);
       });
       if(top.length>3)parts.push(`<div class="pvmore">ほか ${top.length-3} 件…</div>`);
       if(parts.length)body=`<div class="star-preview">${parts.join('')}</div>`;
-      body+=`<div class="star-open-hint">タップしてタスクを組む</div>`;
     }
-    return `<div class="lcard${isCol?' collapsed':''}" data-sid="${s.id}"><div class="lcard-head"><button class="toggle-btn" data-togglestar="${s.id}">${tri}</button><div class="star-dir">${esc(s.dir)}</div></div>${body}</div>`;
+    return `<div class="lcard${isCol?' collapsed':''}"><div class="lcard-head"><button class="toggle-btn" data-togglestar="${s.id}">${tri}</button><div class="star-dir" data-addtotheme="${s.id}">${esc(s.dir)}</div><button class="star-open-btn" data-opentheme="${s.id}" title="このテーマを開く">›</button></div>${body}</div>`;
   }).join('');
 }
 let reorderMode=false;
@@ -2612,9 +2633,72 @@ document.getElementById('starsList').addEventListener('click',async e=>{
     completeStep(cb,path);
     return;
   }
-  const c=e.target.closest('[data-sid]');
-  if(c){const s=stars.find(x=>x.id===c.dataset.sid);if(s)openDetail(s);}
+  // テーマ詳細を開く（›ボタン）
+  const ob=e.target.closest('[data-opentheme]');
+  if(ob){
+    const s=stars.find(x=>x.id===ob.dataset.opentheme);
+    if(s)openDetail(s);
+    return;
+  }
+  // テーマ名タップ：詳細を開かずに、そのテーマの直下に空タスクを作って、その場でカーソル立てる
+  const at=e.target.closest('[data-addtotheme]');
+  if(at){
+    const sid=at.dataset.addtotheme;
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    if(!s.steps)s.steps=[];
+    s.steps.push({id:uid(),text:'',due:null,memo:null,rep:'none',done:false,children:[]});
+    await ss();
+    // カードを開いた状態にする
+    if(collapsedStarCards[sid]){collapsedStarCards[sid]=false;saveCollapsedStarCards();}
+    renderStars();
+    // 新規追加された空テキストの編集行にフォーカス
+    setTimeout(()=>{
+      const els=document.querySelectorAll('[data-themeeditname]');
+      for(const el of els){
+        if(el.textContent.trim()===''){
+          el.focus();
+          const range=document.createRange();range.selectNodeContents(el);range.collapse(false);
+          const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
+          el.scrollIntoView({block:'center',behavior:'smooth'});
+          break;
+        }
+      }
+    },50);
+    return;
+  }
 });
+
+/* テーマカード内インラインタスク編集 */
+(function(){
+  const root=document.getElementById('starsList');if(!root)return;
+  root.addEventListener('keydown',e=>{
+    const t=e.target.closest('[data-themeeditname]');if(!t)return;
+    if(e.key==='Enter'){e.preventDefault();t.blur();}
+    if(e.key==='Escape'){e.preventDefault();t.blur();}
+  });
+  root.addEventListener('blur',async e=>{
+    const t=e.target.closest('[data-themeeditname]');if(!t)return;
+    const[sid,pathStr]=t.dataset.themeeditname.split('::');
+    const path=decPath(pathStr);
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    const node=getStepByPath(s,path);if(!node)return;
+    const newText=t.textContent.trim();
+    if(!newText){
+      // 空のままblur → そのタスクを削除（新規追加直後の取り消し）
+      if(!node.text){
+        const arr=getParentArr(s,path);
+        const np=getNumericPath(path);
+        arr.splice(np[np.length-1],1);
+        await ss();renderStars();renderCal();
+        return;
+      }
+      t.textContent=node.text;return;
+    }
+    if(newText===node.text)return;
+    node.text=newText;
+    await ss();renderStars();renderCal();
+  },true);
+})();
 
 document.getElementById('reorderBtn').addEventListener('click',()=>{
   reorderMode=!reorderMode;
@@ -2664,7 +2748,27 @@ document.getElementById('metricDelete').addEventListener('click',async()=>{
   metricLogs=metricLogs.filter(l=>!(l.starId===metricEditCtx.starId&&l.metricId===metricEditCtx.metricId));
   await ss();await sml();renderMetricsOnStar();renderWeek();closeSheet('mbg','msheet');toast('削除しました');
 });
-document.getElementById('addRootStep').addEventListener('click',()=>openStepEditor(detailSid,null));
+// テーマ詳細のタスク追加：Enterで即追加、⋯で詳細編集
+(function(){
+  const inp=document.getElementById('addRootStepInput');
+  const more=document.getElementById('addRootStepMore');
+  if(!inp||!more)return;
+  inp.addEventListener('keydown',async e=>{
+    if(e.key!=='Enter')return;
+    e.preventDefault();
+    const txt=inp.value.trim();if(!txt)return;
+    const s=getContainer(detailSid);if(!s)return;
+    if(!s.steps)s.steps=[];
+    s.steps.push({id:uid(),text:txt,due:null,memo:null,rep:'none',done:false,children:[]});
+    inp.value='';
+    await ss();await sib();renderStepsTree();renderStars();renderCal();
+  });
+  more.addEventListener('click',()=>{
+    const carry=inp.value;
+    openStepEditor(detailSid,null);
+    if(carry){document.getElementById('stepText').value=carry;inp.value='';}
+  });
+})();
 document.getElementById('addGroup').addEventListener('click',()=>openGroupEditor(null));
 document.getElementById('stepsTree').addEventListener('click',async e=>{
   // カテゴリ並べ替えモード時
@@ -2799,7 +2903,7 @@ function renderTaskChildren(){
   const node=getStepByPath(s,taskDetailPath);if(!node)return;
   const box=document.getElementById('tdChildren');
   if(!node.children||!node.children.length){
-    box.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);padding:10px 0;line-height:1.7;">まだサブタスクはありません。<br>必要なときだけ、ぶら下げればいい。</div>`;
+    box.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);padding:10px 0;line-height:1.7;">まだサブタスクはありません。</div>`;
     return;
   }
   // renderStepNodesは detailSid/collapsed状態をベースに描く。pathを継いで描画
