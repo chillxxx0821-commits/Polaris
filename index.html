@@ -3985,14 +3985,19 @@ document.getElementById('v-cal').addEventListener('click',async e=>{
     return;
   }
   const t=e.target.closest('[data-editev]');
-  if(t){const ev=events.find(x=>x.id===t.dataset.editev);if(ev)openEventDetail({type:'event',data:ev});return;}
+  if(t){
+    const evId=t.dataset.editev;
+    const ev=events.find(x=>x.id===evId);if(!ev)return;
+    handleCalItemTap('event',ev,null);
+    return;
+  }
   const tt=e.target.closest('[data-edittask]');
   if(tt){
     const[sid,pathStr]=tt.dataset.edittask.split('::');
     const path=decPath(pathStr);
     const s=getContainer(sid);if(!s)return;
     const node=getStepByPath(s,path);if(!node)return;
-    openEventDetail({type:'step',data:node,sid,path});
+    handleCalItemTap('step',node,{sid,path});
     return;
   }
   const c=e.target.closest('[data-cellday]');
@@ -4019,6 +4024,37 @@ document.getElementById('v-cal').addEventListener('click',async e=>{
     return;
   }
 });
+
+/* カレンダー項目のタップ判定（シングルタップ→詳細、ダブルタップ→編集） */
+let calTapTimer=null;
+let calTapLast=null; // {type, id, ts}
+function handleCalItemTap(type,data,extra){
+  const now=Date.now();
+  const id=type==='event'?data.id:(extra.sid+'::'+JSON.stringify(extra.path));
+  if(calTapLast && calTapLast.id===id && (now-calTapLast.ts)<350){
+    // ダブルタップ：編集画面へ
+    if(calTapTimer){clearTimeout(calTapTimer);calTapTimer=null;}
+    calTapLast=null;
+    if(type==='event'){
+      openEventEditor(data);
+    }else{
+      detailSid=extra.sid;
+      openStepEditor(extra.sid,null,extra.path);
+    }
+    return;
+  }
+  // シングルタップ：350ms待って詳細表示
+  calTapLast={id,ts:now};
+  if(calTapTimer)clearTimeout(calTapTimer);
+  calTapTimer=setTimeout(()=>{
+    calTapTimer=null;
+    if(type==='event'){
+      openEventDetail({type:'event',data});
+    }else{
+      openEventDetail({type:'step',data,sid:extra.sid,path:extra.path});
+    }
+  },300);
+}
 
 /* 予定/タスクの詳細表示（Googleカレンダー風） */
 let evDetailCtx=null;
