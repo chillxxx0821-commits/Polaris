@@ -2115,7 +2115,7 @@ function renderCardDatePicker(cbId,st){
   return `<div class="inbox-date-picker">
     <div class="idp-quick">
       <button class="idp-q" data-cba-pick="${cbId}::${fmtYmd(today)}"><span>▤ 今日</span><span class="idp-q-sub">${wkLabel(today)}</span></button>
-      <button class="idp-q" data-cba-pick="${cbId}::${fmtYmd(tomorrow)}"><span>☀ 明日</span><span class="idp-q-sub">${wkLabel(tomorrow)}</span></button>
+      <button class="idp-q" data-cba-pick="${cbId}::${fmtYmd(tomorrow)}"><span>○ 明日</span><span class="idp-q-sub">${wkLabel(tomorrow)}</span></button>
       <button class="idp-q" data-cba-pick="${cbId}::${fmtYmd(nextWeek)}"><span>→ 来週</span><span class="idp-q-sub">${wkLabel(nextWeek)} ${fmtMd(nextWeek)}</span></button>
       <button class="idp-q" data-cba-pick="${cbId}::"><span>− なし</span><span class="idp-q-sub"></span></button>
     </div>
@@ -2416,7 +2416,7 @@ function renderStepDatePicker(p,st){
   return `<div class="inbox-date-picker">
     <div class="idp-quick">
       <button class="idp-q" data-sba-pick="${p}::${fmtYmd(today)}"><span>▤ 今日</span><span class="idp-q-sub">${wkLabel(today)}</span></button>
-      <button class="idp-q" data-sba-pick="${p}::${fmtYmd(tomorrow)}"><span>☀ 明日</span><span class="idp-q-sub">${wkLabel(tomorrow)}</span></button>
+      <button class="idp-q" data-sba-pick="${p}::${fmtYmd(tomorrow)}"><span>○ 明日</span><span class="idp-q-sub">${wkLabel(tomorrow)}</span></button>
       <button class="idp-q" data-sba-pick="${p}::${fmtYmd(nextWeek)}"><span>→ 来週</span><span class="idp-q-sub">${wkLabel(nextWeek)} ${fmtMd(nextWeek)}</span></button>
       <button class="idp-q" data-sba-pick="${p}::"><span>− なし</span><span class="idp-q-sub"></span></button>
     </div>
@@ -3336,7 +3336,7 @@ function renderInboxDatePicker(p,st){
   return `<div class="inbox-date-picker">
     <div class="idp-quick">
       <button class="idp-q" data-iba-pick="${p}::${fmtYmd(today)}"><span>▤ 今日</span><span class="idp-q-sub">${wkLabel(today)}</span></button>
-      <button class="idp-q" data-iba-pick="${p}::${fmtYmd(tomorrow)}"><span>☀ 明日</span><span class="idp-q-sub">${wkLabel(tomorrow)}</span></button>
+      <button class="idp-q" data-iba-pick="${p}::${fmtYmd(tomorrow)}"><span>○ 明日</span><span class="idp-q-sub">${wkLabel(tomorrow)}</span></button>
       <button class="idp-q" data-iba-pick="${p}::${fmtYmd(nextWeek)}"><span>→ 来週</span><span class="idp-q-sub">${wkLabel(nextWeek)} ${fmtMd(nextWeek)}</span></button>
       <button class="idp-q" data-iba-pick="${p}::"><span>− なし</span><span class="idp-q-sub"></span></button>
     </div>
