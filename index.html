@@ -366,7 +366,23 @@
   .trail-filter .fchip.on::before{content:'● ';color:var(--star);opacity:1;}
   .trail-filter-summary{font-size:11px;color:var(--ink-faint);margin-top:8px;letter-spacing:0.02em;}
 
-  /* 価値観の全画面編集 */
+  /* 価値観のmarkdownツールバー */
+  .md-toolbar{display:flex;gap:6px;margin-bottom:6px;}
+  .md-btn{
+    background:none;border:1px solid var(--line);
+    border-radius:6px;font-family:inherit;
+    font-size:11px;color:var(--ink-soft);
+    padding:6px 10px;cursor:pointer;
+    transition:color 0.18s ease, border-color 0.18s ease;
+    letter-spacing:0.04em;
+  }
+  .md-btn:hover{color:var(--star);border-color:var(--star);}
+  /* マークダウン表示 */
+  .md-rendered{font-size:13.5px;line-height:1.85;color:var(--ink-soft);white-space:pre-wrap;}
+  .md-rendered ul{margin:6px 0;padding-left:1.4em;}
+  .md-rendered ol{margin:6px 0;padding-left:1.6em;}
+  .md-rendered li{margin:2px 0;}
+  .md-rendered strong{font-weight:600;color:var(--ink);}
   .vsheet-full{
     border-radius:0 !important;
     max-height:100% !important;
@@ -1237,6 +1253,11 @@
     <div class="vfull-inner">
       <h2 id="vWord">—</h2>
       <label>あなたの言葉で</label>
+      <div class="md-toolbar">
+        <button type="button" class="md-btn" data-md="bold" title="太字"><b>B</b></button>
+        <button type="button" class="md-btn" data-md="ul" title="箇条書き">• 箇条書き</button>
+        <button type="button" class="md-btn" data-md="ol" title="番号付き">1. リスト</button>
+      </div>
       <textarea id="vDef" placeholder=""></textarea>
       <button class="btn-full" id="vSave">保存</button>
       <div class="archive-zone" id="vArchiveZone" style="display:none;">
@@ -1362,7 +1383,7 @@
     <h2 style="font-size:18px;" id="cTask">—</h2>
     <div id="cMetricZone" style="display:none;margin-bottom:14px;"></div>
     <label>ひとこと残す（任意）</label>
-    <textarea id="cNote" placeholder="その日の手応え、気づき、なんでも。空でもいい。"></textarea>
+    <textarea id="cNote" placeholder="気づき／やったこと／思ったこと"></textarea>
     <button class="btn-full" id="cConfirm">完了</button>
     <button class="btn-ghost" id="cSkipLog">記録しないで完了</button>
   </div>
@@ -1663,7 +1684,7 @@ function renderValues(){
   if(remain.length){cz.style.display='block';document.getElementById('chips').innerHTML=remain.map(w=>`<button class="chip" data-chip="${esc(w)}">${esc(w)}</button>`).join('');}
   else cz.style.display='none';
   document.getElementById('vcards').innerHTML=values.map(v=>{
-    const def=v.def?`<div class="def">${esc(v.def)}</div>`:`<div class="def empty">タップして、自分の言葉で</div>`;
+    const def=v.def?`<div class="def md-rendered">${renderMd(v.def)}</div>`:`<div class="def empty">タップして、自分の言葉で</div>`;
     const badge=v.def?`<span class="badge">★</span>`:'';
     return `<div class="lcard" data-vid="${v.id}">${badge}<div class="word">${esc(v.word)}</div>${def}</div>`;
   }).join('');
@@ -1677,9 +1698,125 @@ function openValue(v){
   document.getElementById('vArchiveMenu').style.display='none';
   openSheet('vbg','vsheet');
 }
+// 簡易マークダウン → HTML（**太字**, - 箇条書き, 1. 番号リスト のみサポート）
+function renderMd(text){
+  if(!text)return '';
+  const lines=text.split(/\r?\n/);
+  let html='';
+  let listType=null; // 'ul'|'ol'|null
+  const closeList=()=>{if(listType){html+=`</${listType}>`;listType=null;}};
+  const inline=s=>esc(s).replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  for(const ln of lines){
+    const ulM=ln.match(/^[\s]*[-•]\s+(.*)$/);
+    const olM=ln.match(/^[\s]*\d+\.\s+(.*)$/);
+    if(ulM){
+      if(listType!=='ul'){closeList();html+='<ul>';listType='ul';}
+      html+=`<li>${inline(ulM[1])}</li>`;
+    }else if(olM){
+      if(listType!=='ol'){closeList();html+='<ol>';listType='ol';}
+      html+=`<li>${inline(olM[1])}</li>`;
+    }else{
+      closeList();
+      if(ln.trim()===''){html+='<br>';}
+      else html+=inline(ln)+'<br>';
+    }
+  }
+  closeList();
+  return html;
+}
+// 価値観メモのEnter自動継続
+document.getElementById('vDef').addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  if(e.isComposing||e.keyCode===229)return; // IME変換中は通常動作
+  const ta=e.target;
+  const pos=ta.selectionStart;
+  if(pos!==ta.selectionEnd)return; // 選択中は通常動作
+  const before=ta.value.slice(0,pos);
+  const lineStart=before.lastIndexOf('\n')+1;
+  const curLine=before.slice(lineStart);
+  // 箇条書き判定
+  const ulM=curLine.match(/^(\s*)[-•]\s(.*)$/);
+  const olM=curLine.match(/^(\s*)(\d+)\.\s(.*)$/);
+  if(!ulM && !olM)return;
+  e.preventDefault();
+  if(ulM){
+    if(ulM[2].trim()===''){
+      // 空の箇条書き → 解除（行頭の記号を消す）
+      const newBefore=ta.value.slice(0,lineStart);
+      const after=ta.value.slice(pos);
+      ta.value=newBefore+after;
+      ta.selectionStart=ta.selectionEnd=lineStart;
+    }else{
+      // 継続：次の行に「- 」
+      const ins='\n'+ulM[1]+'- ';
+      ta.value=before+ins+ta.value.slice(pos);
+      ta.selectionStart=ta.selectionEnd=pos+ins.length;
+    }
+  }else if(olM){
+    if(olM[3].trim()===''){
+      const newBefore=ta.value.slice(0,lineStart);
+      const after=ta.value.slice(pos);
+      ta.value=newBefore+after;
+      ta.selectionStart=ta.selectionEnd=lineStart;
+    }else{
+      const num=parseInt(olM[2],10)+1;
+      const ins='\n'+olM[1]+num+'. ';
+      ta.value=before+ins+ta.value.slice(pos);
+      ta.selectionStart=ta.selectionEnd=pos+ins.length;
+    }
+  }
+});
+
 document.getElementById('vArchiveToggle').addEventListener('click',()=>{
   const m=document.getElementById('vArchiveMenu');
   m.style.display=m.style.display==='none'?'flex':'none';
+});
+
+// 価値観メモのマークダウンツールバー
+document.querySelectorAll('.md-toolbar .md-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const ta=document.getElementById('vDef');
+    const type=b.dataset.md;
+    const start=ta.selectionStart, end=ta.selectionEnd;
+    const before=ta.value.slice(0,start);
+    const sel=ta.value.slice(start,end);
+    const after=ta.value.slice(end);
+    let ins='', newSel;
+    if(type==='bold'){
+      const inner=sel||'太字';
+      ins=`**${inner}**`;
+      newSel=[start+2,start+2+inner.length];
+    }else if(type==='ul'){
+      // 選択範囲（または現在行）に「- 」を行頭付ける
+      if(sel){
+        ins=sel.split(/\r?\n/).map(l=>l.trim()?`- ${l}`:l).join('\n');
+        newSel=[start,start+ins.length];
+      }else{
+        // 行頭判定
+        const lineStart=before.lastIndexOf('\n')+1;
+        const prefix=ta.value.slice(0,lineStart);
+        const lineRest=ta.value.slice(lineStart);
+        ta.value=prefix+'- '+lineRest;
+        ta.selectionStart=ta.selectionEnd=lineStart+2;
+        ta.focus();return;
+      }
+    }else if(type==='ol'){
+      if(sel){
+        ins=sel.split(/\r?\n/).map((l,i)=>l.trim()?`${i+1}. ${l}`:l).join('\n');
+        newSel=[start,start+ins.length];
+      }else{
+        const lineStart=before.lastIndexOf('\n')+1;
+        const prefix=ta.value.slice(0,lineStart);
+        const lineRest=ta.value.slice(lineStart);
+        ta.value=prefix+'1. '+lineRest;
+        ta.selectionStart=ta.selectionEnd=lineStart+3;
+        ta.focus();return;
+      }
+    }
+    ta.value=before+ins+after;
+    ta.focus();
+    ta.selectionStart=newSel[0];ta.selectionEnd=newSel[1];
+  });
 });
 
 /* STARS */
@@ -2157,7 +2294,7 @@ function renderArchive(){
 
   h+=`<div class="field-label" style="margin-top:26px;">◆ 過去の価値観</div>`;
   if(valuesArch.length){
-    h+=valuesArch.map(v=>`<div class="lcard"><div class="word">${esc(v.word)}</div>${v.def?`<div class="def">${esc(v.def)}</div>`:''}</div>`).join('');
+    h+=valuesArch.map(v=>`<div class="lcard"><div class="word">${esc(v.word)}</div>${v.def?`<div class="def md-rendered">${renderMd(v.def)}</div>`:''}</div>`).join('');
   }else h+=`<div class="section-note">まだありません。</div>`;
   document.getElementById('archiveBody').innerHTML=h;
 }
