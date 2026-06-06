@@ -1310,23 +1310,23 @@
   .dual-fab-btn:active{background:rgba(255,255,255,0.16);}
   .dual-fab-today{font-size:13px;letter-spacing:0.1em;}
   .dual-fab-today.active{background:var(--star);}
-  .dual-fab-add{font-size:22px;font-weight:300;line-height:1;padding:8px 18px;}
+  .dual-fab-add{font-family:-apple-system,sans-serif;font-size:24px;font-weight:200;line-height:1;padding:10px 18px;display:flex;align-items:center;justify-content:center;}
   .dual-fab-sep{
     width:1px;height:22px;background:rgba(255,255,255,0.2);
   }
   /* カレンダー追加フローティングボタン */
   .cal-fab{
-    position:absolute;bottom:158px;right:18px;
+    position:fixed;bottom:158px;right:18px;
     background:var(--ink);color:#fff;
     border:none;border-radius:50%;
     width:48px;height:48px;
-    font-family:inherit;
-    font-size:26px;font-weight:300;line-height:1;
+    font-family:-apple-system,sans-serif;
+    font-size:28px;font-weight:200;line-height:1;
     cursor:pointer;z-index:150;
     box-shadow:0 6px 18px rgba(0,0,0,0.18);
     transition:transform 0.18s ease;
     display:none;align-items:center;justify-content:center;
-    padding:0;padding-bottom:3px;
+    padding:0;
   }
   .cal-fab:active{transform:scale(0.96);}
   /* 「今日」ビュー（フェードイン） */
@@ -1420,7 +1420,7 @@
     <div class="dual-fab" id="dualFab">
       <button class="dual-fab-btn dual-fab-today" id="todayFab">今日</button>
       <span class="dual-fab-sep"></span>
-      <button class="dual-fab-btn dual-fab-add" id="quickAddFab">+</button>
+      <button class="dual-fab-btn dual-fab-add" id="quickAddFab"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 3 L10 17 M3 10 L17 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
     </div>
 
     <section class="view" id="v-log">
@@ -1452,7 +1452,7 @@
     </section>
 
     <section class="view" id="v-cal">
-      <div class="cal-head"><button class="cal-nav" id="calPrev">‹</button><div class="cal-mo" id="calMonth">—</div><button class="cal-nav" id="calNext">›</button><button class="cal-today-btn" id="calToday" title="今日に戻る">今日</button></div>
+      <div class="cal-head"><div class="cal-mo" id="calMonth">—</div><button class="cal-today-btn" id="calToday" title="今日に戻る">今日</button></div>
       <div id="calMonthView"><div class="cal-grid" id="calGrid"></div></div>
       <div id="calWeekView" style="display:none;"></div>
       <div id="calDayView" style="display:none;"></div>
@@ -1461,8 +1461,8 @@
         <button class="seg" data-mode="week">3日</button>
         <button class="seg" data-mode="day">日</button>
       </div>
-      <button class="cal-fab" id="addEvent" title="予定を追加" style="display:none;">+</button>
     </section>
+    <button class="cal-fab" id="addEvent" title="予定を追加" style="display:none;"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3 L10 17 M3 10 L17 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
 
     <section class="view" id="v-week">
       
@@ -3164,8 +3164,42 @@ function hmFromHr(hr){
 }
 /* 横スワイプで前後送り */
 function attachSwipe(root){
-  // 横スワイプ機能は撤去（バグ防止）
-  // 月/3日/日の切替はセグメントタブで行う
+  if(!root)return;
+  if(root.dataset.swipeAttached)return;
+  root.dataset.swipeAttached='1';
+  let startX=0,startY=0,startT=0,tracking=false;
+  root.addEventListener('touchstart',e=>{
+    if(e.touches.length!==1)return;
+    // インタラクティブ要素では発動しない
+    if(e.target.closest('button,input,textarea,[contenteditable="true"],.vev,.vad-chip'))return;
+    const t=e.touches[0];
+    startX=t.clientX;startY=t.clientY;startT=Date.now();
+    tracking=true;
+  },{passive:true});
+  root.addEventListener('touchmove',e=>{
+    if(!tracking||e.touches.length!==1)return;
+    const t=e.touches[0];
+    const dx=t.clientX-startX,dy=t.clientY-startY;
+    // 角度判定：縦の動きが横より明確に大きいなら中断
+    if(Math.abs(dy)>Math.abs(dx) && Math.abs(dy)>16){
+      tracking=false;
+    }
+  },{passive:true});
+  root.addEventListener('touchend',e=>{
+    if(!tracking)return;
+    tracking=false;
+    const touch=e.changedTouches[0];
+    const dx=touch.clientX-startX,dy=touch.clientY-startY;
+    const dt=Date.now()-startT;
+    // 横スワイプの条件：
+    // - 横の動きが80px以上
+    // - 横が縦より明確に大きい（1.5倍以上）
+    // - 速い動き（700ms以内）
+    if(Math.abs(dx)>=80 && Math.abs(dx)>Math.abs(dy)*1.5 && dt<700){
+      if(dx<0)calShift(1); // 左スワイプ：次へ
+      else calShift(-1);   // 右スワイプ：前へ
+    }
+  },{passive:true});
 }
 
 function openSheet(bg,sheet){document.getElementById(bg).classList.add('open');document.getElementById(sheet).classList.add('open');}
@@ -5419,8 +5453,6 @@ function calShift(dir){
   }
   renderCal();
 }
-document.getElementById('calPrev').addEventListener('click',()=>calShift(-1));
-document.getElementById('calNext').addEventListener('click',()=>calShift(1));
 document.getElementById('calToday').addEventListener('click',()=>{
   const today=new Date();
   calAnchor=today;
