@@ -1370,10 +1370,6 @@
     <section class="view" id="v-stars">
       
       <div class="lcards" id="starsList"></div>
-      <div class="inbox-input-row" style="margin-top:8px;">
-        <input type="text" id="inboxInput" placeholder="仮置きタスクを追加（+ Enter）" autocomplete="off">
-        <button class="inbox-more" id="inboxMore" title="詳しく書く">⋯</button>
-      </div>
       
       <button class="vcustom-btn" id="addStar" style="margin-top:14px;"><span class="p">+</span> 新しいテーマを追加</button>
       
@@ -2065,7 +2061,15 @@ function renderCardTaskRow(s,st,pathStr,kind){
   let childrenHtml='';
   if(hasKids && !childCol){
     const path=decPath(pathStr);
-    childrenHtml='<div class="pv-children">'+st.children.map((cst,ci)=>{
+    let displayChildren=st.children;
+    if(showDoneSteps && doneAtBottom){
+      const undone=[],done=[];
+      st.children.forEach(c=>{(c.done?done:undone).push(c);});
+      displayChildren=[...undone,...done];
+    }
+    childrenHtml='<div class="pv-children">'+displayChildren.map(cst=>{
+      if(!showDoneSteps && cst.done)return '';
+      const ci=st.children.indexOf(cst);
       const cPath=encPath(path.concat(ci));
       return renderCardTaskRow(s,cst,cPath,'child');
     }).join('')+'</div>';
@@ -2175,15 +2179,28 @@ function renderStars(){
         const gTri=openSteps.length?(gCol?'▶':'▼'):' ';
         parts.push(`<div class="pvrow pvgroup-row" data-pvgrouphead="${s.id}::${g.id}" data-pvgid="${g.id}">${openSteps.length?`<button class="pv-toggle" data-togglestargroup="${gKey}">${gTri}</button>`:'<span class="pv-toggle-spacer"></span>'}<span class="pvgroup" data-pvgroupname="${s.id}::${g.id}">${esc(g.name)}</span>${n?`<span class="pvcount">(${n})</span>`:''}</div>`);
         if(!gCol && openSteps.length){
-          openSteps.forEach((st,i)=>{
+          // 完了済みを下にまとめる
+          let displaySteps=openSteps;
+          if(showDoneSteps && doneAtBottom){
+            const undone=[],done=[];
+            openSteps.forEach(st=>{(st.done?done:undone).push(st);});
+            displaySteps=[...undone,...done];
+          }
+          displaySteps.forEach(st=>{
             if(!showDoneSteps && st.done)return;
+            const i=openSteps.indexOf(st);
             const pathStr=encPath(['g',g.id,i]);
             parts.push(renderCardTaskRow(s,st,pathStr,'nested'));
           });
         }
       });
       // 直下のタスク（完了済み非表示の場合はそれをスキップ、全件表示）
-      const visibleTop=showDoneSteps?top:top.filter(st=>!st.done);
+      let visibleTop=showDoneSteps?top:top.filter(st=>!st.done);
+      if(showDoneSteps && doneAtBottom){
+        const undone=[],done=[];
+        visibleTop.forEach(st=>{(st.done?done:undone).push(st);});
+        visibleTop=[...undone,...done];
+      }
       visibleTop.forEach(st=>{
         const i=top.indexOf(st);
         const pathStr=encPath([i]);
@@ -2206,7 +2223,7 @@ function renderStars(){
         <button class="inbox-action" data-tba-addtask="${s.id}">+ タスク</button>
         <button class="inbox-action" data-tba-addcat="${s.id}">+ カテゴリ</button>
         <button class="inbox-action${archiveExpanded?' active':''}" data-tba-archive="${s.id}">アーカイブ</button>
-      </div>${archiveExpanded?`<div class="inbox-action-row theme-action-row" style="padding-left:30px;"><button class="inbox-action" data-tba-arc-achieve="${s.id}">達成</button><button class="inbox-action" data-tba-arc-hold="${s.id}">保留</button><button class="inbox-action" data-tba-arc-delete="${s.id}">削除</button></div>`:''}`;
+      </div>${showDoneSteps?`<div class="inbox-action-row theme-action-row" style="padding-left:30px;"><button class="inbox-action${doneAtBottom?' active':''}" data-tba-donebottom="${s.id}">完了済みを下にまとめる</button></div>`:''}${archiveExpanded?`<div class="inbox-action-row theme-action-row" style="padding-left:30px;"><button class="inbox-action" data-tba-arc-achieve="${s.id}">達成</button><button class="inbox-action" data-tba-arc-hold="${s.id}">保留</button><button class="inbox-action" data-tba-arc-delete="${s.id}">削除</button></div>`:''}`;
     }
     return `<div class="lcard${isCol?' collapsed':''}${themeSelCls}" data-tcid="${s.id}"><div class="lcard-head" data-tcdrag="${s.id}"><button class="toggle-btn" data-togglestar="${s.id}">${tri}</button><div class="star-dir" data-themesel="${s.id}">${esc(s.dir)}</div><button class="star-open-btn" data-editstar="${s.id}" title="このテーマを編集">⋯</button></div>${themeActionRow}${body}</div>`;
   }).join('');
@@ -2338,8 +2355,13 @@ function repLabel(st){
   return '';
 }
 let showDoneSteps=false; // 完了済みタスクを表示するか
-async function loadShowDoneSteps(){try{const r=await window.storage.get('polaris:showDone');if(r)showDoneSteps=JSON.parse(r.value);}catch(e){}}
+let doneAtBottom=false; // 完了済みを下にまとめる
+async function loadShowDoneSteps(){
+  try{const r=await window.storage.get('polaris:showDone');if(r)showDoneSteps=JSON.parse(r.value);}catch(e){}
+  try{const r=await window.storage.get('polaris:doneBottom');if(r)doneAtBottom=JSON.parse(r.value);}catch(e){}
+}
 async function saveShowDoneSteps(){try{await window.storage.set('polaris:showDone',JSON.stringify(showDoneSteps));}catch(e){}}
+async function saveDoneAtBottom(){try{await window.storage.set('polaris:doneBottom',JSON.stringify(doneAtBottom));}catch(e){}}
 let selectedStepId=null; // テーマ詳細の選択中タスクID
 let stepTapLast=null;
 let stepDatePickerOpen=null;
@@ -2359,7 +2381,15 @@ let themeArchiveExpand=null; // アーカイブインライン展開している
 
 function renderStepNodes(steps,path){
   // 完了済みを非表示の時はフィルタ
-  return steps.map((st,i)=>{
+  // 完了済みを下にまとめる場合は順序入れ替え（表示時のみ）
+  let displaySteps=steps;
+  if(showDoneSteps && doneAtBottom){
+    const undone=[],done=[];
+    steps.forEach(st=>{(st.done?done:undone).push(st);});
+    displaySteps=[...undone,...done];
+  }
+  return displaySteps.map(st=>{
+    const i=steps.indexOf(st);  // 元のインデックスを保持
     if(!showDoneSteps && st.done)return '';
     const p=encPath(path.concat(i));
     let meta=[];
@@ -3250,24 +3280,6 @@ function renderStarMetricsEditor(){
 document.getElementById('addStar').addEventListener('click',()=>openStarEditor(null));
 
 /* 仮タスク入力（Enterで投稿、⋯で詳細編集） */
-document.getElementById('inboxInput').addEventListener('keydown',async e=>{
-  if(e.key==='Enter'){
-    e.preventDefault();
-    const v=e.target.value.trim();if(!v)return;
-    inbox.steps.push({id:uid(),text:v,memo:null,due:null,from:null,to:null,rep:'none',wd:[],md:[],done:false,children:[]});
-    await sib();
-    e.target.value='';
-    renderStars();renderCal();
-    toast('仮置きに入れました <span class="ts">✦</span>');
-  }
-});
-document.getElementById('inboxMore').addEventListener('click',()=>{
-  // 仮置きのタスクとして新規追加。入力欄にテキストがあれば引き継ぐ
-  detailSid='__inbox__';
-  const carry=document.getElementById('inboxInput').value;
-  openStepEditor('__inbox__',null);
-  if(carry){document.getElementById('stepText').value=carry;document.getElementById('inboxInput').value='';}
-});
 document.getElementById('inboxBtn').addEventListener('click',()=>openInbox());
 
 /* 仮置きシート */
@@ -3364,7 +3376,14 @@ function renderInboxMovePicker(p,st){
   return html;
 }
 function renderInboxStepNodes(steps,path){
-  return steps.map((st,i)=>{
+  let displaySteps=steps;
+  if(showDoneSteps && doneAtBottom){
+    const undone=[],done=[];
+    steps.forEach(st=>{(st.done?done:undone).push(st);});
+    displaySteps=[...undone,...done];
+  }
+  return displaySteps.map(st=>{
+    const i=steps.indexOf(st);
     if(!showDoneSteps && st.done)return '';
     const p=encPath(path.concat(i));
     let meta=[];
@@ -3690,6 +3709,14 @@ document.getElementById('starsList').addEventListener('click',async e=>{
   if(tbaTd){
     showDoneSteps=!showDoneSteps;
     await saveShowDoneSteps();
+    renderStars();
+    return;
+  }
+  // テーマアクション：完了済みを下にまとめるトグル
+  const tbaDb=e.target.closest('[data-tba-donebottom]');
+  if(tbaDb){
+    doneAtBottom=!doneAtBottom;
+    await saveDoneAtBottom();
     renderStars();
     return;
   }
