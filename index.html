@@ -339,6 +339,16 @@
     letter-spacing:0.02em;
   }
   .step-group .sadd-sub-in-group:hover{color:var(--star);}
+  .sadd-root-task{
+    display:block;width:100%;
+    font-family:inherit;font-size:12px;
+    color:var(--ink-faint);
+    background:none;border:none;
+    padding:8px 0;margin-top:0;
+    text-align:left;cursor:pointer;
+    letter-spacing:0.02em;
+  }
+  .sadd-root-task:hover{color:var(--star);}
   /* 移動先オプション */
   .mv-opt{display:block;width:100%;text-align:left;font-family:inherit;background:none;border:1px solid var(--line);border-radius:11px;padding:13px 16px;cursor:pointer;color:var(--ink);font-size:14px;letter-spacing:0.02em;}
   .mv-back{position:absolute;top:18px;left:18px;background:none;border:none;font-family:inherit;font-size:11px;color:var(--ink-faint);font-weight:300;letter-spacing:0.05em;cursor:pointer;padding:6px 8px;border-radius:4px;z-index:2;}
@@ -1054,6 +1064,18 @@
   .step-group.drop-into{
     background:rgba(168,137,63,0.08);border-radius:8px;
   }
+  /* カテゴリD&D */
+  .step-group{position:relative;}
+  .step-group.gdragging{opacity:0.4;}
+  .step-group.gdrop-before::before{
+    content:'';position:absolute;top:-2px;left:0;right:0;
+    height:2px;background:var(--star);border-radius:1px;z-index:5;
+  }
+  .step-group.gdrop-after::after{
+    content:'';position:absolute;bottom:-2px;left:0;right:0;
+    height:2px;background:var(--star);border-radius:1px;z-index:5;
+  }
+  .step-group-head{cursor:default;}
   /* タスク名インライン編集 */
   .td-title-editable{
     cursor:text;border-radius:4px;
@@ -1277,12 +1299,8 @@
     <div class="detail-memo" id="dMemo" style="display:none;"></div>
     <button class="btn-ghost" id="dEdit" style="margin-top:4px;padding:6px;font-size:12px;color:var(--star);">このテーマを編集 ›</button>
     <div class="metrics-on-star" id="metricsOnStar"></div>
-    <div class="sort-row" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;"><button class="sort-btn" id="sortByDue">期日順に整える</button><button class="sort-btn" id="groupReorderBtn" style="display:none;">カテゴリ並べ替え</button><button class="sort-btn" id="toggleDoneBtn">完了済みを表示</button></div>
+    <div class="sort-row" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;"><button class="sort-btn" id="sortByDue">期日順に整える</button><button class="sort-btn" id="toggleDoneBtn">完了済みを表示</button></div>
     <div class="steps-tree" id="stepsTree"></div>
-    <div class="inbox-input-row" style="margin-top:8px;">
-      <input type="text" id="addRootStepInput" placeholder="タスクを追加（+ Enter）" autocomplete="off">
-      <button class="inbox-more" id="addRootStepMore" title="詳しく書く">⋯</button>
-    </div>
     <button class="sadd-root" id="addGroup" style="margin-top:8px;"><span class="p">+</span> カテゴリを追加（例：運動・食事）</button>
     <div class="archive-zone">
       <button class="archive-toggle" id="archiveToggle">アーカイブ</button>
@@ -1906,11 +1924,6 @@ function openDetail(s){
   if(s.memo){memoEl.textContent=s.memo;memoEl.style.display='block';}
   else{memoEl.style.display='none';}
   document.getElementById('archiveMenu').style.display='none';
-  const gbtn=document.getElementById('groupReorderBtn');
-  if(gbtn){
-    gbtn.style.display=((s.groups||[]).length>1)?'inline-block':'none';
-    gbtn.textContent='カテゴリ並べ替え';
-  }
   const tdb=document.getElementById('toggleDoneBtn');
   if(tdb){tdb.textContent=showDoneSteps?'完了済みを隠す':'完了済みを表示';tdb.classList.toggle('active',showDoneSteps);}
   renderStepsTree();renderMetricsOnStar();openSheet('dbg','dsheet');
@@ -1983,12 +1996,14 @@ function renderStepsTree(){
   if(hasRootSteps){
     html+=renderStepNodes(s.steps,[]);
   }
+  // 直下タスクの後に「タスクを追加」（カテゴリの上）
+  html+=`<button class="sadd-root-task" id="addRootStepInline"><span style="color:var(--star);font-weight:700;">+</span> タスクを追加</button>`;
   // カテゴリごとのタスク
   s.groups.forEach((g,gi)=>{
     const n=countOpenSteps(g.steps||[]);
     const isCol=collapsedGroups[detailSid]&&collapsedGroups[detailSid][g.id];
     const tri=isCol?'▶':'▼';
-    html+=`<div class="step-group${isCol?' collapsed':''}"><div class="step-group-head"><div class="step-group-name"><button class="toggle-btn" data-togglegroup="${g.id}">${tri}</button>${esc(g.name)}<button class="smini sadd-here" data-addingroup-top="${g.id}" title="このカテゴリにタスクを追加">+</button></div><button class="step-group-edit" data-editgroup="${g.id}">編集</button></div>`;
+    html+=`<div class="step-group${isCol?' collapsed':''}" data-gid="${g.id}"><div class="step-group-head" data-grouphead="${g.id}"><div class="step-group-name"><button class="toggle-btn" data-togglegroup="${g.id}">${tri}</button>${esc(g.name)}<button class="smini sadd-here" data-addingroup-top="${g.id}" title="このカテゴリにタスクを追加">+</button></div><button class="step-group-edit" data-editgroup="${g.id}">編集</button></div>`;
     if(g.steps&&g.steps.length){
       html+=renderStepNodes(g.steps,['g',g.id]);
     }
@@ -2871,7 +2886,7 @@ function renderInboxTree(){
     const n=countOpenSteps(g.steps||[]);
     const isCol=collapsedGroups['__inbox__']&&collapsedGroups['__inbox__'][g.id];
     const tri=isCol?'▶':'▼';
-    html+=`<div class="step-group${isCol?' collapsed':''}"><div class="step-group-head"><div class="step-group-name"><button class="toggle-btn" data-togglegroup="${g.id}">${tri}</button>${esc(g.name)}<button class="smini sadd-here" data-addingroup-top="${g.id}" title="このカテゴリにタスクを追加">+</button></div><button class="step-group-edit" data-editgroup="${g.id}">編集</button></div>`;
+    html+=`<div class="step-group${isCol?' collapsed':''}" data-gid="${g.id}"><div class="step-group-head" data-grouphead="${g.id}"><div class="step-group-name"><button class="toggle-btn" data-togglegroup="${g.id}">${tri}</button>${esc(g.name)}<button class="smini sadd-here" data-addingroup-top="${g.id}" title="このカテゴリにタスクを追加">+</button></div><button class="step-group-edit" data-editgroup="${g.id}">編集</button></div>`;
     if(g.steps&&g.steps.length)html+=renderStepNodes(g.steps,['g',g.id]);
     html+=`<button class="sadd-sub-in-group" data-addingroup="${g.id}"><span style="color:var(--star);font-weight:700;">+</span> このカテゴリにタスクを追加</button></div>`;
   });
@@ -2901,7 +2916,17 @@ document.getElementById('ibStepsTree').addEventListener('click',async e=>{
   const eg=e.target.closest('[data-editgroup]');
   if(eg){detailSid='__inbox__';openGroupEditor(eg.dataset.editgroup);return;}
   const ag=e.target.closest('[data-addingroup]');
-  if(ag){detailSid='__inbox__';openStepEditor('__inbox__',null,null,ag.dataset.addingroup);return;}
+  if(ag){
+    detailSid='__inbox__';
+    const gid=ag.dataset.addingroup;
+    const g=(inbox.groups||[]).find(x=>x.id===gid);if(!g)return;
+    if(!g.steps)g.steps=[];
+    const newId=uid();
+    g.steps.push({id:newId,text:'',due:null,memo:null,rep:'none',done:false,children:[]});
+    await sib();renderInboxTree();
+    focusStepByText(newId);
+    return;
+  }
   const mv=e.target.closest('[data-movestep]');
   if(mv){detailSid='__inbox__';openMoveSheet(decPath(mv.dataset.movestep));return;}
   const up=e.target.closest('[data-up]');
@@ -3173,27 +3198,19 @@ document.getElementById('metricDelete').addEventListener('click',async()=>{
   metricLogs=metricLogs.filter(l=>!(l.starId===metricEditCtx.starId&&l.metricId===metricEditCtx.metricId));
   await ss();await sml();renderMetricsOnStar();renderWeek();closeSheet('mbg','msheet');toast('削除しました');
 });
-// テーマ詳細のタスク追加：Enterで即追加、⋯で詳細編集
-(function(){
-  const inp=document.getElementById('addRootStepInput');
-  const more=document.getElementById('addRootStepMore');
-  if(!inp||!more)return;
-  inp.addEventListener('keydown',async e=>{
-    if(e.key!=='Enter')return;
-    e.preventDefault();
-    const txt=inp.value.trim();if(!txt)return;
-    const s=getContainer(detailSid);if(!s)return;
+// テーマ詳細「タスクを追加」ボタン：その場で空タスク追加＋フォーカス
+function addRootStepInline(sid){
+  return async()=>{
+    const s=getContainer(sid);if(!s)return;
     if(!s.steps)s.steps=[];
-    s.steps.push({id:uid(),text:txt,due:null,memo:null,rep:'none',done:false,children:[]});
-    inp.value='';
-    await ss();await sib();renderStepsTree();renderStars();renderCal();
-  });
-  more.addEventListener('click',()=>{
-    const carry=inp.value;
-    openStepEditor(detailSid,null);
-    if(carry){document.getElementById('stepText').value=carry;inp.value='';}
-  });
-})();
+    const newId=uid();
+    s.steps.push({id:newId,text:'',due:null,memo:null,rep:'none',done:false,children:[]});
+    await ss();await sib();
+    if(sid==='__inbox__')renderInboxTree();else renderStepsTree();
+    renderStars();
+    focusStepByText(newId);
+  };
+}
 document.getElementById('addGroup').addEventListener('click',()=>openGroupEditor(null));
 document.getElementById('stepsTree').addEventListener('click',async e=>{
   // カテゴリ並べ替えモード時
@@ -3228,10 +3245,25 @@ document.getElementById('stepsTree').addEventListener('click',async e=>{
     collapsedSteps[detailSid][stepId]=!collapsedSteps[detailSid][stepId];
     saveCollapsed();renderStepsTree();return;
   }
+  // 直下タスク追加ボタン
+  if(e.target.closest('#addRootStepInline')){
+    await addRootStepInline(detailSid)();
+    return;
+  }
   const eg=e.target.closest('[data-editgroup]');
   if(eg){openGroupEditor(eg.dataset.editgroup);return;}
   const ag=e.target.closest('[data-addingroup]');
-  if(ag){openStepEditor(detailSid,null,null,ag.dataset.addingroup);return;}
+  if(ag){
+    const gid=ag.dataset.addingroup;
+    const s=getContainer(detailSid);if(!s)return;
+    const g=(s.groups||[]).find(x=>x.id===gid);if(!g)return;
+    if(!g.steps)g.steps=[];
+    const newId=uid();
+    g.steps.push({id:newId,text:'',due:null,memo:null,rep:'none',done:false,children:[]});
+    await ss();renderStepsTree();renderStars();
+    focusStepByText(newId);
+    return;
+  }
   const mv=e.target.closest('[data-movestep]');
   if(mv){openMoveSheet(decPath(mv.dataset.movestep));return;}
   const up=e.target.closest('[data-up]');
@@ -3593,13 +3625,6 @@ document.getElementById('mvTargets').addEventListener('click',async e=>{
   if(moveCtx.fromSid==='__inbox__'||moveCtx.destSid==='__inbox__')renderInboxTree();
   renderStepsTree();renderStars();renderCal();closeSheet('mvbg','mvsheet');toast('移動しました');
   moveCtx=null;
-});
-document.getElementById('groupReorderBtn').addEventListener('click',()=>{
-  groupReorderMode=!groupReorderMode;
-  const btn=document.getElementById('groupReorderBtn');
-  btn.textContent=groupReorderMode?'完了':'カテゴリ並べ替え';
-  btn.classList.toggle('active',groupReorderMode);
-  renderStepsTree();
 });
 /* sort by due: 期日ありを先頭(昇順)、期日なしは後ろ。同階層すべてに再帰適用 */
 document.getElementById('sortByDue').addEventListener('click',async()=>{
@@ -4727,6 +4752,99 @@ document.getElementById('todayList').addEventListener('click',async e=>{
   attachLongPress('stepsTree',()=>detailSid);
   attachLongPress('ibStepsTree',()=>'__inbox__');
   attachLongPress('tdChildren',()=>detailSid);
+})();
+
+/* カテゴリヘッダー長押し→ドラッグで並べ替え（同じテーマ内のみ） */
+(function(){
+  function attachGroupDnD(rootId,getContainerSid){
+    const root=document.getElementById(rootId);if(!root)return;
+    const LONG=500;
+    let timer=null,target=null,startX=0,startY=0;
+    let dragging=false,dragGid=null,dropGid=null,dropMode=null;
+    const clearHi=()=>{
+      root.querySelectorAll('.step-group.gdrop-before,.step-group.gdrop-after,.step-group.gdragging').forEach(el=>el.classList.remove('gdrop-before','gdrop-after','gdragging'));
+    };
+    const start=(e,t)=>{
+      target=t;
+      const touch=e.touches?e.touches[0]:e;
+      startX=touch.clientX;startY=touch.clientY;
+      timer=setTimeout(()=>{
+        dragging=true;
+        dragGid=t.dataset.grouphead;
+        const groupEl=root.querySelector(`.step-group[data-gid="${dragGid}"]`);
+        if(groupEl)groupEl.classList.add('gdragging');
+        if(navigator.vibrate)navigator.vibrate(15);
+      },LONG);
+    };
+    const cancel=()=>{if(timer){clearTimeout(timer);timer=null;}};
+    const move=e=>{
+      if(!timer&&!dragging)return;
+      const touch=e.touches?e.touches[0]:e;
+      const dx=Math.abs(touch.clientX-startX),dy=Math.abs(touch.clientY-startY);
+      if(!dragging&&(dx>12||dy>12)){cancel();return;}
+      if(!dragging)return;
+      if(e.cancelable)e.preventDefault();
+      const x=touch.clientX,y=touch.clientY;
+      clearHi();
+      const dragEl=root.querySelector(`.step-group[data-gid="${dragGid}"]`);
+      if(dragEl)dragEl.classList.add('gdragging');
+      // 全カテゴリの中で位置判定
+      const groups=Array.from(root.querySelectorAll('.step-group[data-gid]'));
+      let best=null,bestMode='before';
+      for(const g of groups){
+        if(g.dataset.gid===dragGid)continue;
+        const r=g.getBoundingClientRect();
+        if(y>=r.top&&y<=r.bottom){
+          best=g;
+          bestMode=(y<r.top+r.height/2)?'before':'after';
+          break;
+        }
+      }
+      if(best){
+        best.classList.add('gdrop-'+bestMode);
+        dropGid=best.dataset.gid;dropMode=bestMode;
+      }else{dropGid=null;dropMode=null;}
+    };
+    const end=async()=>{
+      if(!dragging){cancel();return;}
+      dragging=false;cancel();
+      if(!dropGid||!dropMode){clearHi();dragGid=null;return;}
+      // 配列で並べ替え
+      const sid=(typeof getContainerSid==='function')?getContainerSid():detailSid;
+      const s=getContainer(sid);if(!s||!s.groups){clearHi();return;}
+      const fromIdx=s.groups.findIndex(g=>g.id===dragGid);
+      let toIdx=s.groups.findIndex(g=>g.id===dropGid);
+      if(fromIdx<0||toIdx<0){clearHi();return;}
+      const moved=s.groups.splice(fromIdx,1)[0];
+      // toIdxの再計算
+      toIdx=s.groups.findIndex(g=>g.id===dropGid);
+      if(dropMode==='after')toIdx++;
+      s.groups.splice(toIdx,0,moved);
+      await ss();await sib();
+      if(sid==='__inbox__')renderInboxTree();else renderStepsTree();
+      renderStars();
+      clearHi();
+      dragGid=null;dropGid=null;dropMode=null;
+    };
+    root.addEventListener('mousedown',e=>{
+      const t=e.target.closest('[data-grouphead]');if(!t)return;
+      if(e.target.closest('[data-editgroup],.smini,.toggle-btn'))return;
+      start(e,t);
+    });
+    root.addEventListener('touchstart',e=>{
+      const t=e.target.closest('[data-grouphead]');if(!t)return;
+      if(e.target.closest('[data-editgroup],.smini,.toggle-btn'))return;
+      start(e,t);
+    },{passive:false});
+    root.addEventListener('mouseup',end);
+    root.addEventListener('mouseleave',()=>{cancel();if(dragging)end();});
+    root.addEventListener('touchend',end);
+    root.addEventListener('touchcancel',()=>{cancel();if(dragging)end();});
+    root.addEventListener('mousemove',move);
+    root.addEventListener('touchmove',move,{passive:false});
+  }
+  attachGroupDnD('stepsTree',()=>detailSid);
+  attachGroupDnD('ibStepsTree',()=>'__inbox__');
 })();
 
 function tick(){const el=document.getElementById('clock');if(el){const d=new Date();el.textContent=`${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;}}
