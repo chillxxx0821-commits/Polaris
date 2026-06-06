@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Polaris">
-<meta name="theme-color" content="#faf8f1">
+<meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
@@ -18,8 +18,8 @@
   @import url('https://cdn.jsdelivr.net/gh/shogo82148/genjyuugothic-subsets@main/fonts/GenJyuuGothicL-Regular.css');
   :root{
     --ink:#1a1d24; --ink-soft:#4a4f5c; --ink-faint:#9498a6;
-    --paper:#f4f1ea; --paper-warm:#eceadf; --line:#e0dbcf;
-    --card:#fbf9f4; --star:#c9a227; --star-soft:#e3d4a0;
+    --paper:#ffffff; --paper-warm:#f5f5f5; --line:#e8e6e0;
+    --card:#ffffff; --star:#c9a227; --star-soft:#e3d4a0;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html, body{overscroll-behavior:none;}
@@ -47,7 +47,7 @@
   .title-right{display:flex;gap:8px;align-items:center;flex-shrink:0;}
 
   /* 仮タスク入力 */
-  .inbox-input-row{display:flex;gap:5px;align-items:stretch;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:3px 3px 3px 13px;transition:border-color 0.2s;}
+  .inbox-input-row{display:flex;gap:5px;align-items:stretch;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:3px 3px 3px 13px;transition:border-color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);}
   .inbox-input-row:focus-within{border-color:var(--star);}
   #inboxInput{flex:1;background:none;border:none;padding:8px 0;font-size:13.5px;color:var(--ink);font-family:inherit;outline:none;min-width:0;}
   #inboxInput::placeholder{color:var(--ink-faint);}
@@ -65,15 +65,15 @@
   .chip-zone{margin-bottom:21px;}
   .chip-label{font-size:11px;color:var(--ink-faint);letter-spacing:0.14em;margin-bottom:8px;}
   .chips{display:flex;flex-wrap:wrap;gap:8px;}
-  .chip{font-family:inherit;font-size:12.5px;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:13px;padding:8px 13px;transition:all 0.2s;}
+  .chip{font-family:inherit;font-size:12.5px;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:13px;padding:8px 13px;transition:all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);}
   .chip:active{background:var(--paper-warm);border-color:var(--star);color:var(--ink);}
   .chip::before{content:'+ ';color:var(--star);font-weight:700;}
 
   .lcards{display:flex;flex-direction:column;gap:8px;margin-bottom:21px;}
-  .lcard{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:13px 21px;position:relative;transition:transform 0.22s,border-color 0.22s;}
+  .lcard{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:13px 21px;position:relative;transition:transform 0.22s,border-color 0.22s cubic-bezier(0.4, 0.0, 0.2, 1);}
   .lcard:active{transform:scale(0.99);border-color:var(--star);}
   /* テーマカードはタップ時のスケール・枠変化を無効化 */
-  #starsList .lcard{transition:none;}
+  #starsList .lcard{transition:none cubic-bezier(0.4, 0.0, 0.2, 1);}
   #starsList .lcard:active{transform:none;border-color:var(--line);}
   .lcard .word{font-size:15.5px;font-weight:700;color:var(--ink);letter-spacing:0.02em;}
   .lcard .def{font-size:12.5px;color:var(--ink-soft);margin-top:8px;line-height:1.65;white-space:pre-wrap;word-wrap:break-word;}
@@ -95,7 +95,7 @@
 
   /* achievement collection shelf */
   .trophy-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:8px;}
-  .trophy{background:linear-gradient(160deg,#fdf9ec,#f3ead0);border:1px solid #e6d9b3;border-radius:13px;padding:21px 13px 13px;text-align:center;position:relative;overflow:hidden;box-shadow:0 2px 10px rgba(201,162,39,0.1);transition:transform 0.2s;}
+  .trophy{background:linear-gradient(160deg,#fdf9ec,#f3ead0);border:1px solid #e6d9b3;border-radius:13px;padding:21px 13px 13px;text-align:center;position:relative;overflow:hidden;box-shadow:0 2px 10px rgba(201,162,39,0.1);transition:transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);}
   .trophy:active{transform:scale(0.97);}
   .trophy::before{content:'';position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:90px;height:90px;background:radial-gradient(circle,rgba(201,162,39,0.22),transparent 70%);}
   .trophy .star{font-size:26px;color:var(--star);filter:drop-shadow(0 0 6px rgba(201,162,39,0.5));}
@@ -103,17 +103,17 @@
   .trophy .tmeta{font-size:10px;color:var(--ink-faint);margin-top:8px;letter-spacing:0.03em;}
   .trophy .tribbon{font-size:9px;letter-spacing:0.2em;color:var(--star);text-transform:uppercase;font-weight:700;margin-top:3px;}
 
-  .vcustom-btn{font-family:inherit;width:100%;background:none;border:1px dashed var(--line);border-radius:13px;padding:13px;color:var(--ink-faint);font-size:13px;transition:border-color 0.2s;}
+  .vcustom-btn{font-family:inherit;width:100%;background:none;border:1px dashed var(--line);border-radius:13px;padding:13px;color:var(--ink-faint);font-size:13px;transition:border-color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);}
   .vcustom-btn:active{border-color:var(--star);}
   .vcustom-btn .p{color:var(--star);font-weight:700;}
 
   .field-label{font-size:11px;color:var(--ink-faint);letter-spacing:0.16em;text-transform:uppercase;margin:13px 0 8px;}
-  input[type=text],textarea,select,input[type=date]{font-family:inherit;background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px 13px;font-size:16px;color:var(--ink);width:100%;transition:border-color 0.25s;}
+  input[type=text],textarea,select,input[type=date]{font-family:inherit;background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px 13px;font-size:16px;color:var(--ink);width:100%;transition:border-color 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);}
   input:focus,textarea:focus,select:focus{outline:none;border-color:var(--star);}
   ::placeholder{color:var(--ink-faint);}
   textarea{resize:none;min-height:90px;line-height:1.7;}
-  .btn-full{font-family:inherit;width:100%;background:var(--ink);color:var(--paper);border:none;border-radius:13px;padding:13px;font-size:16px;font-weight:700;letter-spacing:0.08em;margin-top:13px;transition:transform 0.2s;}
-  .btn-full:active{transform:scale(0.97);}
+  .btn-full{font-family:inherit;width:100%;background:var(--ink);color:var(--paper);border:none;border-radius:13px;padding:13px;font-size:16px;font-weight:700;letter-spacing:0.08em;margin-top:13px;transition:transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1),box-shadow 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);box-shadow:0 3px 8px rgba(0,0,0,0.08);}
+  .btn-full:active{transform:scale(0.97);box-shadow:0 1px 3px rgba(0,0,0,0.06);}
   .btn-ghost{font-family:inherit;width:100%;background:none;color:var(--ink-faint);border:none;padding:13px;font-size:13px;margin-top:5px;}
   .btn-ghost.danger:active{color:#b4503e;}
   .hint{font-size:11.5px;color:var(--ink-faint);margin-top:13px;line-height:1.7;}
@@ -132,7 +132,7 @@
   #mbg{z-index:450;}
   #msheet{z-index:451 !important;}
   .sheet-bg.open{display:none;}
-  .sheet{position:absolute;left:0;right:0;top:0;bottom:0;background:var(--paper);border-radius:0;padding:21px 21px 89px;opacity:0;transition:opacity 0.18s ease;z-index:201;overflow-y:auto;visibility:hidden;}
+  .sheet{position:absolute;left:0;right:0;top:0;bottom:0;background:var(--paper);border-radius:0;padding:21px 21px 89px;opacity:0;transition:opacity 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);z-index:201;overflow-y:auto;visibility:hidden;}
   .sheet.open{opacity:1;visibility:visible;}
   .sheet::-webkit-scrollbar{display:none;}
   .sheet .grip{display:none;}
@@ -149,7 +149,7 @@
   .time-or{color:var(--ink-faint);font-size:12px;margin:0 2px;}
   .dur-in{width:84px !important;padding:13px 13px !important;font-size:14px !important;}
   .rep-row{display:flex;gap:8px;margin-top:8px;}
-  .rep-opt{flex:1;font-family:inherit;font-size:12.5px;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:13px;padding:8px 3px;transition:all 0.2s;}
+  .rep-opt{flex:1;font-family:inherit;font-size:12.5px;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:13px;padding:8px 3px;transition:all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);}
   .rep-opt.active{border-color:var(--star);background:rgba(201,162,39,0.08);color:var(--ink);font-weight:700;}
   .weekday-row{display:flex;gap:5px;margin-top:8px;}
   .wd{flex:1;font-family:inherit;font-size:12px;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:8px;padding:8px 0;}
@@ -184,7 +184,7 @@
     font-family:inherit;color:var(--ink-faint);font-size:11px;
     padding:0 8px;height:32px;cursor:pointer;
     letter-spacing:0.08em;margin-left:5px;
-    transition:color 0.2s ease, border-color 0.2s ease;
+    transition:color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1), border-color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .cal-today-btn:hover{color:var(--star);border-color:var(--star);}
   .cal-nav:active{border-color:var(--star);color:var(--star);}
@@ -227,7 +227,7 @@
   /* segment */
   .cal-seg{display:flex;gap:0;background:var(--paper-warm);border-radius:13px;padding:3px;margin-bottom:13px;}
   .cal-seg.cal-seg-bottom{margin-top:13px;margin-bottom:0;flex-shrink:0;}
-  .cal-seg .seg{flex:1;font-family:inherit;font-size:13px;color:var(--ink-soft);background:none;border:none;border-radius:8px;padding:8px 0;transition:all 0.2s;}
+  .cal-seg .seg{flex:1;font-family:inherit;font-size:13px;color:var(--ink-soft);background:none;border:none;border-radius:8px;padding:8px 0;transition:all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);}
   .cal-seg .seg.active{background:var(--paper);color:var(--ink);font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
   /* vertical (week/day) */
   .vcal{position:relative;margin-top:3px;}
@@ -366,7 +366,7 @@
   .mv-opt .mv-mark{color:var(--star);margin-right:5px;}
 
   /* トグル */
-  .toggle-btn{background:none;border:none;font-family:inherit;color:var(--ink-faint);font-size:11px;cursor:pointer;padding:0 3px;margin-right:3px;transition:transform 0.18s;display:inline-block;width:16px;text-align:center;}
+  .toggle-btn{background:none;border:none;font-family:inherit;color:var(--ink-faint);font-size:11px;cursor:pointer;padding:0 3px;margin-right:3px;transition:transform 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);display:inline-block;width:16px;text-align:center;}
   .toggle-btn:hover{color:var(--star);}
   .step-group.collapsed > *:not(.step-group-head){display:none;}
   .snode.collapsed > .schildren{display:none;}
@@ -376,7 +376,7 @@
   .trail-filter{margin-bottom:21px;}
   .trail-filter .tf-label{font-size:11px;color:var(--ink-faint);letter-spacing:0.14em;margin-bottom:8px;}
   .trail-filter .chips{display:flex;flex-wrap:wrap;gap:8px;}
-  .trail-filter .fchip{font-family:inherit;font-size:12.5px;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:13px;padding:8px 13px;transition:all 0.2s;cursor:pointer;}
+  .trail-filter .fchip{font-family:inherit;font-size:12.5px;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:13px;padding:8px 13px;transition:all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);cursor:pointer;}
   .trail-filter .fchip:hover{border-color:var(--star);color:var(--ink);}
   .trail-filter .fchip::before{content:'▸ ';color:var(--star);font-weight:700;opacity:0.7;}
   .trail-filter .fchip.on{background:rgba(201,162,39,0.12);border-color:var(--star);color:var(--ink);font-weight:700;}
@@ -390,7 +390,7 @@
     border-radius:5px;font-family:inherit;
     font-size:11px;color:var(--ink-soft);
     padding:5px 8px;cursor:pointer;
-    transition:color 0.18s ease, border-color 0.18s ease;
+    transition:color 0.18s cubic-bezier(0.4, 0.0, 0.2, 1), border-color 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);
     letter-spacing:0.04em;
   }
   .md-btn:hover{color:var(--star);border-color:var(--star);}
@@ -409,7 +409,7 @@
     inset:0 !important;
     transform:none !important;
     opacity:0;
-    transition:opacity 0.18s ease !important;
+    transition:opacity 0.18s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
     padding:0 !important;
     visibility:hidden;
     overflow:hidden !important;
@@ -458,7 +458,7 @@
   .cal-item.task .cdot{background:#7a9b7a;}
   .cal-item.task .ci-dir{color:#7a9b7a;}
   /* タスクのチェックボックス */
-  .task-check{flex-shrink:0;width:18px;height:18px;border:1.5px solid #7a9b7a;border-radius:5px;background:none;margin-right:8px;cursor:pointer;transition:all 0.2s;align-self:center;}
+  .task-check{flex-shrink:0;width:18px;height:18px;border:1.5px solid #7a9b7a;border-radius:5px;background:none;margin-right:8px;cursor:pointer;transition:all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);align-self:center;}
   .task-check:hover{background:rgba(122,155,122,0.15);}
   .task-check.done{background:#7a9b7a;}
   .task-check.done::after{content:'✓';color:#fff;font-size:13px;font-weight:700;display:block;text-align:center;line-height:15px;}
@@ -492,8 +492,26 @@
     width:10px;height:10px;
     background:#d04a3a;border-radius:50%;
   }
-  .vev.task .vev-check{display:inline-block;width:12px;height:12px;border:1.5px solid #fff;border-radius:3px;margin-right:5px;vertical-align:middle;background:transparent;}
-  .vev.task.done .vev-check{background:#fff;}
+  .vev.task .vev-check{display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border:1.5px solid #fff;border-radius:3px;margin-right:5px;vertical-align:middle;background:transparent;position:relative;overflow:visible;}
+  .vev.task .vev-check .check-svg{
+    width:18px;height:18px;
+    overflow:visible;
+    pointer-events:none;
+    position:absolute;
+    left:50%;top:50%;
+    transform:translate(-50%,-35%);
+  }
+  .vev.task .vev-check .check-svg path{
+    stroke:#fff;
+    stroke-width:0.6;
+    stroke-linecap:round;stroke-linejoin:round;
+    fill:none;
+    stroke-dasharray:28;
+    stroke-dashoffset:28;
+    transition:stroke-dashoffset 1.1s cubic-bezier(0.4, 0.0, 0.2, 1) 0.1s;
+  }
+  .vev.task.done .vev-check{background:transparent;}
+  .vev.task.done .vev-check .check-svg path{stroke-dashoffset:0;}
   .vev.task.done .vev-t{text-decoration:line-through;}
   .cal-item.event .cdot{background:#6a8cb0;}
   .cal-item.event .ci-dir{color:#6a8cb0;}
@@ -504,9 +522,30 @@
   .steps-tree{margin:21px 0 5px;}
   .snode{margin-bottom:3px;}
   .srow{display:flex;align-items:flex-start;gap:8px;padding:8px 0;}
-  .scheck{width:19px;height:19px;border-radius:5px;border:1.5px solid #c3bca8;flex-shrink:0;margin-top:1px;background:none;position:relative;transition:transform 0.2s;}
-  .scheck:active{transform:scale(0.86);}
-  .scheck.filling{border-color:var(--star);background:var(--star);animation:checkPop 0.6s cubic-bezier(.3,1.6,.5,1);}
+  .scheck{
+    width:19px;height:19px;border-radius:5px;border:1.5px solid #c3bca8;
+    flex-shrink:0;margin-top:1px;background:none;position:relative;
+    display:inline-flex;align-items:center;justify-content:center;padding:0;
+    overflow:visible;
+  }
+  .scheck .check-svg{
+    width:24px;height:24px;
+    overflow:visible;
+    pointer-events:none;
+    position:absolute;
+    left:50%;top:50%;
+    transform:translate(-50%,-35%);
+  }
+  .scheck .check-svg path{
+    stroke:var(--star);
+    stroke-width:0.5;
+    stroke-linecap:round;stroke-linejoin:round;
+    fill:none;
+    stroke-dasharray:28;
+    stroke-dashoffset:28;
+    transition:stroke-dashoffset 1.1s cubic-bezier(0.4, 0.0, 0.2, 1) 0.1s;
+  }
+  .scheck.checked .check-svg path,.scheck.filling .check-svg path{stroke-dashoffset:0;}
   @keyframes checkPop{0%{transform:scale(1);}40%{transform:scale(1.4) rotate(15deg);}100%{transform:scale(1) rotate(0);}}
   .stext{flex:1;font-size:14px;color:var(--ink);line-height:1.5;}
   .stext .sdue{display:block;font-size:10.5px;color:var(--ink-faint);margin-top:3px;letter-spacing:0.04em;}
@@ -569,13 +608,13 @@
   .tab.active{color:var(--star);}
   .tab.active .lb{font-weight:700;}
 
-  .toast{position:absolute;bottom:100px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--paper);padding:13px 21px;border-radius:21px;font-size:13px;opacity:0;pointer-events:none;transition:all 0.35s;z-index:300;white-space:nowrap;}
+  .toast{position:absolute;bottom:100px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--paper);padding:13px 21px;border-radius:21px;font-size:13px;opacity:0;pointer-events:none;transition:all 0.35s cubic-bezier(0.4, 0.0, 0.2, 1);z-index:300;white-space:nowrap;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
   .toast .ts{color:var(--star-soft);}
 
   .confirm-bg{position:absolute;inset:0;background:rgba(20,22,28,0.5);z-index:400;display:none !important;align-items:center;justify-content:center;padding:34px;}
   .confirm-bg.open{display:flex !important;}
-  .confirm{background:var(--paper);border-radius:21px;padding:21px 21px;width:100%;transform:scale(0.92);transition:transform 0.25s;}
+  .confirm{background:var(--paper);border-radius:21px;padding:21px 21px;width:100%;transform:scale(0.92);transition:transform 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);}
   .confirm-bg.open .confirm{transform:scale(1);}
   .confirm h3{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:8px;}
   .confirm p{font-size:13px;color:var(--ink-soft);line-height:1.7;margin-bottom:21px;}
@@ -592,16 +631,16 @@
   .flash.go{animation:flashPop 0.85s ease-out forwards;}
   @keyframes flashPop{0%{opacity:0;transform:translate(-50%,-50%) scale(0.2);}30%{opacity:1;transform:translate(-50%,-50%) scale(1.1);}100%{opacity:0;transform:translate(-50%,-50%) scale(1.5);}}
   /* ===== zen overrides：白基調、引き算の禅デザイン ===== */
-  body{background:#e8e5dc;}
+  body{background:#ececec;}
   :root{
     --ink:#2d3038;
     --ink-soft:#6a6d75;
     --ink-faint:#a0a3ab;
-    --line:#e4e0d3;
-    --line-soft:#efebdf;
+    --line:#e8e6e0;
+    --line-soft:#f0eeea;
     --paper:#ffffff;
     --card:#ffffff;
-    --paper-warm:#fbfaf6;
+    --paper-warm:#f5f5f5;
     --star:#a8893f;
     --star-soft:#c4b78a;
   }
@@ -753,7 +792,7 @@
     font-weight:300;
     color:var(--ink-soft);
     font-size:13px;
-    transition:all 0.5s ease;
+    transition:all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .chip:hover, .chip:active{
     background:transparent;
@@ -833,7 +872,7 @@
     color:var(--ink-faint);font-size:11px;
     letter-spacing:0.25em;text-transform:uppercase;
     font-weight:300;padding:5px 0;cursor:pointer;
-    transition:color 0.3s ease;
+    transition:color 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .archive-toggle:hover{color:var(--star);}
   .add-group-mini{
@@ -842,7 +881,7 @@
     letter-spacing:0.1em;
     font-weight:300;padding:5px 0;cursor:pointer;
     display:block;margin-bottom:5px;
-    transition:color 0.3s ease;
+    transition:color 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .add-group-mini:hover{color:var(--star);}
   .archive-menu{margin-top:8px;display:flex;flex-direction:column;gap:0;}
@@ -852,7 +891,7 @@
     color:var(--ink-soft);font-weight:300;font-size:13px;
     border-bottom:1px solid var(--line-soft);
     cursor:pointer;letter-spacing:0.04em;
-    transition:color 0.3s ease;
+    transition:color 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .archive-item:hover{color:var(--star);}
   .archive-item.danger:hover{color:#b85555;}
@@ -860,13 +899,13 @@
   /* テーマカードのトグル＋カテゴリ表示 */
   .lcard-head{display:flex;align-items:center;gap:5px;}
   .lcard-head .toggle-btn{font-size:10px;padding:2px 5px 2px 0;color:var(--ink-faint);}
-  .lcard-head .star-dir{flex:1;cursor:text;padding:3px 5px;margin-left:-6px;border-radius:3px;transition:background 0.18s ease;}
+  .lcard-head .star-dir{flex:1;cursor:text;padding:3px 5px;margin-left:-6px;border-radius:3px;transition:background 0.18s cubic-bezier(0.4, 0.0, 0.2, 1),color 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);}
   .lcard-head .star-dir:hover{background:rgba(168,137,63,0.08);}
   .lcard-head .star-open-btn{
     background:none;border:none;font-family:inherit;
     color:var(--ink-faint);font-size:20px;font-weight:300;
     line-height:1;padding:3px 8px;cursor:pointer;
-    border-radius:3px;transition:color 0.2s ease;flex-shrink:0;
+    border-radius:3px;transition:color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);flex-shrink:0;
   }
   .lcard-head .star-open-btn:hover{color:var(--star);}
   /* テーマカード末尾の小さい「+」 */
@@ -875,7 +914,7 @@
     color:var(--star);font-size:18px;font-weight:300;line-height:1;
     cursor:pointer;padding:5px 8px;
     align-self:flex-end;margin-top:3px;
-    opacity:0.5;transition:opacity 0.2s ease;
+    opacity:0.5;transition:opacity 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
     border-radius:3px;
   }
   .star-add-task:hover{opacity:1;}
@@ -886,7 +925,7 @@
     width:28px;height:28px;border-radius:50%;
     border:2px solid transparent;cursor:pointer;
     padding:0;background:none;
-    transition:transform 0.15s ease, border-color 0.15s ease;
+    transition:transform 0.15s cubic-bezier(0.4, 0.0, 0.2, 1), border-color 0.15s cubic-bezier(0.4, 0.0, 0.2, 1);
     position:relative;
   }
   .color-swatch .cs-inner{
@@ -911,15 +950,35 @@
     background:transparent;
     padding:0;cursor:pointer;
     flex-shrink:0;margin-right:8px;
-    transition:background 0.2s ease;
+    position:relative;
+    display:inline-flex;align-items:center;justify-content:center;
+    overflow:visible;
   }
-  .pv-check:hover{background:rgba(168,137,63,0.15);}
+  .pv-check .check-svg{
+    width:20px;height:20px;
+    overflow:visible;
+    pointer-events:none;
+    position:absolute;
+    left:50%;top:50%;
+    transform:translate(-50%,-35%);
+  }
+  .pv-check .check-svg path{
+    stroke:var(--star);
+    stroke-width:0.5;
+    stroke-linecap:round;stroke-linejoin:round;
+    fill:none;
+    stroke-dasharray:28;
+    stroke-dashoffset:28;
+    transition:stroke-dashoffset 1.1s cubic-bezier(0.4, 0.0, 0.2, 1) 0.1s;
+  }
+  .pv-check.checked .check-svg path{stroke-dashoffset:0;}
+  .pv-check:hover{background:rgba(168,137,63,0.08);}
   .pv-task-text{flex:1;}
   .pv-task-text[contenteditable="true"]{
     outline:none;cursor:text;
     padding:1px 3px;margin-left:-4px;
     border-radius:3px;min-height:1.2em;
-    transition:background 0.18s ease;
+    transition:background 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .pv-task-text[contenteditable="true"]:hover{background:rgba(168,137,63,0.06);}
   .pv-task-text[contenteditable="true"]:focus{background:rgba(168,137,63,0.12);}
@@ -944,12 +1003,11 @@
   .pv-toggle:hover{color:var(--star);}
   .pv-toggle-spacer{display:inline-block;width:18px;}
   .pv-task-block{display:block;}
-  .pv-check.checked{background:var(--star);border-color:var(--star);}
   .pv-edit{
     background:none;border:none;font-family:inherit;
     color:var(--ink-faint);font-size:16px;line-height:1;
     padding:3px 8px;cursor:pointer;
-    opacity:0.5;transition:opacity 0.2s ease, color 0.2s ease;
+    opacity:0.5;transition:opacity 0.2s cubic-bezier(0.4, 0.0, 0.2, 1), color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .pv-edit:hover{opacity:1;color:var(--star);}
 
@@ -966,7 +1024,7 @@
     width:32px;height:32px;cursor:pointer;
     padding:0;border-radius:50%;
     z-index:50;line-height:1;
-    transition:color 0.2s ease;
+    transition:color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .sheet-close-mini:hover{color:var(--ink);}
   /* シート自体が position:relative になっていないことが多いので、absolute起点を確保 */
@@ -979,7 +1037,7 @@
     font-size:17px;color:var(--ink-faint);
     padding:5px 13px;cursor:pointer;line-height:1;
     border-bottom:1px solid transparent;margin-bottom:-1px;
-    transition:color 0.2s ease;
+    transition:color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .trail-search-toggle:hover, .trail-search-toggle.active{color:var(--star);}
   .trail-search-box{margin-bottom:21px;display:flex;flex-direction:column;gap:8px;}
@@ -1020,7 +1078,7 @@
     background:none;border:1px solid var(--line);font-family:inherit;
     color:var(--ink-soft);font-size:14px;
     width:34px;height:34px;cursor:pointer;border-radius:5px;
-    transition:all 0.2s ease;
+    transition:all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .reorder-up:hover, .reorder-down:hover{border-color:var(--star);color:var(--star);}
   .reorder-up:disabled, .reorder-down:disabled{opacity:0.3;cursor:default;}
@@ -1043,7 +1101,7 @@
     background:var(--line);
     border:none;border-radius:13px;
     cursor:pointer;padding:0;
-    transition:background 0.22s ease;
+    transition:background 0.22s cubic-bezier(0.4, 0.0, 0.2, 1);
     flex-shrink:0;
   }
   .toggle-switch.active{background:var(--star);}
@@ -1052,7 +1110,7 @@
     width:18px;height:18px;
     background:#fff;border-radius:50%;
     box-shadow:0 1px 3px rgba(0,0,0,0.2);
-    transition:transform 0.22s ease;
+    transition:transform 0.22s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .toggle-switch.active .toggle-knob{transform:translateX(18px);}
   /* タスク名のインライン編集 */
@@ -1060,7 +1118,7 @@
     cursor:text;display:inline-block;
     padding:1px 3px;margin-left:-4px;
     border-radius:3px;outline:none;
-    transition:background 0.18s ease;
+    transition:background 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .stext-name:focus{background:rgba(168,137,63,0.12);}
   .stext-name.longpress-active{background:rgba(168,137,63,0.25);}
@@ -1069,13 +1127,13 @@
     color:var(--star);
     font-weight:300;font-size:15px;
     opacity:0.5;
-    transition:opacity 0.2s ease;
+    transition:opacity 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .smini.sadd-here:hover{opacity:1;}
   .smini.sopen{
     color:var(--ink-faint);font-size:18px;
     font-weight:300;line-height:1;
-    transition:color 0.2s ease;
+    transition:color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .smini.sopen:hover{color:var(--star);}
   /* 完了タスク：取り消し線＋薄く */
@@ -1096,7 +1154,7 @@
   .snode.drop-into > .srow{
     background:rgba(168,137,63,0.12);border-radius:5px;
   }
-  .snode{position:relative;}
+  .snode{position:relative;transition:background 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);}
   .step-group.drop-into{
     background:rgba(168,137,63,0.08);border-radius:8px;
   }
@@ -1123,8 +1181,8 @@
     content:'';position:absolute;bottom:-2px;left:0;right:0;
     height:2px;background:var(--star);border-radius:1px;z-index:5;
   }
-  /* テーマカード内タスクD&D */
-  .pvrow{position:relative;}
+  /* タスク行・カテゴリ行に共通の滑らかな背景変化 */
+  .pvrow{position:relative;transition:background 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);}
   .pvrow.cdragging{opacity:0.4;}
   .pvrow.cdrop-before::before{
     content:'';position:absolute;top:-1px;left:0;right:0;
@@ -1156,7 +1214,7 @@
     color:var(--ink);
     padding:8px 13px;cursor:pointer;
     display:inline-flex;align-items:center;gap:8px;
-    transition:border-color 0.18s ease, color 0.18s ease;
+    transition:border-color 0.18s cubic-bezier(0.4, 0.0, 0.2, 1), color 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);
     letter-spacing:0.02em;
   }
   .dpicker-btn:hover{border-color:var(--star);}
@@ -1192,7 +1250,7 @@
     font-family:inherit;font-size:12px;
     color:var(--ink-soft);
     padding:5px 13px;cursor:pointer;
-    transition:color 0.18s ease, border-color 0.18s ease;
+    transition:color 0.18s cubic-bezier(0.4, 0.0, 0.2, 1), border-color 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);
     letter-spacing:0.02em;
     white-space:nowrap;flex-shrink:0;
   }
@@ -1214,7 +1272,7 @@
     color:var(--ink);padding:8px 5px;cursor:pointer;
     display:flex;justify-content:space-between;align-items:center;
     border-radius:5px;
-    transition:background 0.15s ease;
+    transition:background 0.15s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .idp-q:hover{background:rgba(168,137,63,0.08);}
   .idp-q-sub{color:var(--ink-faint);font-size:11px;letter-spacing:0.02em;}
@@ -1243,7 +1301,7 @@
     background:none;border:none;font-family:inherit;
     font-size:12.5px;color:var(--ink);
     padding:8px 0;cursor:pointer;border-radius:5px;
-    transition:background 0.15s ease;
+    transition:background 0.15s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .idp-cell:hover{background:rgba(168,137,63,0.1);}
   .idp-cell.today{color:var(--star);font-weight:500;}
@@ -1266,14 +1324,14 @@
     color:var(--ink);padding:8px 8px;cursor:pointer;
     text-align:left;
     border-radius:5px;
-    transition:background 0.15s ease;
+    transition:background 0.15s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .imp-opt:hover{background:rgba(168,137,63,0.08);}
   /* タスク名インライン編集 */
   .td-title-editable{
     cursor:text;border-radius:3px;
     padding:2px 3px;margin-left:-4px !important;
-    transition:background 0.18s ease;
+    transition:background 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .td-title-editable:hover{background:rgba(168,137,63,0.06);}
   .td-title-editable:focus{background:rgba(168,137,63,0.12);outline:none;}
@@ -1286,7 +1344,7 @@
     font-size:13px;letter-spacing:0.12em;
     cursor:pointer;z-index:150;
     box-shadow:0 6px 18px rgba(0,0,0,0.18);
-    transition:transform 0.18s ease;
+    transition:transform 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .today-fab:active{transform:scale(0.96);}
   .today-fab.active{background:var(--star);}
@@ -1304,10 +1362,10 @@
     background:none;border:none;
     color:#fff;font-family:inherit;cursor:pointer;
     padding:13px 21px;
-    transition:background 0.15s ease;
+    transition:background 0.15s cubic-bezier(0.4, 0.0, 0.2, 1),transform 0.15s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .dual-fab-btn:hover{background:rgba(255,255,255,0.08);}
-  .dual-fab-btn:active{background:rgba(255,255,255,0.16);}
+  .dual-fab-btn:active{background:rgba(255,255,255,0.16);transform:scale(0.96);}
   .dual-fab-today{font-size:13px;letter-spacing:0.1em;}
   .dual-fab-today.active{background:var(--star);}
   .dual-fab-add{font-family:-apple-system,sans-serif;font-size:24px;font-weight:200;line-height:1;padding:8px 21px;display:flex;align-items:center;justify-content:center;}
@@ -1324,17 +1382,17 @@
     font-size:28px;font-weight:200;line-height:1;
     cursor:pointer;z-index:150;
     box-shadow:0 6px 18px rgba(0,0,0,0.18);
-    transition:transform 0.18s ease;
+    transition:transform 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);
     display:none;align-items:center;justify-content:center;
     padding:0;
   }
-  .cal-fab:active{transform:scale(0.96);}
+  .cal-fab:active{transform:scale(0.96);box-shadow:0 2px 8px rgba(0,0,0,0.12);}
   /* 「今日」ビュー（フェードイン） */
   .today-view{
     position:absolute;inset:0;
     background:var(--paper);
     opacity:0;visibility:hidden;
-    transition:opacity 0.18s ease;
+    transition:opacity 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);
     z-index:160;overflow-y:auto;
     padding:21px 21px 89px;
   }
@@ -1360,7 +1418,7 @@
     border:1.5px solid var(--star);border-radius:3px;
     background:transparent;padding:0;cursor:pointer;
     flex-shrink:0;margin-top:2px;
-    transition:background 0.2s ease;
+    transition:background 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
     box-sizing:border-box;
   }
   .today-check:hover{background:rgba(168,137,63,0.15);}
@@ -1756,7 +1814,7 @@
     <div class="vfull-inner">
       <div class="sword">TASK</div>
       <div style="display:flex;gap:13px;align-items:flex-start;margin-top:3px;">
-        <button class="scheck" id="tdComplete" style="margin-top:8px;flex-shrink:0;"></button>
+        <button class="scheck" id="tdComplete" style="margin-top:8px;flex-shrink:0;"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></button>
         <h2 id="tdTitle" class="td-title-editable" contenteditable="true" spellcheck="false" style="font-size:22px;margin:0;flex:1;line-height:1.4;outline:none;">—</h2>
       </div>
       <div id="tdMeta" style="font-size:12px;color:var(--ink-faint);margin-top:5px;line-height:1.7;padding-left:34px;"></div>
@@ -2108,7 +2166,7 @@ function renderCardTaskRow(s,st,pathStr,kind){
   }
   return `<div class="pv-task-block" data-pvblock="${s.id}::${pathStr}">
     <div class="pvrow${nestedCls}${doneCls}${selCls}" data-cardrow="${s.id}::${st.id}" data-stepid="${st.id}" data-cardpath="${s.id}::${pathStr}">
-      <button class="pv-check ${st.done?'checked':''}" data-sccheck="${cbId}"></button>
+      <button class="pv-check ${st.done?'checked':''}" data-sccheck="${cbId}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></button>
       ${toggleBtn}
       <span class="pv-task-text" data-themeeditname="${cbId}" data-stepid="${st.id}" data-sid="${s.id}">${esc(st.text)}</span>
       ${due}
@@ -2208,10 +2266,10 @@ function renderStars(){
         const n=countOpenSteps(openSteps);
         const gKey=`${s.id}::${g.id}`;
         const gCol=collapsedStarGroups[gKey];
-        const gTri=openSteps.length?(gCol?'▶':'▼'):' ';
+        const gTri=gCol?'▶':'▼';
         const catSelected=selectedCategoryKey===gKey;
         const catSelCls=catSelected?' cat-selected':'';
-        parts.push(`<div class="pvrow pvgroup-row${catSelCls}" data-pvgrouphead="${s.id}::${g.id}" data-pvgid="${g.id}">${openSteps.length?`<button class="pv-toggle" data-togglestargroup="${gKey}">${gTri}</button>`:'<span class="pv-toggle-spacer"></span>'}<span class="pvgroup" data-pvgroupname="${s.id}::${g.id}">${esc(g.name)}</span>${n?`<span class="pvcount">(${n})</span>`:''}</div>`);
+        parts.push(`<div class="pvrow pvgroup-row${catSelCls}" data-pvgrouphead="${s.id}::${g.id}" data-pvgid="${g.id}"><button class="pv-toggle" data-togglestargroup="${gKey}">${gTri}</button><span class="pvgroup" data-pvgroupname="${s.id}::${g.id}">${esc(g.name)}</span>${n?`<span class="pvcount">(${n})</span>`:''}</div>`);
         if(catSelected){
           parts.push(`<div class="inbox-action-row pv-action-row"><button class="inbox-action" data-gba-addtask="${gKey}">+ タスク</button><button class="inbox-action" data-gba-del="${gKey}">削除</button></div>`);
         }
@@ -2452,7 +2510,7 @@ function renderStepNodes(steps,path){
     const dateActiveCls=datePickerOpen?' active':'';
     const catActiveCls=catPickerOpen?' active':'';
     const actionRow=isSelected?`<div class="inbox-action-row"><button class="inbox-action${dateActiveCls}" data-sba-date="${p}">期日</button><button class="inbox-action${catActiveCls}" data-sba-cat="${p}">カテゴリ</button><button class="inbox-action" data-sba-sub="${p}">+ サブタスク</button><button class="inbox-action" data-sba-del="${p}">削除</button></div>${datePickerOpen?renderStepDatePicker(p,st):''}${catPickerOpen?renderStepCategoryPicker(p,st):''}`:'';
-    return `<div class="snode${isCol?' collapsed':''}${doneCls}${selCls}" data-snode="${p}" data-stepid="${st.id}"><div class="srow"><button class="scheck${st.done?' checked':''}" data-check="${p}"></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" data-stepid="${st.id}">${esc(st.text)}</span>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button></div>${actionRow}${children}</div>`;
+    return `<div class="snode${isCol?' collapsed':''}${doneCls}${selCls}" data-snode="${p}" data-stepid="${st.id}"><div class="srow"><button class="scheck${st.done?' checked':''}" data-check="${p}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" data-stepid="${st.id}">${esc(st.text)}</span>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button></div>${actionRow}${children}</div>`;
   }).join('');
 }
 // テーマ詳細用：期日ピッカー
@@ -3034,8 +3092,8 @@ function renderCalWeek(){
       else if(it.kind==='task'){cls=`vev task ${it.done?'done':''}`;click=` data-editev="${it.id}"`;}
       else{cls=`vev ${it.done?'done':''}`;click=` data-edittask="${it.starId}::${encPath(it.path)}"`;}
       let cb='';
-      if(it.kind==='task')cb=`<span class="vev-check" data-taskdone="${it.id}"></span>`;
-      else if(it.kind==='step')cb=`<span class="vev-check step" data-stepdone="${it.starId}::${encPath(it.path)}"></span>`;
+      if(it.kind==='task')cb=`<span class="vev-check" data-taskdone="${it.id}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></span>`;
+      else if(it.kind==='step')cb=`<span class="vev-check step" data-stepdone="${it.starId}::${encPath(it.path)}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></span>`;
       const bgStyle=getThemeBg(it);
       evtHtml+=`<div class="${cls}" style="top:${pos.top}px;height:${pos.height}px;left:${left};width:${width};${bgStyle}"${click}>${cb}<span class="vev-t">${esc(it.text)}</span></div>`;
     });
@@ -3092,8 +3150,8 @@ function renderCalDay(){
     else if(it.kind==='task'){cls=`vev task ${it.done?'done':''}`;click=` data-editev="${it.id}"`;tail=it.memo?` ・ ${esc(it.memo)}`:'';}
     else{cls=`vev ${it.done?'done':''}`;click=` data-edittask="${it.starId}::${encPath(it.path)}"`;tail=` ・ ★${esc(it.dir)}`;}
     let cb='';
-    if(it.kind==='task')cb=`<span class="vev-check" data-taskdone="${it.id}"></span>`;
-    else if(it.kind==='step')cb=`<span class="vev-check step" data-stepdone="${it.starId}::${encPath(it.path)}"></span>`;
+    if(it.kind==='task')cb=`<span class="vev-check" data-taskdone="${it.id}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></span>`;
+    else if(it.kind==='step')cb=`<span class="vev-check step" data-stepdone="${it.starId}::${encPath(it.path)}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></span>`;
     const bgStyle=getThemeBg(it);
     evtHtml+=`<div class="${cls}" style="top:${pos.top}px;height:${pos.height}px;left:2px;right:2px;width:auto;${bgStyle}"${click}>${cb}<span class="vev-t">${esc(it.text)}</span>${meta.length||tail?`<span class="vev-m">${meta.join(' ・ ')}${tail}</span>`:''}</div>`;
   });
@@ -3509,7 +3567,7 @@ function renderInboxStepNodes(steps,path){
     const dateActiveCls=pickerOpen?' active':'';
     const moveActiveCls=movePickerOpen?' active':'';
     const actionRow=isSelected?`<div class="inbox-action-row"><button class="inbox-action${dateActiveCls}" data-iba-date="${p}">期日</button><button class="inbox-action${moveActiveCls}" data-iba-move="${p}">移動</button><button class="inbox-action" data-iba-sub="${p}">+ サブタスク</button><button class="inbox-action" data-iba-del="${p}">削除</button></div>${pickerOpen?renderInboxDatePicker(p,st):''}${movePickerOpen?renderInboxMovePicker(p,st):''}`:'';
-    return `<div class="snode${isCol?' collapsed':''}${doneCls}${selCls}" data-snode="${p}" data-stepid="${st.id}"><div class="srow inbox-row"><button class="scheck${st.done?' checked':''}" data-check="${p}"></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" data-stepid="${st.id}">${esc(st.text)}</span>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button></div>${actionRow}${children}</div>`;
+    return `<div class="snode${isCol?' collapsed':''}${doneCls}${selCls}" data-snode="${p}" data-stepid="${st.id}"><div class="srow inbox-row"><button class="scheck${st.done?' checked':''}" data-check="${p}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" data-stepid="${st.id}">${esc(st.text)}</span>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button></div>${actionRow}${children}</div>`;
   }).join('');
 }
 document.getElementById('ibbg').addEventListener('click',()=>closeSheet('ibbg','ibsheet'));
@@ -4974,7 +5032,13 @@ async function finalizeComplete(logIt){
       diffs.unshift({id:uid(),ts:Date.now(),text:ev.text,starId:ev.starId||null,groupId:ev.groupId||null,memo:note||null,fromTask:true,repeat:!!(ev.rep&&ev.rep!=='none')});
       await sd();
     }
-    await sev();renderCal();renderTrail();renderWeek();
+    await sev();
+    // アニメを見せる：btn の親.vev に done クラスを付けて少し待つ
+    if(completeCtx.btn){
+      const vevEl=completeCtx.btn.closest('.vev');
+      if(vevEl){vevEl.classList.add('done');await new Promise(r=>setTimeout(r,1200));}
+    }
+    renderCal();renderTrail();renderWeek();
     toast('完了');
     completeCtx=null;
     return;
@@ -5026,7 +5090,18 @@ async function finalizeComplete(logIt){
     node.done=true;
     node.doneTs=Date.now();
   }
-  await ss();await sd();await sml();renderStepsTree();renderStars();renderTrail();renderWeek();renderCal();renderMetricsOnStar();
+  await ss();await sd();await sml();
+  // チェックアニメを見せるため、btn に状態クラス付けて少し待つ
+  if(btn){
+    if(btn.classList.contains('vev-check')){
+      const vevEl=btn.closest('.vev');
+      if(vevEl)vevEl.classList.add('done');
+    }else{
+      btn.classList.add('checked');
+    }
+    await new Promise(r=>setTimeout(r,1200));
+  }
+  renderStepsTree();renderStars();renderTrail();renderWeek();renderCal();renderMetricsOnStar();
   toast(isRep?'記録しました':'完了');
   completeCtx=null;
 }
