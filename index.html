@@ -72,6 +72,9 @@
   .lcards{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
   .lcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:17px 18px;position:relative;transition:transform 0.22s,border-color 0.22s;}
   .lcard:active{transform:scale(0.99);border-color:var(--star);}
+  /* テーマカードはタップ時のスケール・枠変化を無効化 */
+  #starsList .lcard{transition:none;}
+  #starsList .lcard:active{transform:none;border-color:var(--line);}
   .lcard .word{font-size:15.5px;font-weight:700;color:var(--ink);letter-spacing:0.02em;}
   .lcard .def{font-size:12.5px;color:var(--ink-soft);margin-top:8px;line-height:1.65;white-space:pre-wrap;word-wrap:break-word;}
   .lcard .def.empty{color:var(--ink-faint);}
@@ -2225,7 +2228,7 @@ function renderStars(){
         <button class="inbox-action${archiveExpanded?' active':''}" data-tba-archive="${s.id}">アーカイブ</button>
       </div>${showDoneSteps?`<div class="inbox-action-row theme-action-row" style="padding-left:30px;"><button class="inbox-action${doneAtBottom?' active':''}" data-tba-donebottom="${s.id}">完了済みを下にまとめる</button></div>`:''}${archiveExpanded?`<div class="inbox-action-row theme-action-row" style="padding-left:30px;"><button class="inbox-action" data-tba-arc-achieve="${s.id}">達成</button><button class="inbox-action" data-tba-arc-hold="${s.id}">保留</button><button class="inbox-action" data-tba-arc-delete="${s.id}">削除</button></div>`:''}`;
     }
-    return `<div class="lcard${isCol?' collapsed':''}${themeSelCls}" data-tcid="${s.id}"><div class="lcard-head" data-tcdrag="${s.id}"><button class="toggle-btn" data-togglestar="${s.id}">${tri}</button><div class="star-dir" data-themesel="${s.id}">${esc(s.dir)}</div><button class="star-open-btn" data-editstar="${s.id}" title="このテーマを編集">⋯</button></div>${themeActionRow}${body}</div>`;
+    return `<div class="lcard${isCol?' collapsed':''}${themeSelCls}" data-tcid="${s.id}"><div class="lcard-head"><button class="toggle-btn" data-togglestar="${s.id}">${tri}</button><div class="star-dir" data-themesel="${s.id}" data-tcdrag="${s.id}">${esc(s.dir)}</div><button class="star-open-btn" data-editstar="${s.id}" title="このテーマを編集">⋯</button></div>${themeActionRow}${body}</div>`;
   }).join('');
 }
 let reorderMode=false;
