@@ -350,7 +350,11 @@
   }
   .sadd-root-task:hover{color:var(--star);}
   /* 移動先オプション */
-  .mv-opt{display:block;width:100%;text-align:left;font-family:inherit;background:none;border:1px solid var(--line);border-radius:11px;padding:13px 16px;cursor:pointer;color:var(--ink);font-size:14px;letter-spacing:0.02em;}
+  .mv-opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;font-family:inherit;background:none;border:1px solid var(--line);border-radius:11px;padding:13px 16px;cursor:pointer;color:var(--ink);font-size:14px;letter-spacing:0.02em;}
+  .mv-dot{
+    display:inline-block;width:12px;height:12px;
+    border-radius:50%;flex-shrink:0;
+  }
   .mv-back{position:absolute;top:18px;left:18px;background:none;border:none;font-family:inherit;font-size:11px;color:var(--ink-faint);font-weight:300;letter-spacing:0.05em;cursor:pointer;padding:6px 8px;border-radius:4px;z-index:2;}
   .mv-back:hover{color:var(--star);}
   .mv-opt:hover{border-color:var(--star);background:rgba(201,162,39,0.08);}
@@ -825,6 +829,15 @@
     transition:color 0.3s ease;
   }
   .archive-toggle:hover{color:var(--star);}
+  .add-group-mini{
+    background:none;border:none;font-family:inherit;
+    color:var(--ink-faint);font-size:11px;
+    letter-spacing:0.1em;
+    font-weight:300;padding:6px 0;cursor:pointer;
+    display:block;margin-bottom:6px;
+    transition:color 0.3s ease;
+  }
+  .add-group-mini:hover{color:var(--star);}
   .archive-menu{margin-top:8px;display:flex;flex-direction:column;gap:0;}
   .archive-item{
     background:none;border:none;font-family:inherit;
@@ -1076,6 +1089,98 @@
     height:2px;background:var(--star);border-radius:1px;z-index:5;
   }
   .step-group-head{cursor:default;}
+  /* 仮置き：タップで選択、ダブルタップで編集 */
+  .snode.inbox-selected > .srow{
+    background:rgba(168,137,63,0.06);
+  }
+  .inbox-action-row{
+    display:flex;gap:6px;
+    padding:6px 0 10px 30px;
+    animation:fadeIn 0.18s ease;
+  }
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-2px);}to{opacity:1;transform:none;}}
+  .inbox-action{
+    background:none;border:1px solid var(--line);
+    border-radius:14px;
+    font-family:inherit;font-size:12px;
+    color:var(--ink-soft);
+    padding:5px 11px;cursor:pointer;
+    transition:color 0.18s ease, border-color 0.18s ease;
+    letter-spacing:0.02em;
+  }
+  .inbox-action:hover{color:var(--star);border-color:var(--star);}
+  .inbox-action.active{color:var(--star);border-color:var(--star);background:rgba(168,137,63,0.05);}
+  /* 期日ピッカー（インライン） */
+  .inbox-date-picker{
+    margin:6px 0 14px 30px;
+    padding:14px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:rgba(250,248,241,0.5);
+    animation:fadeIn 0.18s ease;
+  }
+  .idp-quick{display:flex;flex-direction:column;gap:2px;margin-bottom:10px;}
+  .idp-q{
+    background:none;border:none;
+    font-family:inherit;font-size:13px;
+    color:var(--ink);padding:8px 6px;cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;
+    border-radius:6px;
+    transition:background 0.15s ease;
+  }
+  .idp-q:hover{background:rgba(168,137,63,0.08);}
+  .idp-q-sub{color:var(--ink-faint);font-size:11px;letter-spacing:0.02em;}
+  .idp-cal-head{
+    display:flex;align-items:center;justify-content:space-between;
+    margin:8px 0 6px;padding:4px 0;
+    border-top:1px solid var(--line);
+  }
+  .idp-month{font-size:12.5px;color:var(--ink-soft);letter-spacing:0.06em;}
+  .idp-nav{
+    background:none;border:none;font-family:inherit;
+    font-size:16px;color:var(--ink-faint);
+    padding:4px 10px;cursor:pointer;
+  }
+  .idp-nav:hover{color:var(--star);}
+  .idp-wk{
+    display:grid;grid-template-columns:repeat(7,1fr);
+    font-size:10px;color:var(--ink-faint);
+    text-align:center;margin-bottom:2px;
+  }
+  .idp-grid{
+    display:grid;grid-template-columns:repeat(7,1fr);
+    gap:2px;
+  }
+  .idp-cell{
+    background:none;border:none;font-family:inherit;
+    font-size:12.5px;color:var(--ink);
+    padding:7px 0;cursor:pointer;border-radius:6px;
+    transition:background 0.15s ease;
+  }
+  .idp-cell:hover{background:rgba(168,137,63,0.1);}
+  .idp-cell.today{color:var(--star);font-weight:500;}
+  .idp-cell.sel{background:var(--star);color:#fff;}
+  .idp-empty{cursor:default;}
+  /* 移動ピッカー（インライン） */
+  .inbox-move-picker{
+    margin:6px 0 14px 30px;
+    padding:8px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:rgba(250,248,241,0.5);
+    display:flex;flex-direction:column;gap:2px;
+    animation:fadeIn 0.18s ease;
+  }
+  .imp-opt{
+    display:flex;align-items:center;gap:10px;
+    background:none;border:none;
+    font-family:inherit;font-size:13px;
+    color:var(--ink);padding:9px 10px;cursor:pointer;
+    text-align:left;
+    border-radius:6px;
+    transition:background 0.15s ease;
+  }
+  .imp-opt:hover{background:rgba(168,137,63,0.08);}
   /* タスク名インライン編集 */
   .td-title-editable{
     cursor:text;border-radius:4px;
@@ -1097,6 +1202,30 @@
   }
   .today-fab:active{transform:scale(0.96);}
   .today-fab.active{background:var(--star);}
+  /* 楕円フローティング（今日＋クイック追加） */
+  .dual-fab{
+    position:absolute;bottom:100px;right:18px;
+    background:var(--ink);color:#fff;
+    border-radius:28px;
+    display:none;align-items:center;
+    z-index:150;
+    box-shadow:0 6px 18px rgba(0,0,0,0.18);
+    overflow:hidden;
+  }
+  .dual-fab-btn{
+    background:none;border:none;
+    color:#fff;font-family:inherit;cursor:pointer;
+    padding:13px 20px;
+    transition:background 0.15s ease;
+  }
+  .dual-fab-btn:hover{background:rgba(255,255,255,0.08);}
+  .dual-fab-btn:active{background:rgba(255,255,255,0.16);}
+  .dual-fab-today{font-size:13px;letter-spacing:0.1em;}
+  .dual-fab-today.active{background:var(--star);}
+  .dual-fab-add{font-size:22px;font-weight:300;line-height:1;padding:8px 18px;}
+  .dual-fab-sep{
+    width:1px;height:22px;background:rgba(255,255,255,0.2);
+  }
   /* カレンダー追加フローティングボタン */
   .cal-fab{
     position:absolute;bottom:158px;right:18px;
@@ -1204,8 +1333,12 @@
       </div>
     </section>
 
-    <!-- 「今日」フローティングボタン（テーマタブ時のみ表示） -->
-    <button class="today-fab" id="todayFab">今日</button>
+    <!-- 楕円フローティング：今日 + クイック追加 -->
+    <div class="dual-fab" id="dualFab">
+      <button class="dual-fab-btn dual-fab-today" id="todayFab">今日</button>
+      <span class="dual-fab-sep"></span>
+      <button class="dual-fab-btn dual-fab-add" id="quickAddFab">+</button>
+    </div>
 
     <section class="view" id="v-log">
       <textarea id="diffText" placeholder="" style="width:100%;min-height:120px;"></textarea>
@@ -1301,8 +1434,8 @@
     <div class="metrics-on-star" id="metricsOnStar"></div>
     <div class="sort-row" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;"><button class="sort-btn" id="sortByDue">期日順に整える</button><button class="sort-btn" id="toggleDoneBtn">完了済みを表示</button></div>
     <div class="steps-tree" id="stepsTree"></div>
-    <button class="sadd-root" id="addGroup" style="margin-top:8px;"><span class="p">+</span> カテゴリを追加（例：運動・食事）</button>
     <div class="archive-zone">
+      <button class="add-group-mini" id="addGroup"><span style="color:var(--star);">+</span> カテゴリを追加</button>
       <button class="archive-toggle" id="archiveToggle">アーカイブ</button>
       <div class="archive-menu" id="archiveMenu" style="display:none;">
         <button class="archive-item" id="dArchive">達成</button>
@@ -1437,6 +1570,14 @@
 
   <!-- event editor sheet -->
   <!-- 予定/タスクの詳細表示（Googleカレンダー風） -->
+  <!-- クイック追加（仮置きに即追加） -->
+  <div class="sheet-bg" id="qabg"></div>
+  <div class="sheet half-sheet" id="qasheet">
+    <h2 style="font-size:14px;color:var(--ink-faint);letter-spacing:0.1em;margin:0 0 12px;">仮置きに追加</h2>
+    <input type="text" id="qaInput" placeholder="思いついたタスクを書く" autocomplete="off" style="width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:15px;background:transparent;color:var(--ink);outline:none;">
+    <div style="font-size:11px;color:var(--ink-faint);margin-top:8px;line-height:1.6;">Enter で追加。続けて入力できます。</div>
+  </div>
+
   <div class="sheet-bg" id="evbg"></div>
   <div class="sheet half-sheet" id="evsheet">
     <div class="ev-detail-inner">
@@ -2677,7 +2818,7 @@ function closeSheet(bg,sheet){document.getElementById(bg).classList.remove('open
     ['vbg','vsheet'],['dbg','dsheet'],['ssbg','sssheet'],['sbg','ssheet'],
     ['cbg','csheet'],['mbg','msheet'],['ebg','esheet'],['ibbg','ibsheet'],
     ['tdbg','tdsheet'],['mvbg','mvsheet'],['gpbg','gpsheet'],['dfbg','dfsheet'],
-    ['evbg','evsheet']
+    ['evbg','evsheet'],['qabg','qasheet']
   ];
   pairs.forEach(([bg,sheet])=>{
     const sh=document.getElementById(sheet);if(!sh)return;
@@ -2706,8 +2847,9 @@ function goTab(v){
   document.getElementById('archiveBtn').style.display=(v==='values'||v==='stars')?'block':'none';
   document.getElementById('inboxBtn').style.display=(v==='stars')?'block':'none';
   document.getElementById('reorderBtn').style.display=(v==='stars'&&stars.length>1)?'block':'none';
+  const dfab=document.getElementById('dualFab');
+  if(dfab)dfab.style.display=(v==='stars')?'flex':'none';
   const tfab=document.getElementById('todayFab');
-  if(tfab)tfab.style.display=(v==='stars')?'block':'none';
   const cfab=document.getElementById('addEvent');
   if(cfab)cfab.style.display=(v==='cal')?'flex':'none';
   // カレンダータブは余白少し詰める（タイトルは表示）
@@ -2732,6 +2874,7 @@ document.getElementById('archiveBtn').addEventListener('click',()=>{
   document.getElementById('reorderBtn').style.display='none';
   document.getElementById('inboxBtn').style.display='none';
   const tfab=document.getElementById('todayFab');if(tfab)tfab.style.display='none';
+  const dfab=document.getElementById('dualFab');if(dfab)dfab.style.display='none';
   renderArchive();
 });
 document.getElementById('archiveBack').addEventListener('click',()=>goTab(prevTab));
@@ -2874,6 +3017,11 @@ function openInbox(){
   renderInboxTree();
   openSheet('ibbg','ibsheet');
 }
+let selectedInboxStepId=null;
+let inboxTapLast=null; // {id, ts}
+let inboxDatePickerOpen=null; // 期日ピッカー開いてるタスクのID
+let inboxDatePickerMonth=null; // 表示中の月（Date）
+let inboxMovePickerOpen=null; // 移動ピッカー開いてるタスクのID
 function renderInboxTree(){
   const tree=document.getElementById('ibStepsTree');
   if(!inbox.groups)inbox.groups=[];
@@ -2881,16 +3029,104 @@ function renderInboxTree(){
   const hasRootSteps=inbox.steps&&inbox.steps.length>0;
   if(!hasGroups&&!hasRootSteps){tree.innerHTML=`<div style="font-size:12.5px;color:var(--ink-faint);text-align:center;padding:14px 0;line-height:1.7;">仮<br></div>`;return;}
   let html='';
-  if(hasRootSteps)html+=renderStepNodes(inbox.steps,[]);
+  if(hasRootSteps)html+=renderInboxStepNodes(inbox.steps,[]);
   inbox.groups.forEach(g=>{
     const n=countOpenSteps(g.steps||[]);
     const isCol=collapsedGroups['__inbox__']&&collapsedGroups['__inbox__'][g.id];
     const tri=isCol?'▶':'▼';
     html+=`<div class="step-group${isCol?' collapsed':''}" data-gid="${g.id}"><div class="step-group-head" data-grouphead="${g.id}"><div class="step-group-name"><button class="toggle-btn" data-togglegroup="${g.id}">${tri}</button>${esc(g.name)}<button class="smini sadd-here" data-addingroup-top="${g.id}" title="このカテゴリにタスクを追加">+</button></div><button class="step-group-edit" data-editgroup="${g.id}">編集</button></div>`;
-    if(g.steps&&g.steps.length)html+=renderStepNodes(g.steps,['g',g.id]);
+    if(g.steps&&g.steps.length)html+=renderInboxStepNodes(g.steps,['g',g.id]);
     html+=`<button class="sadd-sub-in-group" data-addingroup="${g.id}"><span style="color:var(--star);font-weight:700;">+</span> このカテゴリにタスクを追加</button></div>`;
   });
   tree.innerHTML=html;
+}
+// 仮置き用：renderStepNodes と同じだが、選択中タスクの下にアクション行を出す
+// 仮置きの期日ピッカー（インライン）
+function renderInboxDatePicker(p,st){
+  const WK=['月','火','水','木','金','土','日'];
+  const today=new Date();today.setHours(0,0,0,0);
+  const tomorrow=new Date(today);tomorrow.setDate(tomorrow.getDate()+1);
+  const nextWeek=new Date(today);
+  // 来週月曜
+  const dow=today.getDay();
+  const daysToMon=(8-dow)%7||7;
+  nextWeek.setDate(today.getDate()+daysToMon);
+  const fmtYmd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const fmtMd=d=>`${d.getMonth()+1}月${d.getDate()}日`;
+  const wkLabel=d=>WK[(d.getDay()+6)%7];
+  // 表示月
+  const m=inboxDatePickerMonth||new Date(today.getFullYear(),today.getMonth(),1);
+  const year=m.getFullYear(),mon=m.getMonth();
+  const first=new Date(year,mon,1);
+  const firstDow=(first.getDay()+6)%7; // 月曜=0
+  const daysInMonth=new Date(year,mon+1,0).getDate();
+  let cells=[];
+  for(let i=0;i<firstDow;i++)cells.push('');
+  for(let d=1;d<=daysInMonth;d++)cells.push(d);
+  while(cells.length%7)cells.push('');
+  let gridHtml='';
+  cells.forEach(c=>{
+    if(c===''){gridHtml+='<span class="idp-cell idp-empty"></span>';return;}
+    const cellDate=new Date(year,mon,c);
+    const ymd=fmtYmd(cellDate);
+    const isToday=cellDate.getTime()===today.getTime();
+    const isSel=st.due===ymd;
+    gridHtml+=`<button class="idp-cell${isToday?' today':''}${isSel?' sel':''}" data-iba-pick="${p}::${ymd}">${c}</button>`;
+  });
+  return `<div class="inbox-date-picker">
+    <div class="idp-quick">
+      <button class="idp-q" data-iba-pick="${p}::${fmtYmd(today)}"><span>▤ 今日</span><span class="idp-q-sub">${wkLabel(today)}</span></button>
+      <button class="idp-q" data-iba-pick="${p}::${fmtYmd(tomorrow)}"><span>☀ 明日</span><span class="idp-q-sub">${wkLabel(tomorrow)}</span></button>
+      <button class="idp-q" data-iba-pick="${p}::${fmtYmd(nextWeek)}"><span>→ 来週</span><span class="idp-q-sub">${wkLabel(nextWeek)} ${fmtMd(nextWeek)}</span></button>
+      <button class="idp-q" data-iba-pick="${p}::"><span>− なし</span><span class="idp-q-sub"></span></button>
+    </div>
+    <div class="idp-cal-head">
+      <button class="idp-nav" data-iba-month="prev">‹</button>
+      <span class="idp-month">${year}年 ${mon+1}月</span>
+      <button class="idp-nav" data-iba-month="next">›</button>
+    </div>
+    <div class="idp-wk">${WK.map(w=>`<span>${w}</span>`).join('')}</div>
+    <div class="idp-grid">${gridHtml}</div>
+  </div>`;
+}
+// 仮置きの移動先ピッカー（インライン、テーマだけ）
+function renderInboxMovePicker(p,st){
+  let html='<div class="inbox-move-picker">';
+  if(stars.length===0){
+    html+='<div style="font-size:12px;color:var(--ink-faint);text-align:center;padding:8px;">テーマがありません</div>';
+  }else{
+    stars.forEach(s=>{
+      const hex=s.color?colorHex(s.color):'#c9a227';
+      html+=`<button class="imp-opt" data-iba-mvto="${p}::${s.id}"><span class="mv-dot" style="background:${hex};"></span>${esc(s.dir)}</button>`;
+    });
+  }
+  html+='</div>';
+  return html;
+}
+function renderInboxStepNodes(steps,path){
+  return steps.map((st,i)=>{
+    if(!showDoneSteps && st.done)return '';
+    const p=encPath(path.concat(i));
+    let meta=[];
+    if(st.due){const past=isPast(st.due);meta.push(`<span class="${past?'past':''}" style="${past?'color:#a98b6a;':''}">${fmtDue(st.due)}${past?'(過ぎました)':''}</span>`);}
+    const tm=fmtTime(st);if(tm)meta.push(tm);
+    const metaLine=meta.length?`<span class="smeta">${meta.join(' ・ ')}</span>`:'';
+    const memoLine=st.memo?`<span class="smemo">${esc(st.memo)}</span>`:'';
+    const rep=repLabel(st);const repLine=rep?`<span class="srep">↻ ${rep}</span>`:'';
+    const hasKids=st.children&&st.children.length;
+    const isCol=collapsedSteps['__inbox__']&&collapsedSteps['__inbox__'][st.id];
+    const children=hasKids?`<div class="schildren">${renderInboxStepNodes(st.children,path.concat(i))}</div>`:'';
+    const toggleBtn=hasKids?`<button class="toggle-btn" data-togglestep="${st.id}">${isCol?'▶':'▼'}</button>`:'<span class="toggle-spacer" style="display:inline-block;width:16px;"></span>';
+    const doneCls=st.done?' step-done':'';
+    const isSelected=selectedInboxStepId===st.id;
+    const selCls=isSelected?' inbox-selected':'';
+    const pickerOpen=inboxDatePickerOpen===st.id;
+    const movePickerOpen=inboxMovePickerOpen===st.id;
+    const dateActiveCls=pickerOpen?' active':'';
+    const moveActiveCls=movePickerOpen?' active':'';
+    const actionRow=isSelected?`<div class="inbox-action-row"><button class="inbox-action${dateActiveCls}" data-iba-date="${p}">▤ 期日</button><button class="inbox-action${moveActiveCls}" data-iba-move="${p}">↪ 移動</button><button class="inbox-action" data-iba-del="${p}">× 削除</button></div>${pickerOpen?renderInboxDatePicker(p,st):''}${movePickerOpen?renderInboxMovePicker(p,st):''}`:'';
+    return `<div class="snode${isCol?' collapsed':''}${doneCls}${selCls}" data-snode="${p}" data-stepid="${st.id}"><div class="srow inbox-row"><button class="scheck${st.done?' checked':''}" data-check="${p}"></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" data-stepid="${st.id}">${esc(st.text)}</span><button class="smini sadd-here" data-addchild="${p}" title="この中にサブタスクを追加">+</button>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button></div>${actionRow}${children}</div>`;
+  }).join('');
 }
 document.getElementById('ibbg').addEventListener('click',()=>closeSheet('ibbg','ibsheet'));
 document.getElementById('ibClose').addEventListener('click',()=>closeSheet('ibbg','ibsheet'));
@@ -2898,6 +3134,126 @@ document.getElementById('ibAddRoot').addEventListener('click',()=>{detailSid='__
 document.getElementById('ibAddGroup').addEventListener('click',()=>{detailSid='__inbox__';openGroupEditor(null);});
 // 仮置きシート内のタスク操作も、stepsTreeと同じハンドラを共有させる
 document.getElementById('ibStepsTree').addEventListener('click',async e=>{
+  // 仮置きアクション行：期日／移動／削除
+  const ibaDate=e.target.closest('[data-iba-date]');
+  if(ibaDate){
+    const path=decPath(ibaDate.dataset.ibaDate);
+    const node=getStepByPath(inbox,path);if(!node)return;
+    // ピッカー開閉
+    if(inboxDatePickerOpen===node.id){inboxDatePickerOpen=null;}
+    else{
+      inboxDatePickerOpen=node.id;
+      inboxMovePickerOpen=null;
+      // 現在の期日がある月に合わせる、なければ今月
+      if(node.due){
+        const[y,m]=node.due.split('-').map(Number);
+        inboxDatePickerMonth=new Date(y,m-1,1);
+      }else{
+        const t=new Date();
+        inboxDatePickerMonth=new Date(t.getFullYear(),t.getMonth(),1);
+      }
+    }
+    renderInboxTree();
+    return;
+  }
+  // ピッカーの日付選択
+  const ibaPick=e.target.closest('[data-iba-pick]');
+  if(ibaPick){
+    const[pathStr,ymd]=ibaPick.dataset.ibaPick.split('::');
+    const path=decPath(pathStr);
+    const node=getStepByPath(inbox,path);if(!node)return;
+    node.due=ymd||null;
+    inboxDatePickerOpen=null;
+    await sib();renderInboxTree();renderStars();renderCal();
+    toast(ymd?'期日を設定しました':'期日を外しました');
+    return;
+  }
+  // ピッカーの月送り
+  const ibaMonth=e.target.closest('[data-iba-month]');
+  if(ibaMonth){
+    if(!inboxDatePickerMonth){const t=new Date();inboxDatePickerMonth=new Date(t.getFullYear(),t.getMonth(),1);}
+    const m=new Date(inboxDatePickerMonth);
+    m.setMonth(m.getMonth()+(ibaMonth.dataset.ibaMonth==='next'?1:-1));
+    inboxDatePickerMonth=m;
+    renderInboxTree();
+    return;
+  }
+  const ibaMove=e.target.closest('[data-iba-move]');
+  if(ibaMove){
+    const path=decPath(ibaMove.dataset.ibaMove);
+    const node=getStepByPath(inbox,path);if(!node)return;
+    // ピッカー開閉
+    if(inboxMovePickerOpen===node.id){inboxMovePickerOpen=null;}
+    else{inboxMovePickerOpen=node.id;inboxDatePickerOpen=null;}
+    renderInboxTree();
+    return;
+  }
+  // 移動先テーマ選択 → 即移動
+  const ibaMvto=e.target.closest('[data-iba-mvto]');
+  if(ibaMvto){
+    const[pathStr,sid]=ibaMvto.dataset.ibaMvto.split('::');
+    const path=decPath(pathStr);
+    const arr=getParentArr(inbox,path);
+    const np=getNumericPath(path);
+    const idx=np[np.length-1];
+    const node=arr.splice(idx,1)[0];
+    const destContainer=getContainer(sid);
+    if(!destContainer){toast('テーマが見つかりません');return;}
+    if(!destContainer.steps)destContainer.steps=[];
+    destContainer.steps.push(node);
+    inboxMovePickerOpen=null;
+    selectedInboxStepId=null;
+    await ss();await sib();
+    renderInboxTree();renderStars();renderCal();
+    toast('移動しました');
+    return;
+  }
+  const ibaDel=e.target.closest('[data-iba-del]');
+  if(ibaDel){
+    detailSid='__inbox__';
+    const path=decPath(ibaDel.dataset.ibaDel);
+    if(!confirm('このタスクを削除しますか？'))return;
+    const arr=getParentArr(inbox,path);
+    const np=getNumericPath(path);
+    arr.splice(np[np.length-1],1);
+    selectedInboxStepId=null;
+    await sib();renderInboxTree();renderStars();
+    return;
+  }
+  // タスク名のシングル/ダブルタップで選択 or 編集
+  const nm=e.target.closest('[data-editname]');
+  if(nm){
+    const stepId=nm.dataset.stepid;
+    const now=Date.now();
+    // ダブルタップ判定（350ms以内）
+    if(inboxTapLast && inboxTapLast.id===stepId && (now-inboxTapLast.ts)<350){
+      // 編集モードへ
+      inboxTapLast=null;
+      nm.setAttribute('contenteditable','true');
+      nm.setAttribute('spellcheck','false');
+      nm.focus();
+      const range=document.createRange();range.selectNodeContents(nm);range.collapse(false);
+      const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
+      return;
+    }
+    inboxTapLast={id:stepId,ts:now};
+    // 選択切替
+    if(selectedInboxStepId===stepId){
+      selectedInboxStepId=null;
+      inboxDatePickerOpen=null;
+      inboxMovePickerOpen=null;
+    }else{
+      selectedInboxStepId=stepId;
+      inboxDatePickerOpen=null;
+      inboxMovePickerOpen=null;
+    }
+    renderInboxTree();
+    return;
+  }
+  // 余白タップで選択解除
+  if(!e.target.closest('.snode')){
+    if(selectedInboxStepId){selectedInboxStepId=null;inboxDatePickerOpen=null;inboxMovePickerOpen=null;renderInboxTree();}
+  }
   // stepsTreeのハンドラのコピー：detailSid='__inbox__'で動く
   const tg=e.target.closest('[data-togglegroup]');
   if(tg){
@@ -3492,16 +3848,17 @@ function openMoveSheet(path){
   openSheet('mvbg','mvsheet');
 }
 function renderMvStep1(){
-  // ステップ1：移動先の「箱」を選ぶ（テーマ or 仮置き）
+  // ステップ1：移動先のテーマを選ぶ
   const target=document.getElementById('mvTargets');
   const fromSid=moveCtx.fromSid;
   const h2=document.querySelector('#mvsheet h2');if(h2)h2.textContent='移動先（テーマ）';
   const note=document.querySelector('#mvsheet .due-note');if(note)note.textContent='';
   let html='';
   stars.forEach(s=>{
-    html+=`<button class="mv-opt" data-mvstar="${s.id}">★ ${esc(s.dir)}</button>`;
+    if(s.id===fromSid)return; // 自分自身は除外
+    const hex=s.color?colorHex(s.color):'#c9a227';
+    html+=`<button class="mv-opt" data-mvstar="${s.id}"><span class="mv-dot" style="background:${hex};"></span>${esc(s.dir)}</button>`;
   });
-  html+=`<button class="mv-opt" data-mvstar="__inbox__">□ 仮置き</button>`;
   target.innerHTML=html;
 }
 function renderMvStep2(){
@@ -3571,9 +3928,26 @@ document.getElementById('mvTargets').addEventListener('click',async e=>{
   if(e.target.closest('[data-mvback2]')){moveCtx.step=2;renderMvStep2();return;}
   // 「タスク選択」ボタン → step3へ
   if(e.target.closest('[data-mvinside]')){moveCtx.step=3;renderMvStep3();return;}
-  // テーマ or 仮置き選択（step1→step2）
+  // テーマ選択（step1）→ 即移動（テーマ直下に）
   const sb=e.target.closest('[data-mvstar]');
-  if(sb){moveCtx.destSid=sb.dataset.mvstar;moveCtx.step=2;renderMvStep2();return;}
+  if(sb){
+    moveCtx.destSid=sb.dataset.mvstar;
+    const fromContainer=getContainer(moveCtx.fromSid);
+    const destContainer=getContainer(moveCtx.destSid);
+    if(!fromContainer||!destContainer)return;
+    const path=moveCtx.path;
+    const arr=getParentArr(fromContainer,path);
+    const np=getNumericPath(path);
+    const idx=np[np.length-1];
+    const node=arr.splice(idx,1)[0];
+    // テーマ直下に追加
+    if(!destContainer.steps)destContainer.steps=[];
+    destContainer.steps.push(node);
+    await ss();await sib();
+    if(moveCtx.fromSid==='__inbox__'||moveCtx.destSid==='__inbox__')renderInboxTree();
+    renderStepsTree();renderStars();renderCal();closeSheet('mvbg','mvsheet');toast('移動しました');
+    moveCtx=null;return;
+  }
   // 親タスクを選んだ：子として入れる
   const pp=e.target.closest('[data-mvparent]');
   if(pp){
@@ -4511,6 +4885,24 @@ document.getElementById('todayFab').addEventListener('click',()=>{
   if(opening){renderToday();v.classList.add('open');document.getElementById('todayFab').classList.add('active');}
   else{v.classList.remove('open');document.getElementById('todayFab').classList.remove('active');}
 });
+
+// クイック追加：仮置きに即追加
+document.getElementById('quickAddFab').addEventListener('click',()=>{
+  document.getElementById('qaInput').value='';
+  openSheet('qabg','qasheet');
+  setTimeout(()=>document.getElementById('qaInput').focus(),100);
+});
+document.getElementById('qaInput').addEventListener('keydown',async e=>{
+  if(e.key!=='Enter')return;
+  if(e.isComposing||e.keyCode===229)return;
+  e.preventDefault();
+  const txt=e.target.value.trim();if(!txt)return;
+  if(!inbox.steps)inbox.steps=[];
+  inbox.steps.push({id:uid(),text:txt,due:null,memo:null,rep:'none',done:false,children:[]});
+  await sib();
+  e.target.value='';
+  toast('仮置きに追加しました');
+});
 document.getElementById('todayClose').addEventListener('click',()=>{
   document.getElementById('todayView').classList.remove('open');
   document.getElementById('todayFab').classList.remove('active');
@@ -4743,9 +5135,15 @@ document.getElementById('todayList').addEventListener('click',async e=>{
         }
         t.textContent=node.text;return;
       }
-      if(newText===node.text)return;
+      if(newText===node.text){
+        // 仮置きでは編集後contenteditableを外す
+        if(sid==='__inbox__'){t.removeAttribute('contenteditable');}
+        return;
+      }
       node.text=newText;
       await ss();await sib();
+      // 仮置きでは編集後contenteditableを外す
+      if(sid==='__inbox__'){t.removeAttribute('contenteditable');renderInboxTree();}
       renderStars();renderCal();renderTrail();
     },true);
   }
