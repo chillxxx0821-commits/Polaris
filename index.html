@@ -529,6 +529,10 @@
   .trail-head{display:flex;align-items:baseline;gap:10px;padding-bottom:8px;margin-bottom:6px;border-bottom:1px solid var(--line);cursor:pointer;}
   .trail-head:active{opacity:0.6;}
   .trail-head .name{font-size:15px;font-weight:700;color:var(--ink);}
+  .trail-head .name .trail-dot{
+    display:inline-block;width:10px;height:10px;border-radius:50%;
+    margin-right:8px;vertical-align:1px;
+  }
   .trail-head .n{font-size:11px;color:var(--ink-faint);margin-left:auto;}
   .trail-head .hopen{font-size:10.5px;color:var(--star);letter-spacing:0.06em;opacity:0.7;margin-left:2px;}
   .trail-head:active .hopen{opacity:1;}
@@ -1141,6 +1145,29 @@
     content:'';position:absolute;bottom:-1px;left:0;right:0;
     height:2px;background:var(--star);border-radius:1px;z-index:5;
   }
+  /* 記録のテーマ選択ボタン群 */
+  .diff-theme-picker{
+    display:flex;flex-wrap:wrap;gap:6px;
+  }
+  .dpicker-btn{
+    background:none;border:1px solid var(--line);
+    border-radius:16px;
+    font-family:inherit;font-size:12.5px;
+    color:var(--ink);
+    padding:7px 13px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:7px;
+    transition:border-color 0.18s ease, color 0.18s ease;
+    letter-spacing:0.02em;
+  }
+  .dpicker-btn:hover{border-color:var(--star);}
+  .dpicker-btn.active{font-weight:500;}
+  .dpicker-dot{
+    display:inline-block;width:10px;height:10px;border-radius:50%;
+    background:#c9a227;flex-shrink:0;
+  }
+  .dpicker-none .dpicker-dot{background:transparent;border:1px solid var(--line);}
+  .dpicker-none.active{background:var(--ink-soft);color:#fff;}
+  .dpicker-none.active .dpicker-dot{border-color:#fff;}
   .lcard-head{cursor:default;}
   .lcard.theme-selected .star-dir{color:var(--star);}
   .theme-action-row{padding-left:14px;padding-right:14px;margin-top:4px;}
@@ -1397,7 +1424,8 @@
 
     <section class="view" id="v-log">
       <textarea id="diffText" placeholder="" style="width:100%;min-height:120px;"></textarea>
-      <div style="margin-top:14px;"><select id="diffStar"><option value="">（未分類）</option></select></div>
+      <div id="diffStarPicker" class="diff-theme-picker" style="margin-top:14px;"></div>
+      <input type="hidden" id="diffStar" value="">
       <div id="diffGroupZone" style="margin-top:10px;display:none;"><select id="diffGroup"><option value="">— 未分類</option></select></div>
       <div id="diffMetrics" style="margin-top:10px;"></div>
       <button class="btn-full" id="addDiff" style="margin-top:18px;">記録</button>
@@ -2228,7 +2256,9 @@ function renderStars(){
         <button class="inbox-action${archiveExpanded?' active':''}" data-tba-archive="${s.id}">アーカイブ</button>
       </div>${showDoneSteps?`<div class="inbox-action-row theme-action-row" style="padding-left:30px;"><button class="inbox-action${doneAtBottom?' active':''}" data-tba-donebottom="${s.id}">完了済みを下にまとめる</button></div>`:''}${archiveExpanded?`<div class="inbox-action-row theme-action-row" style="padding-left:30px;"><button class="inbox-action" data-tba-arc-achieve="${s.id}">達成</button><button class="inbox-action" data-tba-arc-hold="${s.id}">保留</button><button class="inbox-action" data-tba-arc-delete="${s.id}">削除</button></div>`:''}`;
     }
-    return `<div class="lcard${isCol?' collapsed':''}${themeSelCls}" data-tcid="${s.id}"><div class="lcard-head"><button class="toggle-btn" data-togglestar="${s.id}">${tri}</button><div class="star-dir" data-themesel="${s.id}" data-tcdrag="${s.id}">${esc(s.dir)}</div><button class="star-open-btn" data-editstar="${s.id}" title="このテーマを編集">⋯</button></div>${themeActionRow}${body}</div>`;
+    const themeHex=s.color?colorHex(s.color):'';
+    const dirStyle=themeHex?`style="color:${themeHex};"`:'';
+    return `<div class="lcard${isCol?' collapsed':''}${themeSelCls}" data-tcid="${s.id}"><div class="lcard-head"><button class="toggle-btn" data-togglestar="${s.id}">${tri}</button><div class="star-dir" data-themesel="${s.id}" data-tcdrag="${s.id}" ${dirStyle}>${esc(s.dir)}</div><button class="star-open-btn" data-editstar="${s.id}" title="このテーマを編集">⋯</button></div>${themeActionRow}${body}</div>`;
   }).join('');
 }
 let reorderMode=false;
@@ -2569,14 +2599,34 @@ function collectStepInput(){
   const noSubLog=!document.getElementById("stepNoLogToggle").classList.contains("active");return {text:txt,memo,due,from,to,dur,rep,wd,md,noSubLog};
 }
 
-/* DIFF select */
+/* DIFF テーマ選択（ボタン群） */
 function renderStarSelect(){
-  const sel=document.getElementById('diffStar');const cur=sel.value;
-  sel.innerHTML=`<option value="">（未分類）</option>`+stars.map(s=>`<option value="${s.id}">★ ${esc(s.dir)}</option>`).join('');
-  sel.value=cur;
+  const picker=document.getElementById('diffStarPicker');
+  const hidden=document.getElementById('diffStar');
+  const cur=hidden.value;
+  let html='';
+  // 未分類
+  const unsel=cur===''?' active':'';
+  html+=`<button class="dpicker-btn dpicker-none${unsel}" data-pickstar=""><span class="dpicker-dot"></span>未分類</button>`;
+  stars.forEach(s=>{
+    const hex=s.color?colorHex(s.color):'#c9a227';
+    const isSel=cur===s.id?' active':'';
+    const style=isSel?`background:${hex};border-color:${hex};color:#fff;`:'';
+    html+=`<button class="dpicker-btn${isSel}" data-pickstar="${s.id}" style="${style}"><span class="dpicker-dot" style="background:${hex};"></span>${esc(s.dir)}</button>`;
+  });
+  picker.innerHTML=html;
   if(typeof refreshDiffMetrics==='function')refreshDiffMetrics();
   if(typeof refreshDiffGroup==='function')refreshDiffGroup();
 }
+// ボタンクリック処理
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-pickstar]');
+  if(!b)return;
+  if(!b.closest('#diffStarPicker'))return;
+  const sid=b.dataset.pickstar;
+  document.getElementById('diffStar').value=sid;
+  renderStarSelect();
+});
 
 /* TRAIL */
 let trailExpanded={}; // 3→7
@@ -2642,8 +2692,10 @@ function renderTrail(){
         const wd=['日','月','火','水','木','金','土'][dt.getDay()];
         h+=`<div class="trail-date-group"><div class="trail-date-label">${k} (${wd})</div>`;
         h+=items.map(d=>{
-          const dirLabel=d.starId?(stars.find(s=>s.id===d.starId)||{}).dir:null;
-          const tag=dirLabel?`<span class="trail-dir-tag">★ ${esc(dirLabel)}</span>`:`<span class="trail-dir-tag muted">未分類</span>`;
+          const star=d.starId?stars.find(s=>s.id===d.starId):null;
+          const dirLabel=star?star.dir:null;
+          const tagHex=star && star.color?colorHex(star.color):null;
+          const tag=dirLabel?`<span class="trail-dir-tag"${tagHex?` style="color:${tagHex};"`:''}>${esc(dirLabel)}</span>`:`<span class="trail-dir-tag muted">未分類</span>`;
           const memo=d.memo?`<span class="tmemo">${esc(d.memo)}</span>`:'';
           const cls=d.repeat?'step repeat':(d.fromTask?'step achieved':'step');
           const mark=d.repeat?'<span class="repdot">↻</span>':(d.fromTask?'<span class="vmark">✓</span>':'');
@@ -2658,7 +2710,14 @@ function renderTrail(){
   }
   // テーマ別
   const single=stars.length<=1;let h='';
-  stars.forEach(s=>{const ds=useDiffs.filter(d=>d.starId===s.id).sort((a,b)=>b.ts-a.ts);if(ds.length)h+=trailBlock(s.id,'★ '+esc(s.dir),ds,single);});
+  stars.forEach(s=>{
+    const ds=useDiffs.filter(d=>d.starId===s.id).sort((a,b)=>b.ts-a.ts);
+    if(ds.length){
+      const hex=s.color?colorHex(s.color):'#c9a227';
+      const title=`<span class="trail-dot" style="background:${hex};"></span><span style="color:${hex};">${esc(s.dir)}</span>`;
+      h+=trailBlock(s.id,title,ds,single);
+    }
+  });
   const loose=useDiffs.filter(d=>!d.starId||!stars.find(s=>s.id===d.starId)).sort((a,b)=>b.ts-a.ts);
   if(loose.length)h+=trailBlock('__loose__','— 未分類',loose,single);
   b.innerHTML=h;
@@ -2693,7 +2752,7 @@ function renderTrailFull(b){
   let title='',ds=[];const isLoose=key==='__loose__';
   let starObj=null;
   if(isLoose){title='— 未分類';ds=diffs.filter(d=>!d.starId||!stars.find(s=>s.id===d.starId));}
-  else{starObj=stars.find(x=>x.id===key);if(!starObj){trailFullStar=null;renderTrail();return;}title='★ '+esc(starObj.dir);ds=diffs.filter(d=>d.starId===key);}
+  else{starObj=stars.find(x=>x.id===key);if(!starObj){trailFullStar=null;renderTrail();return;}const hex=starObj.color?colorHex(starObj.color):'#c9a227';title=`<span class="trail-dot" style="background:${hex};"></span><span style="color:${hex};">${esc(starObj.dir)}</span>`;ds=diffs.filter(d=>d.starId===key);}
   // カテゴリフィルタ（複数選択：OR検索）
   if(trailFilterGroups.length&&starObj){
     ds=ds.filter(d=>trailFilterGroups.includes(d.groupId));
