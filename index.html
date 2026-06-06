@@ -6,7 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Polaris">
-<meta name="theme-color" content="#f4f1ea">
+<meta name="theme-color" content="#faf8f1">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <title>Polaris</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;500;700;800&family=Zen+Maru+Gothic:wght@300;400;500&display=swap');
@@ -4431,6 +4435,13 @@ document.getElementById('todayList').addEventListener('click',async e=>{
 function tick(){const el=document.getElementById('clock');if(el){const d=new Date();el.textContent=`${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;}}
 tick();setInterval(tick,10000);
 load();
+
+// Service Worker 登録（PWA）
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').catch(err=>console.log('SW登録失敗:',err));
+  });
+}
 </script>
 </body>
 </html>
