@@ -230,7 +230,7 @@
   .cal-seg .seg{flex:1;font-family:inherit;font-size:13px;color:var(--ink-soft);background:none;border:none;border-radius:9px;padding:9px 0;transition:all 0.2s;}
   .cal-seg .seg.active{background:var(--paper);color:var(--ink);font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
   /* vertical (week/day) */
-  .vcal{position:relative;border-top:1px solid var(--line);margin-top:4px;}
+  .vcal{position:relative;margin-top:4px;}
   .vcal-dayhead{display:flex;padding-left:38px;position:sticky;top:0;background:var(--paper);z-index:5;}
   .vcal-dayhead .vdh{flex:1;text-align:center;font-size:10.5px;color:var(--ink-faint);padding:6px 0;}
   .vcal-dayhead .vdh.today{color:var(--star);font-weight:700;}
@@ -251,7 +251,7 @@
   .vev .vev-t{font-weight:600;display:inline;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;}
   .vev.task .vev-check, .vev .vev-check{vertical-align:middle;}
   .vev .vev-m{font-size:9px;opacity:0.9;}
-  .vcal-allday{display:flex;padding-left:38px;border-bottom:1px solid var(--line);min-height:26px;}
+  .vcal-allday{display:flex;padding-left:38px;min-height:26px;}
   .vcal-allday .vad-col{flex:1;padding:2px;display:flex;flex-direction:column;gap:2px;}
   .vad-chip{background:#b9a06a;color:#fff;border-radius:5px;font-size:9px;padding:2px 4px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .vad-empty{font-size:10px;color:var(--ink-faint);padding:4px 6px;letter-spacing:0.05em;}
@@ -562,9 +562,9 @@
 
   .tabbar{flex-shrink:0;height:84px;padding-bottom:20px;background:rgba(244,241,234,0.92);backdrop-filter:blur(20px);border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:flex-start;padding-top:10px;}
   .tab{background:none;border:none;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink-faint);flex:1;padding-top:4px;cursor:pointer;}
-  .tab .ic{font-size:20px;line-height:24px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-family:'M PLUS 1','Hiragino Sans',sans-serif;font-variant-emoji:text;}
-  /* カレンダー▦は字面が左寄りなので微調整 */
-  .tab[data-v="cal"] .ic{padding-left:1px;}
+  .tab .ic{font-size:20px;line-height:24px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
+  .tab .ic svg{display:block;}
+  .tab.active .ic{color:var(--star);}
   .tab .lb{font-size:9px;letter-spacing:0.01em;}
   .tab.active{color:var(--star);}
   .tab.active .lb{font-weight:700;}
@@ -1478,12 +1478,12 @@
   </div>
 
   <div class="tabbar">
-    <button class="tab active" data-v="values"><span class="ic">◆&#xFE0E;</span><span class="lb">価値観</span></button>
-    <button class="tab" data-v="stars"><span class="ic">★&#xFE0E;</span><span class="lb">テーマ</span></button>
-    <button class="tab" data-v="log"><span class="ic">✎&#xFE0E;</span><span class="lb">記録</span></button>
-    <button class="tab" data-v="trail"><span class="ic">✦&#xFE0E;</span><span class="lb">ジャーナル</span></button>
-    <button class="tab" data-v="cal"><span class="ic">▦&#xFE0E;</span><span class="lb">カレンダー</span></button>
-    <button class="tab" data-v="week"><span class="ic">◐&#xFE0E;</span><span class="lb">振り返り</span></button>
+    <button class="tab active" data-v="values"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="0" cy="0" r="13"/><circle cx="0" cy="0" r="8"/></svg></span><span class="lb">価値観</span></button>
+    <button class="tab" data-v="stars"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22"><polygon points="0,-13 3.06,-4.04 12.36,-4.02 4.85,1.54 7.64,10.5 0,5 -7.64,10.5 -4.85,1.54 -12.36,-4.02 -3.06,-4.04" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span class="lb">テーマ</span></button>
+    <button class="tab" data-v="log"><span class="ic"><svg viewBox="-18 -10 36 20" width="24" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M -16,3 Q -10,-3 -3,1 C 2,3 7,-5 3,-6 C -2,-6 -2,2 4,2 L 16,-3"/></svg></span><span class="lb">記録</span></button>
+    <button class="tab" data-v="trail"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22"><rect x="-13" y="-12" width="3" height="24" fill="currentColor" stroke="none"/><rect x="-10" y="-12" width="20" height="24" fill="none" stroke="currentColor" stroke-width="1.5" rx="0.5"/><path d="M 4,-12 L 4,8 L 7,5 L 10,8 L 10,-12 Z" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg></span><span class="lb">ジャーナル</span></button>
+    <button class="tab" data-v="cal"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22" fill="none" stroke="currentColor"><rect x="-13" y="-13" width="26" height="26" stroke-width="1.5" rx="2"/><line x1="-7.8" y1="-13" x2="-7.8" y2="13" stroke-width="0.6"/><line x1="-2.6" y1="-13" x2="-2.6" y2="13" stroke-width="0.6"/><line x1="2.6" y1="-13" x2="2.6" y2="13" stroke-width="0.6"/><line x1="7.8" y1="-13" x2="7.8" y2="13" stroke-width="0.6"/><line x1="-13" y1="-7.8" x2="13" y2="-7.8" stroke-width="0.6"/><line x1="-13" y1="-2.6" x2="13" y2="-2.6" stroke-width="0.6"/><line x1="-13" y1="2.6" x2="13" y2="2.6" stroke-width="0.6"/><line x1="-13" y1="7.8" x2="13" y2="7.8" stroke-width="0.6"/></svg></span><span class="lb">カレンダー</span></button>
+    <button class="tab" data-v="week"><span class="ic"><svg viewBox="-16 -10 32 20" width="24" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M 0,0 C -5,-8 -13,-8 -13,0 C -13,8 -5,8 0,0 C 5,-8 13,-8 13,0 C 13,8 5,8 0,0 Z"/></svg></span><span class="lb">振り返り</span></button>
   </div>
 
   <div class="sheet-bg" id="vbg"></div>
