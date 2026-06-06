@@ -6129,12 +6129,12 @@ document.getElementById('todayList').addEventListener('click',async e=>{
   };
   root.addEventListener('mousedown',e=>{
     const t=e.target.closest('.pvrow[data-cardpath]');if(!t)return;
-    if(e.target.closest('button,input,textarea,[contenteditable="true"]'))return;
+    if(e.target.closest('button,input,textarea,[contenteditable="true"],.inbox-action-row'))return;
     start(e,t);
   });
   root.addEventListener('touchstart',e=>{
     const t=e.target.closest('.pvrow[data-cardpath]');if(!t)return;
-    if(e.target.closest('button,input,textarea,[contenteditable="true"]'))return;
+    if(e.target.closest('button,input,textarea,[contenteditable="true"],.inbox-action-row'))return;
     start(e,t);
   },{passive:false});
   root.addEventListener('mouseup',end);
@@ -6218,12 +6218,12 @@ document.getElementById('todayList').addEventListener('click',async e=>{
   };
   root.addEventListener('mousedown',e=>{
     const t=e.target.closest('.pvrow[data-pvgrouphead]');if(!t)return;
-    if(e.target.closest('button,input,textarea,[contenteditable="true"]'))return;
+    if(e.target.closest('button,input,textarea,[contenteditable="true"],.inbox-action-row'))return;
     start(e,t);
   });
   root.addEventListener('touchstart',e=>{
     const t=e.target.closest('.pvrow[data-pvgrouphead]');if(!t)return;
-    if(e.target.closest('button,input,textarea,[contenteditable="true"]'))return;
+    if(e.target.closest('button,input,textarea,[contenteditable="true"],.inbox-action-row'))return;
     start(e,t);
   },{passive:false});
   root.addEventListener('mouseup',end);
@@ -6300,12 +6300,12 @@ document.getElementById('todayList').addEventListener('click',async e=>{
   };
   root.addEventListener('mousedown',e=>{
     const t=e.target.closest('[data-tcdrag]');if(!t)return;
-    if(e.target.closest('button,input,textarea,[contenteditable="true"]'))return;
+    if(e.target.closest('button,input,textarea,[contenteditable="true"],.inbox-action-row'))return;
     start(e,t);
   });
   root.addEventListener('touchstart',e=>{
     const t=e.target.closest('[data-tcdrag]');if(!t)return;
-    if(e.target.closest('button,input,textarea,[contenteditable="true"]'))return;
+    if(e.target.closest('button,input,textarea,[contenteditable="true"],.inbox-action-row'))return;
     start(e,t);
   },{passive:false});
   root.addEventListener('mouseup',end);
