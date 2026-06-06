@@ -1658,8 +1658,10 @@
       <h2 style="font-size:22px;">仮置き</h2>
       
       <div class="steps-tree" id="ibStepsTree" style="margin-top:18px;"></div>
-      <button class="sadd-root" id="ibAddRoot" style="margin-top:18px;"><span class="p">+</span> タスクを追加する</button>
-      <button class="sadd-root" id="ibAddGroup" style="margin-top:8px;"><span class="p">+</span> カテゴリを追加</button>
+      <button class="sadd-sub-in-group sadd-root-task" id="ibAddRoot"><span style="color:var(--star);font-weight:700;">+</span> タスクを追加</button>
+      <div class="archive-zone">
+        <button class="add-group-mini" id="ibAddGroup"><span style="color:var(--star);">+</span> カテゴリを追加</button>
+      </div>
     </div>
   </div>
 
@@ -3124,13 +3126,20 @@ function renderInboxStepNodes(steps,path){
     const movePickerOpen=inboxMovePickerOpen===st.id;
     const dateActiveCls=pickerOpen?' active':'';
     const moveActiveCls=movePickerOpen?' active':'';
-    const actionRow=isSelected?`<div class="inbox-action-row"><button class="inbox-action${dateActiveCls}" data-iba-date="${p}">▤ 期日</button><button class="inbox-action${moveActiveCls}" data-iba-move="${p}">↪ 移動</button><button class="inbox-action" data-iba-del="${p}">× 削除</button></div>${pickerOpen?renderInboxDatePicker(p,st):''}${movePickerOpen?renderInboxMovePicker(p,st):''}`:'';
+    const actionRow=isSelected?`<div class="inbox-action-row"><button class="inbox-action${dateActiveCls}" data-iba-date="${p}">▤ 期日</button><button class="inbox-action${moveActiveCls}" data-iba-move="${p}">→ 移動</button><button class="inbox-action" data-iba-del="${p}">× 削除</button></div>${pickerOpen?renderInboxDatePicker(p,st):''}${movePickerOpen?renderInboxMovePicker(p,st):''}`:'';
     return `<div class="snode${isCol?' collapsed':''}${doneCls}${selCls}" data-snode="${p}" data-stepid="${st.id}"><div class="srow inbox-row"><button class="scheck${st.done?' checked':''}" data-check="${p}"></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" data-stepid="${st.id}">${esc(st.text)}</span><button class="smini sadd-here" data-addchild="${p}" title="この中にサブタスクを追加">+</button>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button></div>${actionRow}${children}</div>`;
   }).join('');
 }
 document.getElementById('ibbg').addEventListener('click',()=>closeSheet('ibbg','ibsheet'));
 document.getElementById('ibClose').addEventListener('click',()=>closeSheet('ibbg','ibsheet'));
-document.getElementById('ibAddRoot').addEventListener('click',()=>{detailSid='__inbox__';openStepEditor('__inbox__',null);});
+document.getElementById('ibAddRoot').addEventListener('click',async()=>{
+  detailSid='__inbox__';
+  if(!inbox.steps)inbox.steps=[];
+  const newId=uid();
+  inbox.steps.push({id:newId,text:'',due:null,memo:null,rep:'none',done:false,children:[]});
+  await sib();renderInboxTree();
+  focusStepByText(newId);
+});
 document.getElementById('ibAddGroup').addEventListener('click',()=>{detailSid='__inbox__';openGroupEditor(null);});
 // 仮置きシート内のタスク操作も、stepsTreeと同じハンドラを共有させる
 document.getElementById('ibStepsTree').addEventListener('click',async e=>{
@@ -3672,6 +3681,11 @@ function focusStepByText(stepId){
     const els=document.querySelectorAll('[data-editname]');
     for(const el of els){
       if(el.textContent.trim()===''){
+        // 仮置きは contenteditable がデフォルトoffなのでONにする
+        if(!el.hasAttribute('contenteditable')){
+          el.setAttribute('contenteditable','true');
+          el.setAttribute('spellcheck','false');
+        }
         el.focus();
         // カーソル位置を末尾に
         const range=document.createRange();range.selectNodeContents(el);range.collapse(false);
