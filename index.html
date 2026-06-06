@@ -921,6 +921,22 @@
   /* テーマカード内の完了タスク */
   .pvrow.pv-done{opacity:0.5;}
   .pvrow.pv-done .pv-task-text{text-decoration:line-through;color:var(--ink-faint);}
+  /* テーマカード内タスクの選択 */
+  .pvrow.pv-selected{
+    background:rgba(168,137,63,0.06);
+    border-radius:6px;
+  }
+  .pv-action-row{padding-left:30px;}
+  /* テーマカード内のサブタスク */
+  .pv-children{margin-left:24px;}
+  .pv-toggle{
+    background:none;border:none;
+    color:var(--ink-faint);font-size:10px;
+    padding:0 4px;cursor:pointer;line-height:1;
+  }
+  .pv-toggle:hover{color:var(--star);}
+  .pv-toggle-spacer{display:inline-block;width:18px;}
+  .pv-task-block{display:block;}
   .pv-check.checked{background:var(--star);border-color:var(--star);}
   .pv-edit{
     background:none;border:none;font-family:inherit;
@@ -1089,6 +1105,42 @@
     height:2px;background:var(--star);border-radius:1px;z-index:5;
   }
   .step-group-head{cursor:default;}
+  /* テーマカードD&D */
+  .lcard{position:relative;}
+  .lcard.tcdragging{opacity:0.4;}
+  .lcard.tcdrop-before::before{
+    content:'';position:absolute;top:-2px;left:0;right:0;
+    height:2px;background:var(--star);border-radius:1px;z-index:5;
+  }
+  .lcard.tcdrop-after::after{
+    content:'';position:absolute;bottom:-2px;left:0;right:0;
+    height:2px;background:var(--star);border-radius:1px;z-index:5;
+  }
+  /* テーマカード内タスクD&D */
+  .pvrow{position:relative;}
+  .pvrow.cdragging{opacity:0.4;}
+  .pvrow.cdrop-before::before{
+    content:'';position:absolute;top:-1px;left:0;right:0;
+    height:2px;background:var(--star);border-radius:1px;z-index:5;
+  }
+  .pvrow.cdrop-after::after{
+    content:'';position:absolute;bottom:-1px;left:0;right:0;
+    height:2px;background:var(--star);border-radius:1px;z-index:5;
+  }
+  .pvrow.cdrop-into{background:rgba(168,137,63,0.1);border-radius:6px;}
+  .pvrow.cdrop-group{background:rgba(168,137,63,0.12);border-radius:6px;}
+  .pvrow.pvgrp-dragging{opacity:0.4;}
+  .pvrow.pvgrp-drop-before::before{
+    content:'';position:absolute;top:-1px;left:0;right:0;
+    height:2px;background:var(--star);border-radius:1px;z-index:5;
+  }
+  .pvrow.pvgrp-drop-after::after{
+    content:'';position:absolute;bottom:-1px;left:0;right:0;
+    height:2px;background:var(--star);border-radius:1px;z-index:5;
+  }
+  .lcard-head{cursor:default;}
+  .lcard.theme-selected .star-dir{color:var(--star);}
+  .theme-action-row{padding-left:14px;padding-right:14px;margin-top:4px;}
   /* 仮置き：タップで選択、ダブルタップで編集 */
   .snode.inbox-selected > .srow{
     background:rgba(168,137,63,0.06);
@@ -1097,7 +1149,11 @@
     display:flex;gap:6px;
     padding:6px 0 10px 30px;
     animation:fadeIn 0.18s ease;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
   }
+  .inbox-action-row::-webkit-scrollbar{display:none;}
   @keyframes fadeIn{from{opacity:0;transform:translateY(-2px);}to{opacity:1;transform:none;}}
   .inbox-action{
     background:none;border:1px solid var(--line);
@@ -1107,6 +1163,7 @@
     padding:5px 11px;cursor:pointer;
     transition:color 0.18s ease, border-color 0.18s ease;
     letter-spacing:0.02em;
+    white-space:nowrap;flex-shrink:0;
   }
   .inbox-action:hover{color:var(--star);border-color:var(--star);}
   .inbox-action.active{color:var(--star);border-color:var(--star);background:rgba(168,137,63,0.05);}
@@ -1297,7 +1354,6 @@
       <div class="sub" id="screenSub">自分が大事にしたいこと</div>
     </div>
     <div class="title-right" id="titleRight">
-      <button class="archive-btn" id="reorderBtn" style="display:none;">入れ替え</button>
       <button class="archive-btn" id="inboxBtn" style="display:none;">仮置き</button>
       <button class="archive-btn" id="archiveBtn" style="display:none;">アーカイブ</button>
     </div>
@@ -1574,7 +1630,7 @@
   <div class="sheet-bg" id="qabg"></div>
   <div class="sheet half-sheet" id="qasheet">
     <h2 style="font-size:14px;color:var(--ink-faint);letter-spacing:0.1em;margin:0 0 12px;">仮置きに追加</h2>
-    <input type="text" id="qaInput" placeholder="思いついたタスクを書く" autocomplete="off" style="width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:15px;background:transparent;color:var(--ink);outline:none;">
+    <input type="text" id="qaInput" placeholder="仮置きタスクを追加" autocomplete="off" style="width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:15px;background:transparent;color:var(--ink);outline:none;">
     <div style="font-size:11px;color:var(--ink-faint);margin-top:8px;line-height:1.6;">Enter で追加。続けて入力できます。</div>
   </div>
 
@@ -1988,6 +2044,109 @@ function countOpenAll(s){
   (s.groups||[]).forEach(g=>{n+=countOpenSteps(g.steps||[]);});
   return n;
 }
+// テーマカード内タスク行を生成
+function renderCardTaskRow(s,st,pathStr,kind){
+  const due=st.due?`<span class="pvdue${isPast(st.due)?' past':''}">${fmtDue(st.due)}</span>`:'';
+  const cbId=`${s.id}::${pathStr}`;
+  const editPath=`${s.id}::${pathStr}`;
+  const isSelected=cardSelectedSid===s.id && cardSelectedStepId===st.id;
+  const datePickerOpen=isSelected && cardDatePickerOpen===st.id;
+  const catPickerOpen=isSelected && cardCategoryPickerOpen===st.id;
+  const dateActiveCls=datePickerOpen?' active':'';
+  const catActiveCls=catPickerOpen?' active':'';
+  const nestedCls=kind==='nested'?' pvrow-nested':'';
+  const doneCls=st.done?' pv-done':'';
+  const selCls=isSelected?' pv-selected':'';
+  const actionRow=isSelected?`<div class="inbox-action-row pv-action-row"><button class="inbox-action${dateActiveCls}" data-cba-date="${cbId}">期日</button><button class="inbox-action${catActiveCls}" data-cba-cat="${cbId}">カテゴリ</button><button class="inbox-action" data-cba-sub="${cbId}">+ サブタスク</button><button class="inbox-action" data-cba-del="${cbId}">削除</button></div>${datePickerOpen?renderCardDatePicker(cbId,st):''}${catPickerOpen?renderCardCategoryPicker(cbId,st,s):''}`:'';
+  const hasKids=st.children&&st.children.length;
+  const cardCollapseKey=`${s.id}::${st.id}`;
+  const childCol=cardCollapsedSteps[cardCollapseKey];
+  const toggleBtn=hasKids?`<button class="pv-toggle" data-cardtogglestep="${cardCollapseKey}">${childCol?'▶':'▼'}</button>`:'<span class="pv-toggle-spacer"></span>';
+  let childrenHtml='';
+  if(hasKids && !childCol){
+    const path=decPath(pathStr);
+    childrenHtml='<div class="pv-children">'+st.children.map((cst,ci)=>{
+      const cPath=encPath(path.concat(ci));
+      return renderCardTaskRow(s,cst,cPath,'child');
+    }).join('')+'</div>';
+  }
+  return `<div class="pv-task-block" data-pvblock="${s.id}::${pathStr}">
+    <div class="pvrow${nestedCls}${doneCls}${selCls}" data-cardrow="${s.id}::${st.id}" data-stepid="${st.id}" data-cardpath="${s.id}::${pathStr}">
+      <button class="pv-check ${st.done?'checked':''}" data-sccheck="${cbId}"></button>
+      ${toggleBtn}
+      <span class="pv-task-text" data-themeeditname="${cbId}" data-stepid="${st.id}" data-sid="${s.id}">${esc(st.text)}</span>
+      ${due}
+      <button class="pv-edit" data-themeeditstep="${editPath}" title="編集">⋯</button>
+    </div>
+    ${actionRow}
+    ${childrenHtml}
+  </div>`;
+}
+// テーマカード用：期日ピッカー
+function renderCardDatePicker(cbId,st){
+  const WK=['月','火','水','木','金','土','日'];
+  const today=new Date();today.setHours(0,0,0,0);
+  const tomorrow=new Date(today);tomorrow.setDate(tomorrow.getDate()+1);
+  const nextWeek=new Date(today);
+  const dow=today.getDay();
+  const daysToMon=(8-dow)%7||7;
+  nextWeek.setDate(today.getDate()+daysToMon);
+  const fmtYmd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const fmtMd=d=>`${d.getMonth()+1}月${d.getDate()}日`;
+  const wkLabel=d=>WK[(d.getDay()+6)%7];
+  const m=cardDatePickerMonth||new Date(today.getFullYear(),today.getMonth(),1);
+  const year=m.getFullYear(),mon=m.getMonth();
+  const first=new Date(year,mon,1);
+  const firstDow=(first.getDay()+6)%7;
+  const daysInMonth=new Date(year,mon+1,0).getDate();
+  let cells=[];
+  for(let i=0;i<firstDow;i++)cells.push('');
+  for(let d=1;d<=daysInMonth;d++)cells.push(d);
+  while(cells.length%7)cells.push('');
+  let gridHtml='';
+  cells.forEach(c=>{
+    if(c===''){gridHtml+='<span class="idp-cell idp-empty"></span>';return;}
+    const cellDate=new Date(year,mon,c);
+    const ymd=fmtYmd(cellDate);
+    const isToday=cellDate.getTime()===today.getTime();
+    const isSel=st.due===ymd;
+    gridHtml+=`<button class="idp-cell${isToday?' today':''}${isSel?' sel':''}" data-cba-pick="${cbId}::${ymd}">${c}</button>`;
+  });
+  return `<div class="inbox-date-picker">
+    <div class="idp-quick">
+      <button class="idp-q" data-cba-pick="${cbId}::${fmtYmd(today)}"><span>▤ 今日</span><span class="idp-q-sub">${wkLabel(today)}</span></button>
+      <button class="idp-q" data-cba-pick="${cbId}::${fmtYmd(tomorrow)}"><span>☀ 明日</span><span class="idp-q-sub">${wkLabel(tomorrow)}</span></button>
+      <button class="idp-q" data-cba-pick="${cbId}::${fmtYmd(nextWeek)}"><span>→ 来週</span><span class="idp-q-sub">${wkLabel(nextWeek)} ${fmtMd(nextWeek)}</span></button>
+      <button class="idp-q" data-cba-pick="${cbId}::"><span>− なし</span><span class="idp-q-sub"></span></button>
+    </div>
+    <div class="idp-cal-head">
+      <button class="idp-nav" data-cba-month="prev">‹</button>
+      <span class="idp-month">${year}年 ${mon+1}月</span>
+      <button class="idp-nav" data-cba-month="next">›</button>
+    </div>
+    <div class="idp-wk">${WK.map(w=>`<span>${w}</span>`).join('')}</div>
+    <div class="idp-grid">${gridHtml}</div>
+  </div>`;
+}
+// テーマカード用：カテゴリピッカー
+function renderCardCategoryPicker(cbId,st,s){
+  const[sid,pathStr]=cbId.split('::');
+  const path=decPath(pathStr);
+  const currentGroupId=path[0]==='g'?path[1]:null;
+  let html='<div class="inbox-move-picker">';
+  if(currentGroupId!==null){
+    html+=`<button class="imp-opt" data-cba-mvto="${cbId}::__root__"><span class="mv-dot" style="background:transparent;border:1px solid var(--line);"></span>未分類（直下）</button>`;
+  }
+  (s.groups||[]).forEach(g=>{
+    if(g.id===currentGroupId)return;
+    html+=`<button class="imp-opt" data-cba-mvto="${cbId}::${g.id}"><span class="mv-dot" style="background:transparent;border:1px solid var(--star);"></span>${esc(g.name)}</button>`;
+  });
+  if((!s.groups||s.groups.length===0) && currentGroupId===null){
+    html+='<div style="font-size:12px;color:var(--ink-faint);text-align:center;padding:8px;">カテゴリがありません</div>';
+  }
+  html+='</div>';
+  return html;
+}
 function renderStars(){
   const l=document.getElementById('starsList');
   if(!stars.length){l.innerHTML=`<div class="empty"><span class="em-glyph">☆</span><br></div>`;return;}
@@ -2014,38 +2173,42 @@ function renderStars(){
         const gKey=`${s.id}::${g.id}`;
         const gCol=collapsedStarGroups[gKey];
         const gTri=openSteps.length?(gCol?'▶':'▼'):' ';
-        parts.push(`<div class="pvrow pvgroup-row">${openSteps.length?`<button class="pv-toggle" data-togglestargroup="${gKey}">${gTri}</button>`:'<span class="pv-toggle-spacer"></span>'}<span class="pvgroup">${esc(g.name)}</span>${n?`<span class="pvcount">(${n})</span>`:''}</div>`);
+        parts.push(`<div class="pvrow pvgroup-row" data-pvgrouphead="${s.id}::${g.id}" data-pvgid="${g.id}">${openSteps.length?`<button class="pv-toggle" data-togglestargroup="${gKey}">${gTri}</button>`:'<span class="pv-toggle-spacer"></span>'}<span class="pvgroup" data-pvgroupname="${s.id}::${g.id}">${esc(g.name)}</span>${n?`<span class="pvcount">(${n})</span>`:''}</div>`);
         if(!gCol && openSteps.length){
           openSteps.forEach((st,i)=>{
             if(!showDoneSteps && st.done)return;
-            let due='';
-            if(st.due){const past=isPast(st.due);due=`<span class="pvdue${past?' past':''}">${fmtDue(st.due)}</span>`;}
-            const cbId=`${s.id}::${encPath(['g',g.id,i])}`;
-            const editPath=`${s.id}::${encPath(['g',g.id,i])}`;
-            parts.push(`<div class="pvrow pvrow-nested ${st.done?'pv-done':''}"><button class="pv-check ${st.done?'checked':''}" data-sccheck="${cbId}"></button><span class="pv-task-text">${esc(st.text)}</span>${due}<button class="pv-edit" data-themeeditstep="${editPath}" title="編集">⋯</button></div>`);
+            const pathStr=encPath(['g',g.id,i]);
+            parts.push(renderCardTaskRow(s,st,pathStr,'nested'));
           });
         }
       });
-      // 直下のタスク（最大3件、完了済み非表示の場合はそれをスキップ）。すべてインライン編集可能
+      // 直下のタスク（完了済み非表示の場合はそれをスキップ、全件表示）
       const visibleTop=showDoneSteps?top:top.filter(st=>!st.done);
-      const shown=visibleTop.slice(0,3);
-      // インデックスは元のtop配列基準で取得
-      shown.forEach(st=>{
+      visibleTop.forEach(st=>{
         const i=top.indexOf(st);
-        let due='';
-        if(st.due){const past=isPast(st.due);due=`<span class="pvdue${past?' past':''}">${fmtDue(st.due)}</span>`;}
-        const cbId=`${s.id}::${encPath([i])}`;
-        const editPath=`${s.id}::${encPath([i])}`;
-        parts.push(`<div class="pvrow ${st.done?'pv-done':''}"><button class="pv-check ${st.done?'checked':''}" data-sccheck="${cbId}"></button><span class="pv-task-text" data-themeeditname="${s.id}::${encPath([i])}" contenteditable="true" spellcheck="false">${esc(st.text)}</span>${due}<button class="pv-edit" data-themeeditstep="${editPath}" title="編集">⋯</button></div>`);
+        const pathStr=encPath([i]);
+        parts.push(renderCardTaskRow(s,st,pathStr,'top'));
       });
-      if(visibleTop.length>3)parts.push(`<div class="pvmore">ほか ${visibleTop.length-3} 件…</div>`);
       parts.push(`<button class="star-add-task" data-addtotheme="${s.id}" title="このテーマにタスクを追加">+</button>`);
       body=`<div class="star-preview">${parts.join('')}</div>`;
     }else{
       // タスクが何もない時も + ボタンだけは出す
       body=`<div class="star-preview"><button class="star-add-task" data-addtotheme="${s.id}" title="このテーマにタスクを追加">+</button></div>`;
     }
-    return `<div class="lcard${isCol?' collapsed':''}"><div class="lcard-head"><button class="toggle-btn" data-togglestar="${s.id}">${tri}</button><div class="star-dir" data-opentheme="${s.id}">${esc(s.dir)}</div><button class="star-open-btn" data-opentheme="${s.id}" title="このテーマを開く">›</button></div>${body}</div>`;
+    const themeSelected=selectedThemeSid===s.id;
+    const themeSelCls=themeSelected?' theme-selected':'';
+    const archiveExpanded=themeArchiveExpand===s.id;
+    let themeActionRow='';
+    if(themeSelected){
+      themeActionRow=`<div class="inbox-action-row theme-action-row">
+        <button class="inbox-action" data-tba-sort="${s.id}">期日順</button>
+        <button class="inbox-action${showDoneSteps?' active':''}" data-tba-toggledone="${s.id}">${showDoneSteps?'完了済みを隠す':'完了済みを表示'}</button>
+        <button class="inbox-action" data-tba-addtask="${s.id}">+ タスク</button>
+        <button class="inbox-action" data-tba-addcat="${s.id}">+ カテゴリ</button>
+        <button class="inbox-action${archiveExpanded?' active':''}" data-tba-archive="${s.id}">アーカイブ</button>
+      </div>${archiveExpanded?`<div class="inbox-action-row theme-action-row" style="padding-left:30px;"><button class="inbox-action" data-tba-arc-achieve="${s.id}">達成</button><button class="inbox-action" data-tba-arc-hold="${s.id}">保留</button><button class="inbox-action" data-tba-arc-delete="${s.id}">削除</button></div>`:''}`;
+    }
+    return `<div class="lcard${isCol?' collapsed':''}${themeSelCls}" data-tcid="${s.id}"><div class="lcard-head" data-tcdrag="${s.id}"><button class="toggle-btn" data-togglestar="${s.id}">${tri}</button><div class="star-dir" data-themesel="${s.id}">${esc(s.dir)}</div><button class="star-open-btn" data-editstar="${s.id}" title="このテーマを編集">⋯</button></div>${themeActionRow}${body}</div>`;
   }).join('');
 }
 let reorderMode=false;
@@ -2062,6 +2225,9 @@ async function saveContainer(sid){
 function openDetail(s){
   detailSid=s.id;
   groupReorderMode=false;
+  selectedStepId=null;
+  stepDatePickerOpen=null;
+  stepCategoryPickerOpen=null;
   document.getElementById('dDir').textContent=s.dir;
   const memoEl=document.getElementById('dMemo');
   if(s.memo){memoEl.textContent=s.memo;memoEl.style.display='block';}
@@ -2174,8 +2340,25 @@ function repLabel(st){
 let showDoneSteps=false; // 完了済みタスクを表示するか
 async function loadShowDoneSteps(){try{const r=await window.storage.get('polaris:showDone');if(r)showDoneSteps=JSON.parse(r.value);}catch(e){}}
 async function saveShowDoneSteps(){try{await window.storage.set('polaris:showDone',JSON.stringify(showDoneSteps));}catch(e){}}
+let selectedStepId=null; // テーマ詳細の選択中タスクID
+let stepTapLast=null;
+let stepDatePickerOpen=null;
+let stepDatePickerMonth=null;
+let stepCategoryPickerOpen=null;
+// テーマカード（一覧）の選択
+let cardSelectedSid=null;
+let cardSelectedStepId=null;
+let cardTapLast=null;
+let cardDatePickerOpen=null;
+let cardDatePickerMonth=null;
+let cardCategoryPickerOpen=null;
+let cardCollapsedSteps={}; // テーマカード内のサブタスク折りたたみ状態 {sid::stepId: bool}
+// テーマ自体の選択
+let selectedThemeSid=null;
+let themeArchiveExpand=null; // アーカイブインライン展開しているテーマsid
+
 function renderStepNodes(steps,path){
-  // 完了済みを非表示の時はフィルタ（ただしインデックスは保持する必要があるので、フィルタしてもpath計算用にもとのインデックスを使う）
+  // 完了済みを非表示の時はフィルタ
   return steps.map((st,i)=>{
     if(!showDoneSteps && st.done)return '';
     const p=encPath(path.concat(i));
@@ -2188,11 +2371,85 @@ function renderStepNodes(steps,path){
     const hasKids=st.children&&st.children.length;
     const isCol=collapsedSteps[detailSid]&&collapsedSteps[detailSid][st.id];
     const children=hasKids?`<div class="schildren">${renderStepNodes(st.children,path.concat(i))}</div>`:'';
-    const moveBtn=`<button class="smini" data-movestep="${p}" title="移動">⇄</button>`;
     const toggleBtn=hasKids?`<button class="toggle-btn" data-togglestep="${st.id}">${isCol?'▶':'▼'}</button>`:'<span class="toggle-spacer" style="display:inline-block;width:16px;"></span>';
     const doneCls=st.done?' step-done':'';
-    return `<div class="snode${isCol?' collapsed':''}${doneCls}" data-snode="${p}"><div class="srow"><button class="scheck${st.done?' checked':''}" data-check="${p}"></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" contenteditable="true" spellcheck="false">${esc(st.text)}</span><button class="smini sadd-here" data-addchild="${p}" title="この中にサブタスクを追加">+</button>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button><button class="smini" data-delstep="${p}">×</button></div>${children}</div>`;
+    const isSelected=selectedStepId===st.id;
+    const selCls=isSelected?' inbox-selected':'';
+    const datePickerOpen=stepDatePickerOpen===st.id;
+    const catPickerOpen=stepCategoryPickerOpen===st.id;
+    const dateActiveCls=datePickerOpen?' active':'';
+    const catActiveCls=catPickerOpen?' active':'';
+    const actionRow=isSelected?`<div class="inbox-action-row"><button class="inbox-action${dateActiveCls}" data-sba-date="${p}">期日</button><button class="inbox-action${catActiveCls}" data-sba-cat="${p}">カテゴリ</button><button class="inbox-action" data-sba-sub="${p}">+ サブタスク</button><button class="inbox-action" data-sba-del="${p}">削除</button></div>${datePickerOpen?renderStepDatePicker(p,st):''}${catPickerOpen?renderStepCategoryPicker(p,st):''}`:'';
+    return `<div class="snode${isCol?' collapsed':''}${doneCls}${selCls}" data-snode="${p}" data-stepid="${st.id}"><div class="srow"><button class="scheck${st.done?' checked':''}" data-check="${p}"></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" data-stepid="${st.id}">${esc(st.text)}</span>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button></div>${actionRow}${children}</div>`;
   }).join('');
+}
+// テーマ詳細用：期日ピッカー
+function renderStepDatePicker(p,st){
+  const WK=['月','火','水','木','金','土','日'];
+  const today=new Date();today.setHours(0,0,0,0);
+  const tomorrow=new Date(today);tomorrow.setDate(tomorrow.getDate()+1);
+  const nextWeek=new Date(today);
+  const dow=today.getDay();
+  const daysToMon=(8-dow)%7||7;
+  nextWeek.setDate(today.getDate()+daysToMon);
+  const fmtYmd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const fmtMd=d=>`${d.getMonth()+1}月${d.getDate()}日`;
+  const wkLabel=d=>WK[(d.getDay()+6)%7];
+  const m=stepDatePickerMonth||new Date(today.getFullYear(),today.getMonth(),1);
+  const year=m.getFullYear(),mon=m.getMonth();
+  const first=new Date(year,mon,1);
+  const firstDow=(first.getDay()+6)%7;
+  const daysInMonth=new Date(year,mon+1,0).getDate();
+  let cells=[];
+  for(let i=0;i<firstDow;i++)cells.push('');
+  for(let d=1;d<=daysInMonth;d++)cells.push(d);
+  while(cells.length%7)cells.push('');
+  let gridHtml='';
+  cells.forEach(c=>{
+    if(c===''){gridHtml+='<span class="idp-cell idp-empty"></span>';return;}
+    const cellDate=new Date(year,mon,c);
+    const ymd=fmtYmd(cellDate);
+    const isToday=cellDate.getTime()===today.getTime();
+    const isSel=st.due===ymd;
+    gridHtml+=`<button class="idp-cell${isToday?' today':''}${isSel?' sel':''}" data-sba-pick="${p}::${ymd}">${c}</button>`;
+  });
+  return `<div class="inbox-date-picker">
+    <div class="idp-quick">
+      <button class="idp-q" data-sba-pick="${p}::${fmtYmd(today)}"><span>▤ 今日</span><span class="idp-q-sub">${wkLabel(today)}</span></button>
+      <button class="idp-q" data-sba-pick="${p}::${fmtYmd(tomorrow)}"><span>☀ 明日</span><span class="idp-q-sub">${wkLabel(tomorrow)}</span></button>
+      <button class="idp-q" data-sba-pick="${p}::${fmtYmd(nextWeek)}"><span>→ 来週</span><span class="idp-q-sub">${wkLabel(nextWeek)} ${fmtMd(nextWeek)}</span></button>
+      <button class="idp-q" data-sba-pick="${p}::"><span>− なし</span><span class="idp-q-sub"></span></button>
+    </div>
+    <div class="idp-cal-head">
+      <button class="idp-nav" data-sba-month="prev">‹</button>
+      <span class="idp-month">${year}年 ${mon+1}月</span>
+      <button class="idp-nav" data-sba-month="next">›</button>
+    </div>
+    <div class="idp-wk">${WK.map(w=>`<span>${w}</span>`).join('')}</div>
+    <div class="idp-grid">${gridHtml}</div>
+  </div>`;
+}
+// テーマ詳細用：カテゴリピッカー
+function renderStepCategoryPicker(p,st){
+  const s=getContainer(detailSid);if(!s)return '';
+  const path=decPath(p);
+  const currentGroupId=path[0]==='g'?path[1]:null;
+  let html='<div class="inbox-move-picker">';
+  // 未分類（直下）
+  if(currentGroupId!==null){
+    html+=`<button class="imp-opt" data-sba-mvto="${p}::__root__"><span class="mv-dot" style="background:transparent;border:1px solid var(--line);"></span>未分類（直下）</button>`;
+  }
+  (s.groups||[]).forEach(g=>{
+    if(g.id===currentGroupId)return; // 現在のカテゴリは除外
+    html+=`<button class="imp-opt" data-sba-mvto="${p}::${g.id}"><span class="mv-dot" style="background:transparent;border:1px solid var(--star);"></span>${esc(g.name)}</button>`;
+  });
+  if(!s.groups||s.groups.length===0){
+    if(currentGroupId===null){
+      html+='<div style="font-size:12px;color:var(--ink-faint);text-align:center;padding:8px;">カテゴリがありません</div>';
+    }
+  }
+  html+='</div>';
+  return html;
 }
 function encPath(path){return path.join('|');}
 function decPath(str){return str.split('|').map(s=>/^-?\d+$/.test(s)?Number(s):s);}
@@ -2848,7 +3105,8 @@ function goTab(v){
   document.querySelector('.screen').scrollTop=0;
   document.getElementById('archiveBtn').style.display=(v==='values'||v==='stars')?'block':'none';
   document.getElementById('inboxBtn').style.display=(v==='stars')?'block':'none';
-  document.getElementById('reorderBtn').style.display=(v==='stars'&&stars.length>1)?'block':'none';
+  const rb=document.getElementById('reorderBtn');
+  if(rb)rb.style.display=(v==='stars'&&stars.length>1)?'block':'none';
   const dfab=document.getElementById('dualFab');
   if(dfab)dfab.style.display=(v==='stars')?'flex':'none';
   const tfab=document.getElementById('todayFab');
@@ -2873,7 +3131,7 @@ document.getElementById('archiveBtn').addEventListener('click',()=>{
   document.getElementById('screenTitle').textContent=TITLES.archive[0];
   document.getElementById('screenSub').textContent=TITLES.archive[1];
   document.getElementById('archiveBtn').style.display='none';
-  document.getElementById('reorderBtn').style.display='none';
+  const rb2=document.getElementById('reorderBtn');if(rb2)rb2.style.display='none';
   document.getElementById('inboxBtn').style.display='none';
   const tfab=document.getElementById('todayFab');if(tfab)tfab.style.display='none';
   const dfab=document.getElementById('dualFab');if(dfab)dfab.style.display='none';
@@ -3126,8 +3384,8 @@ function renderInboxStepNodes(steps,path){
     const movePickerOpen=inboxMovePickerOpen===st.id;
     const dateActiveCls=pickerOpen?' active':'';
     const moveActiveCls=movePickerOpen?' active':'';
-    const actionRow=isSelected?`<div class="inbox-action-row"><button class="inbox-action${dateActiveCls}" data-iba-date="${p}">▤ 期日</button><button class="inbox-action${moveActiveCls}" data-iba-move="${p}">→ 移動</button><button class="inbox-action" data-iba-del="${p}">× 削除</button></div>${pickerOpen?renderInboxDatePicker(p,st):''}${movePickerOpen?renderInboxMovePicker(p,st):''}`:'';
-    return `<div class="snode${isCol?' collapsed':''}${doneCls}${selCls}" data-snode="${p}" data-stepid="${st.id}"><div class="srow inbox-row"><button class="scheck${st.done?' checked':''}" data-check="${p}"></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" data-stepid="${st.id}">${esc(st.text)}</span><button class="smini sadd-here" data-addchild="${p}" title="この中にサブタスクを追加">+</button>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button></div>${actionRow}${children}</div>`;
+    const actionRow=isSelected?`<div class="inbox-action-row"><button class="inbox-action${dateActiveCls}" data-iba-date="${p}">期日</button><button class="inbox-action${moveActiveCls}" data-iba-move="${p}">移動</button><button class="inbox-action" data-iba-sub="${p}">+ サブタスク</button><button class="inbox-action" data-iba-del="${p}">削除</button></div>${pickerOpen?renderInboxDatePicker(p,st):''}${movePickerOpen?renderInboxMovePicker(p,st):''}`:'';
+    return `<div class="snode${isCol?' collapsed':''}${doneCls}${selCls}" data-snode="${p}" data-stepid="${st.id}"><div class="srow inbox-row"><button class="scheck${st.done?' checked':''}" data-check="${p}"></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" data-stepid="${st.id}">${esc(st.text)}</span>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button></div>${actionRow}${children}</div>`;
   }).join('');
 }
 document.getElementById('ibbg').addEventListener('click',()=>closeSheet('ibbg','ibsheet'));
@@ -3215,6 +3473,24 @@ document.getElementById('ibStepsTree').addEventListener('click',async e=>{
     await ss();await sib();
     renderInboxTree();renderStars();renderCal();
     toast('移動しました');
+    return;
+  }
+  // サブタスク追加
+  const ibaSub=e.target.closest('[data-iba-sub]');
+  if(ibaSub){
+    const path=decPath(ibaSub.dataset.ibaSub);
+    const node=getStepByPath(inbox,path);if(!node)return;
+    if(!node.children)node.children=[];
+    const newId=uid();
+    node.children.push({id:newId,text:'',due:null,memo:null,rep:'none',done:false,children:[]});
+    if(collapsedSteps['__inbox__'] && collapsedSteps['__inbox__'][node.id]){
+      collapsedSteps['__inbox__'][node.id]=false;
+      saveCollapsed();
+    }
+    selectedInboxStepId=null;
+    inboxDatePickerOpen=null;inboxMovePickerOpen=null;
+    await sib();renderInboxTree();renderStars();
+    focusStepByText(newId);
     return;
   }
   const ibaDel=e.target.closest('[data-iba-del]');
@@ -3379,6 +3655,128 @@ document.getElementById('starsList').addEventListener('click',async e=>{
     }
     return; // 並べ替えモード中は他の操作不可
   }
+  // テーマ名タップ：テーマ選択状態を切り替え
+  const tsel=e.target.closest('[data-themesel]');
+  if(tsel){
+    const sid=tsel.dataset.themesel;
+    if(selectedThemeSid===sid){
+      selectedThemeSid=null;themeArchiveExpand=null;
+    }else{
+      selectedThemeSid=sid;themeArchiveExpand=null;
+    }
+    renderStars();
+    return;
+  }
+  // テーマアクション：期日順
+  const tbaSort=e.target.closest('[data-tba-sort]');
+  if(tbaSort){
+    const sid=tbaSort.dataset.tbaSort;
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    const sortArr=arr=>{
+      arr.sort((a,b)=>{
+        if(a.due&&b.due)return a.due<b.due?-1:a.due>b.due?1:0;
+        if(a.due)return -1;if(b.due)return 1;return 0;
+      });
+      arr.forEach(st=>{if(st.children&&st.children.length)sortArr(st.children);});
+    };
+    if(s.steps)sortArr(s.steps);
+    (s.groups||[]).forEach(g=>{if(g.steps)sortArr(g.steps);});
+    await ss();renderStars();
+    toast('期日順に整えました');
+    return;
+  }
+  // テーマアクション：完了済み表示トグル
+  const tbaTd=e.target.closest('[data-tba-toggledone]');
+  if(tbaTd){
+    showDoneSteps=!showDoneSteps;
+    await saveShowDoneSteps();
+    renderStars();
+    return;
+  }
+  // テーマアクション：カテゴリ追加
+  const tbaAc=e.target.closest('[data-tba-addcat]');
+  if(tbaAc){
+    const sid=tbaAc.dataset.tbaAddcat;
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    if(!s.groups)s.groups=[];
+    const newId=uid();
+    s.groups.push({id:newId,name:'',steps:[]});
+    if(collapsedStarCards[sid]){collapsedStarCards[sid]=false;saveCollapsedStarCards();}
+    await ss();renderStars();
+    // 空のカテゴリ名にフォーカス
+    setTimeout(()=>{
+      const els=document.querySelectorAll('[data-pvgroupname]');
+      for(const el of els){
+        if(el.textContent.trim()===''){
+          el.setAttribute('contenteditable','true');
+          el.setAttribute('spellcheck','false');
+          el.focus();
+          const range=document.createRange();range.selectNodeContents(el);range.collapse(false);
+          const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
+          el.scrollIntoView({block:'center',behavior:'smooth'});
+          break;
+        }
+      }
+    },50);
+    return;
+  }
+  // テーマアクション：タスク追加（直下に空タスク追加＋カーソル）
+  const tbaAt=e.target.closest('[data-tba-addtask]');
+  if(tbaAt){
+    const sid=tbaAt.dataset.tbaAddtask;
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    if(!s.steps)s.steps=[];
+    const newId=uid();
+    s.steps.push({id:newId,text:'',due:null,memo:null,rep:'none',done:false,children:[]});
+    if(collapsedStarCards[sid]){collapsedStarCards[sid]=false;saveCollapsedStarCards();}
+    await ss();renderStars();
+    focusStepByText(newId);
+    return;
+  }
+  // テーマアクション：アーカイブ展開
+  const tbaArc=e.target.closest('[data-tba-archive]');
+  if(tbaArc){
+    const sid=tbaArc.dataset.tbaArchive;
+    themeArchiveExpand=themeArchiveExpand===sid?null:sid;
+    renderStars();
+    return;
+  }
+  // アーカイブ系
+  const tbaAch=e.target.closest('[data-tba-arc-achieve]');
+  if(tbaAch){
+    const sid=tbaAch.dataset.tbaArcAchieve;
+    const i=stars.findIndex(x=>x.id===sid);if(i<0)return;
+    const s=stars.splice(i,1)[0];
+    s.archivedAt=Date.now();s.archiveKind='achieve';
+    starsArch.push(s);
+    selectedThemeSid=null;themeArchiveExpand=null;
+    await ss();await ssa();renderStars();
+    toast('達成として残しました');
+    return;
+  }
+  const tbaHold=e.target.closest('[data-tba-arc-hold]');
+  if(tbaHold){
+    const sid=tbaHold.dataset.tbaArcHold;
+    const i=stars.findIndex(x=>x.id===sid);if(i<0)return;
+    const s=stars.splice(i,1)[0];
+    s.heldAt=Date.now();
+    starsHold.push(s);
+    selectedThemeSid=null;themeArchiveExpand=null;
+    await ss();await ssh();renderStars();
+    toast('保留しました');
+    return;
+  }
+  const tbaDel=e.target.closest('[data-tba-arc-delete]');
+  if(tbaDel){
+    const sid=tbaDel.dataset.tbaArcDelete;
+    if(!confirm('このテーマを完全に削除しますか？\nタスクも全部消えます。元には戻せません。'))return;
+    const i=stars.findIndex(x=>x.id===sid);if(i<0)return;
+    stars.splice(i,1);
+    selectedThemeSid=null;themeArchiveExpand=null;
+    await ss();renderStars();renderCal();
+    toast('削除しました');
+    return;
+  }
   // テーマカード内タスクの「⋯」編集ボタン
   const tes=e.target.closest('[data-themeeditstep]');
   if(tes){
@@ -3386,6 +3784,166 @@ document.getElementById('starsList').addEventListener('click',async e=>{
     detailSid=sid;
     openStepEditor(sid,null,decPath(pathStr));
     return;
+  }
+  // テーマカード内のサブタスク折りたたみ
+  const cts=e.target.closest('[data-cardtogglestep]');
+  if(cts){
+    e.stopPropagation();
+    const key=cts.dataset.cardtogglestep;
+    cardCollapsedSteps[key]=!cardCollapsedSteps[key];
+    renderStars();
+    return;
+  }
+  // カテゴリ名ダブルタップで編集
+  const pgn=e.target.closest('[data-pvgroupname]');
+  if(pgn && !pgn.hasAttribute('contenteditable')){
+    const now=Date.now();
+    const gid=pgn.dataset.pvgroupname;
+    if(cardTapLast && cardTapLast.id==='grp:'+gid && (now-cardTapLast.ts)<350){
+      cardTapLast=null;
+      pgn.setAttribute('contenteditable','true');
+      pgn.setAttribute('spellcheck','false');
+      pgn.focus();
+      const range=document.createRange();range.selectNodeContents(pgn);range.collapse(false);
+      const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
+      return;
+    }
+    cardTapLast={id:'grp:'+gid,ts:now};
+    return;
+  }
+  // 期日ピッカー
+  const cbaDate=e.target.closest('[data-cba-date]');
+  if(cbaDate){
+    const[sid,pathStr]=cbaDate.dataset.cbaDate.split('::');
+    const path=decPath(pathStr);
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    const node=getStepByPath(s,path);if(!node)return;
+    if(cardDatePickerOpen===node.id){cardDatePickerOpen=null;}
+    else{
+      cardDatePickerOpen=node.id;
+      cardCategoryPickerOpen=null;
+      if(node.due){const[y,m]=node.due.split('-').map(Number);cardDatePickerMonth=new Date(y,m-1,1);}
+      else{const t=new Date();cardDatePickerMonth=new Date(t.getFullYear(),t.getMonth(),1);}
+    }
+    renderStars();return;
+  }
+  const cbaPick=e.target.closest('[data-cba-pick]');
+  if(cbaPick){
+    const parts=cbaPick.dataset.cbaPick.split('::');
+    const sid=parts[0],pathStr=parts[1],ymd=parts[2];
+    const path=decPath(pathStr);
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    const node=getStepByPath(s,path);if(!node)return;
+    node.due=ymd||null;
+    cardDatePickerOpen=null;
+    await ss();renderStars();renderCal();
+    toast(ymd?'期日を設定しました':'期日を外しました');
+    return;
+  }
+  const cbaMonth=e.target.closest('[data-cba-month]');
+  if(cbaMonth){
+    if(!cardDatePickerMonth){const t=new Date();cardDatePickerMonth=new Date(t.getFullYear(),t.getMonth(),1);}
+    const m=new Date(cardDatePickerMonth);
+    m.setMonth(m.getMonth()+(cbaMonth.dataset.cbaMonth==='next'?1:-1));
+    cardDatePickerMonth=m;
+    renderStars();return;
+  }
+  // カテゴリピッカー
+  const cbaCat=e.target.closest('[data-cba-cat]');
+  if(cbaCat){
+    const[sid,pathStr]=cbaCat.dataset.cbaCat.split('::');
+    const path=decPath(pathStr);
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    const node=getStepByPath(s,path);if(!node)return;
+    if(cardCategoryPickerOpen===node.id){cardCategoryPickerOpen=null;}
+    else{cardCategoryPickerOpen=node.id;cardDatePickerOpen=null;}
+    renderStars();return;
+  }
+  // カテゴリ移動
+  const cbaMvto=e.target.closest('[data-cba-mvto]');
+  if(cbaMvto){
+    const parts=cbaMvto.dataset.cbaMvto.split('::');
+    const sid=parts[0],pathStr=parts[1],destGid=parts[2];
+    const path=decPath(pathStr);
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    const arr=getParentArr(s,path);
+    const np=getNumericPath(path);
+    const idx=np[np.length-1];
+    const node=arr.splice(idx,1)[0];
+    if(destGid==='__root__'){
+      if(!s.steps)s.steps=[];
+      s.steps.push(node);
+    }else{
+      const g=(s.groups||[]).find(x=>x.id===destGid);
+      if(!g){toast('カテゴリが見つかりません');arr.splice(idx,0,node);return;}
+      if(!g.steps)g.steps=[];
+      g.steps.push(node);
+    }
+    cardCategoryPickerOpen=null;
+    cardSelectedStepId=null;cardSelectedSid=null;
+    await ss();renderStars();
+    toast('移動しました');
+    return;
+  }
+  // サブタスク追加
+  const cbaSub=e.target.closest('[data-cba-sub]');
+  if(cbaSub){
+    const[sid,pathStr]=cbaSub.dataset.cbaSub.split('::');
+    const path=decPath(pathStr);
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    const node=getStepByPath(s,path);if(!node)return;
+    if(!node.children)node.children=[];
+    const newId=uid();
+    node.children.push({id:newId,text:'',due:null,memo:null,rep:'none',done:false,children:[]});
+    // 親が折りたたまれていたら展開
+    const key=`${sid}::${node.id}`;
+    if(cardCollapsedSteps[key])cardCollapsedSteps[key]=false;
+    cardSelectedSid=null;cardSelectedStepId=null;
+    cardDatePickerOpen=null;cardCategoryPickerOpen=null;
+    await ss();renderStars();
+    focusStepByText(newId);
+    return;
+  }
+  // 削除
+  const cbaDel=e.target.closest('[data-cba-del]');
+  if(cbaDel){
+    const[sid,pathStr]=cbaDel.dataset.cbaDel.split('::');
+    if(!confirm('このタスクを削除しますか？'))return;
+    const path=decPath(pathStr);
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    const arr=getParentArr(s,path);
+    const np=getNumericPath(path);
+    arr.splice(np[np.length-1],1);
+    cardSelectedStepId=null;cardSelectedSid=null;
+    cardDatePickerOpen=null;cardCategoryPickerOpen=null;
+    await ss();renderStars();renderCal();
+    return;
+  }
+  // タスク名のシングル/ダブルタップで選択 or 編集
+  const nm=e.target.closest('[data-themeeditname]');
+  if(nm && !nm.hasAttribute('contenteditable')){
+    const stepId=nm.dataset.stepid;
+    const sid=nm.dataset.sid;
+    if(stepId && sid){
+      const now=Date.now();
+      if(cardTapLast && cardTapLast.id===stepId && (now-cardTapLast.ts)<350){
+        cardTapLast=null;
+        nm.setAttribute('contenteditable','true');
+        nm.setAttribute('spellcheck','false');
+        nm.focus();
+        const range=document.createRange();range.selectNodeContents(nm);range.collapse(false);
+        const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
+        return;
+      }
+      cardTapLast={id:stepId,ts:now};
+      if(cardSelectedStepId===stepId){
+        cardSelectedStepId=null;cardSelectedSid=null;cardDatePickerOpen=null;cardCategoryPickerOpen=null;
+      }else{
+        cardSelectedSid=sid;cardSelectedStepId=stepId;cardDatePickerOpen=null;cardCategoryPickerOpen=null;
+      }
+      renderStars();
+      return;
+    }
   }
   const tg=e.target.closest('[data-togglestar]');
   if(tg){
@@ -3414,11 +3972,11 @@ document.getElementById('starsList').addEventListener('click',async e=>{
     completeStep(cb,path);
     return;
   }
-  // テーマ詳細を開く（›ボタン）
-  const ob=e.target.closest('[data-opentheme]');
+  // テーマ編集（⋯ボタン）
+  const ob=e.target.closest('[data-editstar]');
   if(ob){
-    const s=stars.find(x=>x.id===ob.dataset.opentheme);
-    if(s)openDetail(s);
+    const s=stars.find(x=>x.id===ob.dataset.editstar);
+    if(s)openStarEditor(s.id);
     return;
   }
   // テーマ名タップ：詳細を開かずに、そのテーマの直下に空タスクを作って、その場でカーソル立てる
@@ -3427,24 +3985,13 @@ document.getElementById('starsList').addEventListener('click',async e=>{
     const sid=at.dataset.addtotheme;
     const s=stars.find(x=>x.id===sid);if(!s)return;
     if(!s.steps)s.steps=[];
-    s.steps.push({id:uid(),text:'',due:null,memo:null,rep:'none',done:false,children:[]});
+    const newId=uid();
+    s.steps.push({id:newId,text:'',due:null,memo:null,rep:'none',done:false,children:[]});
     await ss();
     // カードを開いた状態にする
     if(collapsedStarCards[sid]){collapsedStarCards[sid]=false;saveCollapsedStarCards();}
     renderStars();
-    // 新規追加された空テキストの編集行にフォーカス
-    setTimeout(()=>{
-      const els=document.querySelectorAll('[data-themeeditname]');
-      for(const el of els){
-        if(el.textContent.trim()===''){
-          el.focus();
-          const range=document.createRange();range.selectNodeContents(el);range.collapse(false);
-          const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
-          el.scrollIntoView({block:'center',behavior:'smooth'});
-          break;
-        }
-      }
-    },50);
+    focusStepByText(newId);
     return;
   }
 });
@@ -3452,6 +3999,36 @@ document.getElementById('starsList').addEventListener('click',async e=>{
 /* テーマカード内インラインタスク編集 */
 (function(){
   const root=document.getElementById('starsList');if(!root)return;
+  // カテゴリ名の編集
+  root.addEventListener('keydown',async e=>{
+    const t=e.target.closest('[data-pvgroupname]');if(!t)return;
+    if(e.key==='Escape'){e.preventDefault();t.blur();return;}
+    if(e.key==='Enter'){
+      if(e.isComposing||e.keyCode===229)return;
+      e.preventDefault();t.blur();
+    }
+  });
+  root.addEventListener('blur',async e=>{
+    const t=e.target.closest('[data-pvgroupname]');if(!t)return;
+    const[sid,gid]=t.dataset.pvgroupname.split('::');
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    const g=(s.groups||[]).find(x=>x.id===gid);if(!g)return;
+    const newName=t.textContent.trim();
+    if(!newName){
+      if(!g.name){
+        // 新規追加された空カテゴリを削除
+        s.groups=s.groups.filter(x=>x.id!==gid);
+        await ss();renderStars();return;
+      }
+      t.textContent=g.name;
+      t.removeAttribute('contenteditable');
+      return;
+    }
+    if(newName===g.name){t.removeAttribute('contenteditable');return;}
+    g.name=newName;
+    t.removeAttribute('contenteditable');
+    await ss();renderStars();
+  },true);
   root.addEventListener('keydown',async e=>{
     const t=e.target.closest('[data-themeeditname]');if(!t)return;
     if(e.key==='Escape'){e.preventDefault();t.blur();return;}
@@ -3477,18 +4054,7 @@ document.getElementById('starsList').addEventListener('click',async e=>{
       const newId=uid();
       arr.splice(np[np.length-1]+1,0,{id:newId,text:'',due:null,memo:null,rep:'none',done:false,children:[]});
       await ss();renderStars();renderCal();
-      // 新しい行にフォーカス
-      setTimeout(()=>{
-        const els=document.querySelectorAll('[data-themeeditname]');
-        for(const el of els){
-          if(el.textContent.trim()===''){
-            el.focus();
-            const range=document.createRange();range.selectNodeContents(el);range.collapse(false);
-            const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
-            break;
-          }
-        }
-      },30);
+      focusStepByText(newId);
       return;
     }
   });
@@ -3507,20 +4073,19 @@ document.getElementById('starsList').addEventListener('click',async e=>{
         await ss();renderStars();renderCal();
         return;
       }
-      t.textContent=node.text;return;
+      t.textContent=node.text;
+      t.removeAttribute('contenteditable');
+      return;
     }
-    if(newText===node.text)return;
+    if(newText===node.text){
+      t.removeAttribute('contenteditable');
+      return;
+    }
     node.text=newText;
+    t.removeAttribute('contenteditable');
     await ss();renderStars();renderCal();
   },true);
 })();
-
-document.getElementById('reorderBtn').addEventListener('click',()=>{
-  reorderMode=!reorderMode;
-  document.getElementById('reorderBtn').textContent=reorderMode?'完了':'入れ替え';
-  document.getElementById('reorderBtn').classList.toggle('active',reorderMode);
-  renderStars();
-});
 
 document.getElementById('dbg').addEventListener('click',()=>closeSheet('dbg','dsheet'));
 document.getElementById('mbg').addEventListener('click',()=>closeSheet('mbg','msheet'));
@@ -3578,6 +4143,140 @@ function addRootStepInline(sid){
 }
 document.getElementById('addGroup').addEventListener('click',()=>openGroupEditor(null));
 document.getElementById('stepsTree').addEventListener('click',async e=>{
+  // 期日ピッカー
+  const sbaDate=e.target.closest('[data-sba-date]');
+  if(sbaDate){
+    const path=decPath(sbaDate.dataset.sbaDate);
+    const s=getContainer(detailSid);if(!s)return;
+    const node=getStepByPath(s,path);if(!node)return;
+    if(stepDatePickerOpen===node.id){stepDatePickerOpen=null;}
+    else{
+      stepDatePickerOpen=node.id;
+      stepCategoryPickerOpen=null;
+      if(node.due){const[y,m]=node.due.split('-').map(Number);stepDatePickerMonth=new Date(y,m-1,1);}
+      else{const t=new Date();stepDatePickerMonth=new Date(t.getFullYear(),t.getMonth(),1);}
+    }
+    renderStepsTree();return;
+  }
+  const sbaPick=e.target.closest('[data-sba-pick]');
+  if(sbaPick){
+    const[pathStr,ymd]=sbaPick.dataset.sbaPick.split('::');
+    const path=decPath(pathStr);
+    const s=getContainer(detailSid);if(!s)return;
+    const node=getStepByPath(s,path);if(!node)return;
+    node.due=ymd||null;
+    stepDatePickerOpen=null;
+    await ss();renderStepsTree();renderStars();renderCal();
+    toast(ymd?'期日を設定しました':'期日を外しました');
+    return;
+  }
+  const sbaMonth=e.target.closest('[data-sba-month]');
+  if(sbaMonth){
+    if(!stepDatePickerMonth){const t=new Date();stepDatePickerMonth=new Date(t.getFullYear(),t.getMonth(),1);}
+    const m=new Date(stepDatePickerMonth);
+    m.setMonth(m.getMonth()+(sbaMonth.dataset.sbaMonth==='next'?1:-1));
+    stepDatePickerMonth=m;
+    renderStepsTree();return;
+  }
+  // カテゴリピッカー
+  const sbaCat=e.target.closest('[data-sba-cat]');
+  if(sbaCat){
+    const path=decPath(sbaCat.dataset.sbaCat);
+    const s=getContainer(detailSid);if(!s)return;
+    const node=getStepByPath(s,path);if(!node)return;
+    if(stepCategoryPickerOpen===node.id){stepCategoryPickerOpen=null;}
+    else{stepCategoryPickerOpen=node.id;stepDatePickerOpen=null;}
+    renderStepsTree();return;
+  }
+  // カテゴリ移動
+  const sbaMvto=e.target.closest('[data-sba-mvto]');
+  if(sbaMvto){
+    const[pathStr,destGid]=sbaMvto.dataset.sbaMvto.split('::');
+    const path=decPath(pathStr);
+    const s=getContainer(detailSid);if(!s)return;
+    const arr=getParentArr(s,path);
+    const np=getNumericPath(path);
+    const idx=np[np.length-1];
+    const node=arr.splice(idx,1)[0];
+    if(destGid==='__root__'){
+      if(!s.steps)s.steps=[];
+      s.steps.push(node);
+    }else{
+      const g=(s.groups||[]).find(x=>x.id===destGid);
+      if(!g){toast('カテゴリが見つかりません');arr.splice(idx,0,node);return;}
+      if(!g.steps)g.steps=[];
+      g.steps.push(node);
+    }
+    stepCategoryPickerOpen=null;
+    selectedStepId=null;
+    await ss();renderStepsTree();renderStars();
+    toast('移動しました');
+    return;
+  }
+  // サブタスク追加
+  const sbaSub=e.target.closest('[data-sba-sub]');
+  if(sbaSub){
+    const path=decPath(sbaSub.dataset.sbaSub);
+    const s=getContainer(detailSid);if(!s)return;
+    const node=getStepByPath(s,path);if(!node)return;
+    if(!node.children)node.children=[];
+    const newId=uid();
+    node.children.push({id:newId,text:'',due:null,memo:null,rep:'none',done:false,children:[]});
+    // 親が折りたたまれていたら展開
+    if(collapsedSteps[detailSid] && collapsedSteps[detailSid][node.id]){
+      collapsedSteps[detailSid][node.id]=false;
+      saveCollapsed();
+    }
+    selectedStepId=null;
+    stepDatePickerOpen=null;stepCategoryPickerOpen=null;
+    await ss();renderStepsTree();renderStars();
+    focusStepByText(newId);
+    return;
+  }
+  // 削除
+  const sbaDel=e.target.closest('[data-sba-del]');
+  if(sbaDel){
+    const path=decPath(sbaDel.dataset.sbaDel);
+    if(!confirm('このタスクを削除しますか？'))return;
+    const s=getContainer(detailSid);if(!s)return;
+    const arr=getParentArr(s,path);
+    const np=getNumericPath(path);
+    arr.splice(np[np.length-1],1);
+    selectedStepId=null;
+    stepCategoryPickerOpen=null;stepDatePickerOpen=null;
+    await ss();renderStepsTree();renderStars();renderCal();
+    return;
+  }
+  // タスク名のシングル/ダブルタップで選択 or 編集
+  const nm=e.target.closest('[data-editname]');
+  if(nm && !nm.hasAttribute('contenteditable')){
+    const stepId=nm.dataset.stepid;
+    if(stepId){
+      const now=Date.now();
+      if(stepTapLast && stepTapLast.id===stepId && (now-stepTapLast.ts)<350){
+        // ダブルタップ → 編集モード
+        stepTapLast=null;
+        nm.setAttribute('contenteditable','true');
+        nm.setAttribute('spellcheck','false');
+        nm.focus();
+        const range=document.createRange();range.selectNodeContents(nm);range.collapse(false);
+        const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
+        return;
+      }
+      stepTapLast={id:stepId,ts:now};
+      if(selectedStepId===stepId){
+        selectedStepId=null;stepDatePickerOpen=null;stepCategoryPickerOpen=null;
+      }else{
+        selectedStepId=stepId;stepDatePickerOpen=null;stepCategoryPickerOpen=null;
+      }
+      renderStepsTree();
+      return;
+    }
+  }
+  // 余白タップで選択解除
+  if(!e.target.closest('.snode') && !e.target.closest('.inbox-date-picker') && !e.target.closest('.inbox-move-picker')){
+    if(selectedStepId){selectedStepId=null;stepDatePickerOpen=null;stepCategoryPickerOpen=null;renderStepsTree();}
+  }
   // カテゴリ並べ替えモード時
   if(groupReorderMode){
     const up=e.target.closest('[data-greorderup]');
@@ -3676,25 +4375,31 @@ document.getElementById('stepsTree').addEventListener('click',async e=>{
   const ck=e.target.closest('[data-check]');if(ck)await completeStep(ck,decPath(ck.dataset.check));
 });
 function focusStepByText(stepId){
-  // 新規追加直後、空テキストのstext-nameにフォーカス
+  // 新規追加直後、空テキストの行にフォーカス（data-editname or data-themeeditname）
   setTimeout(()=>{
-    const els=document.querySelectorAll('[data-editname]');
-    for(const el of els){
-      if(el.textContent.trim()===''){
-        // 仮置きは contenteditable がデフォルトoffなのでONにする
-        if(!el.hasAttribute('contenteditable')){
-          el.setAttribute('contenteditable','true');
-          el.setAttribute('spellcheck','false');
-        }
-        el.focus();
-        // カーソル位置を末尾に
-        const range=document.createRange();range.selectNodeContents(el);range.collapse(false);
-        const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
-        // スクロールして見える位置に
-        el.scrollIntoView({block:'center',behavior:'smooth'});
-        break;
+    // 優先：stepIdが一致する要素
+    let targetEl=null;
+    const candidates=document.querySelectorAll('[data-editname],[data-themeeditname]');
+    for(const el of candidates){
+      if(el.dataset.stepid===stepId && el.textContent.trim()===''){
+        targetEl=el;break;
       }
     }
+    // フォールバック：空テキストの最初の要素
+    if(!targetEl){
+      for(const el of candidates){
+        if(el.textContent.trim()===''){targetEl=el;break;}
+      }
+    }
+    if(!targetEl)return;
+    if(!targetEl.hasAttribute('contenteditable')){
+      targetEl.setAttribute('contenteditable','true');
+      targetEl.setAttribute('spellcheck','false');
+    }
+    targetEl.focus();
+    const range=document.createRange();range.selectNodeContents(targetEl);range.collapse(false);
+    const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
+    targetEl.scrollIntoView({block:'center',behavior:'smooth'});
   },50);
 }
 async function moveStep(path,dir){
@@ -5150,14 +5855,15 @@ document.getElementById('todayList').addEventListener('click',async e=>{
         t.textContent=node.text;return;
       }
       if(newText===node.text){
-        // 仮置きでは編集後contenteditableを外す
-        if(sid==='__inbox__'){t.removeAttribute('contenteditable');}
+        // 編集後contenteditableを外す（仮置き・テーマ詳細とも）
+        t.removeAttribute('contenteditable');
         return;
       }
       node.text=newText;
       await ss();await sib();
-      // 仮置きでは編集後contenteditableを外す
-      if(sid==='__inbox__'){t.removeAttribute('contenteditable');renderInboxTree();}
+      // 編集後contenteditableを外す
+      t.removeAttribute('contenteditable');
+      if(sid==='__inbox__')renderInboxTree();else renderStepsTree();
       renderStars();renderCal();renderTrail();
     },true);
   }
@@ -5257,6 +5963,330 @@ document.getElementById('todayList').addEventListener('click',async e=>{
   }
   attachGroupDnD('stepsTree',()=>detailSid);
   attachGroupDnD('ibStepsTree',()=>'__inbox__');
+})();
+
+/* テーマカード内：タスク長押しD&D */
+(function(){
+  const root=document.getElementById('starsList');if(!root)return;
+  const LONG=500;
+  let timer=null,target=null,startX=0,startY=0;
+  let dragging=false,dragSid=null,dragPath=null,dragEl=null;
+  let dropTargetEl=null,dropMode=null;
+  const clearHi=()=>{
+    root.querySelectorAll('.pvrow.cdrop-before,.pvrow.cdrop-after,.pvrow.cdrop-into,.pvrow.cdragging,.pvrow.cdrop-group').forEach(el=>el.classList.remove('cdrop-before','cdrop-after','cdrop-into','cdragging','cdrop-group'));
+  };
+  // 子孫判定（自分の子に自分を入れないため）
+  const isAncestor=(ancPath,desPath)=>{
+    if(ancPath.length>=desPath.length)return false;
+    for(let i=0;i<ancPath.length;i++){
+      if(ancPath[i]!==desPath[i])return false;
+    }
+    return true;
+  };
+  const start=(e,t)=>{
+    target=t;
+    const touch=e.touches?e.touches[0]:e;
+    startX=touch.clientX;startY=touch.clientY;
+    timer=setTimeout(()=>{
+      dragging=true;
+      const data=t.dataset.cardpath;
+      const[sid,pathStr]=data.split('::');
+      dragSid=sid;dragPath=decPath(pathStr);
+      dragEl=t;
+      t.classList.add('cdragging');
+      if(navigator.vibrate)navigator.vibrate(15);
+    },LONG);
+  };
+  const cancel=()=>{if(timer){clearTimeout(timer);timer=null;}};
+  const move=e=>{
+    if(!timer&&!dragging)return;
+    const touch=e.touches?e.touches[0]:e;
+    const dx=Math.abs(touch.clientX-startX),dy=Math.abs(touch.clientY-startY);
+    if(!dragging&&(dx>12||dy>12)){cancel();return;}
+    if(!dragging)return;
+    if(e.cancelable)e.preventDefault();
+    const x=touch.clientX,y=touch.clientY;
+    clearHi();
+    if(dragEl)dragEl.classList.add('cdragging');
+    // 同じテーマ内のタスク行とカテゴリヘッダーを探す
+    const lcard=dragEl.closest('.lcard');
+    if(!lcard)return;
+    const candidates=Array.from(lcard.querySelectorAll('.pvrow[data-cardpath],.pvrow[data-pvgrouphead]'));
+    let best=null,bestMode='before',bestType='task';
+    for(const r of candidates){
+      if(r===dragEl)continue;
+      // 自分の子孫はスキップ
+      if(r.dataset.cardpath){
+        const[rSid,rPathStr]=r.dataset.cardpath.split('::');
+        if(rSid!==dragSid)continue;
+        const rPath=decPath(rPathStr);
+        if(isAncestor(dragPath,rPath))continue;
+      }
+      const rect=r.getBoundingClientRect();
+      if(y<rect.top||y>rect.bottom)continue;
+      const relY=y-rect.top;
+      const h=rect.height;
+      best=r;
+      if(r.dataset.pvgrouphead){
+        // カテゴリヘッダー：上半分→before/カテゴリの前、下半分→そのカテゴリ内に入れる
+        bestType='group';
+        bestMode=relY<h/2?'before':'into-group';
+      }else{
+        bestType='task';
+        if(relY<h*0.25)bestMode='before';
+        else if(relY>h*0.75)bestMode='after';
+        else bestMode='into';
+      }
+      break;
+    }
+    if(best){
+      if(bestType==='task'){
+        best.classList.add('cdrop-'+bestMode);
+      }else{
+        // カテゴリ
+        if(bestMode==='into-group')best.classList.add('cdrop-group');
+        else best.classList.add('cdrop-before');
+      }
+      dropTargetEl=best;dropMode=bestMode;
+    }else{dropTargetEl=null;dropMode=null;}
+  };
+  const end=async()=>{
+    if(!dragging){cancel();return;}
+    dragging=false;cancel();
+    if(!dropTargetEl||!dropMode){clearHi();dragEl=null;dragPath=null;return;}
+    const s=stars.find(x=>x.id===dragSid);if(!s){clearHi();return;}
+    // 自分を抜き取る
+    const srcArr=getParentArr(s,dragPath);
+    const srcNp=getNumericPath(dragPath);
+    const srcIdx=srcNp[srcNp.length-1];
+    const moved=srcArr.splice(srcIdx,1)[0];
+    // 移動先決定
+    try{
+      if(dropTargetEl.dataset.pvgrouphead){
+        // カテゴリヘッダー
+        const gid=dropTargetEl.dataset.pvgid;
+        if(dropMode==='into-group'){
+          const g=(s.groups||[]).find(x=>x.id===gid);
+          if(g){if(!g.steps)g.steps=[];g.steps.push(moved);}
+          else srcArr.splice(srcIdx,0,moved);
+        }else{
+          // カテゴリの前にドロップ → 未分類の末尾
+          if(!s.steps)s.steps=[];
+          s.steps.push(moved);
+        }
+      }else{
+        // タスク行
+        const[,dstPathStr]=dropTargetEl.dataset.cardpath.split('::');
+        const dstPath=decPath(dstPathStr);
+        if(dropMode==='into'){
+          // 子に
+          const dstNode=getStepByPath(s,dstPath);
+          if(dstNode){if(!dstNode.children)dstNode.children=[];dstNode.children.push(moved);}
+          else srcArr.splice(srcIdx,0,moved);
+        }else{
+          // before/after：同じ親配列内
+          const dstArr=getParentArr(s,dstPath);
+          const dstNp=getNumericPath(dstPath);
+          let dstIdx=dstNp[dstNp.length-1];
+          if(dropMode==='after')dstIdx++;
+          dstArr.splice(dstIdx,0,moved);
+        }
+      }
+      await ss();renderStars();renderCal();
+    }catch(err){
+      srcArr.splice(srcIdx,0,moved);
+      console.error(err);
+    }
+    clearHi();
+    dragEl=null;dragSid=null;dragPath=null;dropTargetEl=null;dropMode=null;
+  };
+  root.addEventListener('mousedown',e=>{
+    const t=e.target.closest('.pvrow[data-cardpath]');if(!t)return;
+    if(e.target.closest('button,input,textarea,[contenteditable="true"]'))return;
+    start(e,t);
+  });
+  root.addEventListener('touchstart',e=>{
+    const t=e.target.closest('.pvrow[data-cardpath]');if(!t)return;
+    if(e.target.closest('button,input,textarea,[contenteditable="true"]'))return;
+    start(e,t);
+  },{passive:false});
+  root.addEventListener('mouseup',end);
+  root.addEventListener('mouseleave',()=>{cancel();if(dragging)end();});
+  root.addEventListener('touchend',end);
+  root.addEventListener('touchcancel',()=>{cancel();if(dragging)end();});
+  root.addEventListener('mousemove',move);
+  root.addEventListener('touchmove',move,{passive:false});
+})();
+
+/* テーマカード内：カテゴリ長押しD&D */
+(function(){
+  const root=document.getElementById('starsList');if(!root)return;
+  const LONG=500;
+  let timer=null,target=null,startX=0,startY=0;
+  let dragging=false,dragSid=null,dragGid=null;
+  let dropGid=null,dropMode=null;
+  const clearHi=()=>{
+    root.querySelectorAll('.pvrow.pvgrp-drop-before,.pvrow.pvgrp-drop-after,.pvrow.pvgrp-dragging').forEach(el=>el.classList.remove('pvgrp-drop-before','pvgrp-drop-after','pvgrp-dragging'));
+  };
+  const start=(e,t)=>{
+    target=t;
+    const touch=e.touches?e.touches[0]:e;
+    startX=touch.clientX;startY=touch.clientY;
+    timer=setTimeout(()=>{
+      dragging=true;
+      const[sid,gid]=t.dataset.pvgrouphead.split('::');
+      dragSid=sid;dragGid=gid;
+      t.classList.add('pvgrp-dragging');
+      if(navigator.vibrate)navigator.vibrate(15);
+    },LONG);
+  };
+  const cancel=()=>{if(timer){clearTimeout(timer);timer=null;}};
+  const move=e=>{
+    if(!timer&&!dragging)return;
+    const touch=e.touches?e.touches[0]:e;
+    const dx=Math.abs(touch.clientX-startX),dy=Math.abs(touch.clientY-startY);
+    if(!dragging&&(dx>12||dy>12)){cancel();return;}
+    if(!dragging)return;
+    if(e.cancelable)e.preventDefault();
+    const y=touch.clientY;
+    clearHi();
+    const dragEl=root.querySelector(`.pvrow[data-pvgrouphead="${dragSid}::${dragGid}"]`);
+    if(dragEl)dragEl.classList.add('pvgrp-dragging');
+    // 同じテーマ内の他のカテゴリヘッダー
+    const lcard=dragEl?dragEl.closest('.lcard'):null;
+    if(!lcard)return;
+    const cands=Array.from(lcard.querySelectorAll('.pvrow[data-pvgrouphead]'));
+    let best=null,bestMode='before';
+    for(const r of cands){
+      const[,gid]=r.dataset.pvgrouphead.split('::');
+      if(gid===dragGid)continue;
+      const rect=r.getBoundingClientRect();
+      if(y>=rect.top&&y<=rect.bottom){
+        best=r;
+        bestMode=(y<rect.top+rect.height/2)?'before':'after';
+        break;
+      }
+    }
+    if(best){
+      best.classList.add('pvgrp-drop-'+bestMode);
+      const[,gid]=best.dataset.pvgrouphead.split('::');
+      dropGid=gid;dropMode=bestMode;
+    }else{dropGid=null;dropMode=null;}
+  };
+  const end=async()=>{
+    if(!dragging){cancel();return;}
+    dragging=false;cancel();
+    if(!dropGid||!dropMode){clearHi();dragSid=null;dragGid=null;return;}
+    const s=stars.find(x=>x.id===dragSid);if(!s||!s.groups){clearHi();return;}
+    const fromIdx=s.groups.findIndex(g=>g.id===dragGid);
+    let toIdx=s.groups.findIndex(g=>g.id===dropGid);
+    if(fromIdx<0||toIdx<0){clearHi();return;}
+    const moved=s.groups.splice(fromIdx,1)[0];
+    toIdx=s.groups.findIndex(g=>g.id===dropGid);
+    if(dropMode==='after')toIdx++;
+    s.groups.splice(toIdx,0,moved);
+    await ss();renderStars();
+    clearHi();
+    dragSid=null;dragGid=null;dropGid=null;dropMode=null;
+  };
+  root.addEventListener('mousedown',e=>{
+    const t=e.target.closest('.pvrow[data-pvgrouphead]');if(!t)return;
+    if(e.target.closest('button,input,textarea,[contenteditable="true"]'))return;
+    start(e,t);
+  });
+  root.addEventListener('touchstart',e=>{
+    const t=e.target.closest('.pvrow[data-pvgrouphead]');if(!t)return;
+    if(e.target.closest('button,input,textarea,[contenteditable="true"]'))return;
+    start(e,t);
+  },{passive:false});
+  root.addEventListener('mouseup',end);
+  root.addEventListener('mouseleave',()=>{cancel();if(dragging)end();});
+  root.addEventListener('touchend',end);
+  root.addEventListener('touchcancel',()=>{cancel();if(dragging)end();});
+  root.addEventListener('mousemove',move);
+  root.addEventListener('touchmove',move,{passive:false});
+})();
+
+/* テーマカード長押し→ドラッグで並べ替え */
+(function(){
+  const root=document.getElementById('starsList');if(!root)return;
+  const LONG=500;
+  let timer=null,target=null,startX=0,startY=0;
+  let dragging=false,dragSid=null,dropSid=null,dropMode=null;
+  const clearHi=()=>{
+    root.querySelectorAll('.lcard.tcdrop-before,.lcard.tcdrop-after,.lcard.tcdragging').forEach(el=>el.classList.remove('tcdrop-before','tcdrop-after','tcdragging'));
+  };
+  const start=(e,t)=>{
+    target=t;
+    const touch=e.touches?e.touches[0]:e;
+    startX=touch.clientX;startY=touch.clientY;
+    timer=setTimeout(()=>{
+      dragging=true;
+      dragSid=t.dataset.tcdrag;
+      const cardEl=root.querySelector(`.lcard[data-tcid="${dragSid}"]`);
+      if(cardEl)cardEl.classList.add('tcdragging');
+      if(navigator.vibrate)navigator.vibrate(15);
+    },LONG);
+  };
+  const cancel=()=>{if(timer){clearTimeout(timer);timer=null;}};
+  const move=e=>{
+    if(!timer&&!dragging)return;
+    const touch=e.touches?e.touches[0]:e;
+    const dx=Math.abs(touch.clientX-startX),dy=Math.abs(touch.clientY-startY);
+    if(!dragging&&(dx>12||dy>12)){cancel();return;}
+    if(!dragging)return;
+    if(e.cancelable)e.preventDefault();
+    const x=touch.clientX,y=touch.clientY;
+    clearHi();
+    const dragEl=root.querySelector(`.lcard[data-tcid="${dragSid}"]`);
+    if(dragEl)dragEl.classList.add('tcdragging');
+    const cards=Array.from(root.querySelectorAll('.lcard[data-tcid]'));
+    let best=null,bestMode='before';
+    for(const c of cards){
+      if(c.dataset.tcid===dragSid)continue;
+      const r=c.getBoundingClientRect();
+      if(y>=r.top&&y<=r.bottom){
+        best=c;
+        bestMode=(y<r.top+r.height/2)?'before':'after';
+        break;
+      }
+    }
+    if(best){
+      best.classList.add('tcdrop-'+bestMode);
+      dropSid=best.dataset.tcid;dropMode=bestMode;
+    }else{dropSid=null;dropMode=null;}
+  };
+  const end=async()=>{
+    if(!dragging){cancel();return;}
+    dragging=false;cancel();
+    if(!dropSid||!dropMode){clearHi();dragSid=null;return;}
+    const fromIdx=stars.findIndex(s=>s.id===dragSid);
+    let toIdx=stars.findIndex(s=>s.id===dropSid);
+    if(fromIdx<0||toIdx<0){clearHi();return;}
+    const moved=stars.splice(fromIdx,1)[0];
+    toIdx=stars.findIndex(s=>s.id===dropSid);
+    if(dropMode==='after')toIdx++;
+    stars.splice(toIdx,0,moved);
+    await ss();renderStars();
+    clearHi();
+    dragSid=null;dropSid=null;dropMode=null;
+  };
+  root.addEventListener('mousedown',e=>{
+    const t=e.target.closest('[data-tcdrag]');if(!t)return;
+    if(e.target.closest('button,input,textarea,[contenteditable="true"]'))return;
+    start(e,t);
+  });
+  root.addEventListener('touchstart',e=>{
+    const t=e.target.closest('[data-tcdrag]');if(!t)return;
+    if(e.target.closest('button,input,textarea,[contenteditable="true"]'))return;
+    start(e,t);
+  },{passive:false});
+  root.addEventListener('mouseup',end);
+  root.addEventListener('mouseleave',()=>{cancel();if(dragging)end();});
+  root.addEventListener('touchend',end);
+  root.addEventListener('touchcancel',()=>{cancel();if(dragging)end();});
+  root.addEventListener('mousemove',move);
+  root.addEventListener('touchmove',move,{passive:false});
 })();
 
 function tick(){const el=document.getElementById('clock');if(el){const d=new Date();el.textContent=`${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;}}
