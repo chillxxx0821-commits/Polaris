@@ -1171,6 +1171,7 @@
   .lcard-head{cursor:default;}
   .lcard.theme-selected .star-dir{color:var(--star);}
   .theme-action-row{padding-left:14px;padding-right:14px;margin-top:4px;}
+  .pvrow.pvgroup-row.cat-selected{background:rgba(168,137,63,0.06);border-radius:6px;}
   /* 仮置き：タップで選択、ダブルタップで編集 */
   .snode.inbox-selected > .srow{
     background:rgba(168,137,63,0.06);
@@ -2208,7 +2209,12 @@ function renderStars(){
         const gKey=`${s.id}::${g.id}`;
         const gCol=collapsedStarGroups[gKey];
         const gTri=openSteps.length?(gCol?'▶':'▼'):' ';
-        parts.push(`<div class="pvrow pvgroup-row" data-pvgrouphead="${s.id}::${g.id}" data-pvgid="${g.id}">${openSteps.length?`<button class="pv-toggle" data-togglestargroup="${gKey}">${gTri}</button>`:'<span class="pv-toggle-spacer"></span>'}<span class="pvgroup" data-pvgroupname="${s.id}::${g.id}">${esc(g.name)}</span>${n?`<span class="pvcount">(${n})</span>`:''}</div>`);
+        const catSelected=selectedCategoryKey===gKey;
+        const catSelCls=catSelected?' cat-selected':'';
+        parts.push(`<div class="pvrow pvgroup-row${catSelCls}" data-pvgrouphead="${s.id}::${g.id}" data-pvgid="${g.id}">${openSteps.length?`<button class="pv-toggle" data-togglestargroup="${gKey}">${gTri}</button>`:'<span class="pv-toggle-spacer"></span>'}<span class="pvgroup" data-pvgroupname="${s.id}::${g.id}">${esc(g.name)}</span>${n?`<span class="pvcount">(${n})</span>`:''}</div>`);
+        if(catSelected){
+          parts.push(`<div class="inbox-action-row pv-action-row"><button class="inbox-action" data-gba-addtask="${gKey}">+ タスク</button><button class="inbox-action" data-gba-del="${gKey}">削除</button></div>`);
+        }
         if(!gCol && openSteps.length){
           // 完了済みを下にまとめる
           let displaySteps=openSteps;
@@ -2411,6 +2417,9 @@ let cardCollapsedSteps={}; // テーマカード内のサブタスク折りた�
 // テーマ自体の選択
 let selectedThemeSid=null;
 let themeArchiveExpand=null; // アーカイブインライン展開しているテーマsid
+// カテゴリの選択
+let selectedCategoryKey=null; // "sid::gid"
+let categoryTapLast=null;
 
 function renderStepNodes(steps,path){
   // 完了済みを非表示の時はフィルタ
@@ -3888,8 +3897,9 @@ document.getElementById('starsList').addEventListener('click',async e=>{
   if(pgn && !pgn.hasAttribute('contenteditable')){
     const now=Date.now();
     const gid=pgn.dataset.pvgroupname;
-    if(cardTapLast && cardTapLast.id==='grp:'+gid && (now-cardTapLast.ts)<350){
-      cardTapLast=null;
+    if(categoryTapLast && categoryTapLast.id===gid && (now-categoryTapLast.ts)<350){
+      // ダブルタップ → 編集モード
+      categoryTapLast=null;
       pgn.setAttribute('contenteditable','true');
       pgn.setAttribute('spellcheck','false');
       pgn.focus();
@@ -3897,7 +3907,45 @@ document.getElementById('starsList').addEventListener('click',async e=>{
       const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
       return;
     }
-    cardTapLast={id:'grp:'+gid,ts:now};
+    categoryTapLast={id:gid,ts:now};
+    // シングルタップ → カテゴリ選択トグル
+    if(selectedCategoryKey===gid){
+      selectedCategoryKey=null;
+    }else{
+      selectedCategoryKey=gid;
+    }
+    renderStars();
+    return;
+  }
+  // カテゴリアクション：+ タスク
+  const gbaAt=e.target.closest('[data-gba-addtask]');
+  if(gbaAt){
+    const[sid,gid]=gbaAt.dataset.gbaAddtask.split('::');
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    const g=(s.groups||[]).find(x=>x.id===gid);if(!g)return;
+    if(!g.steps)g.steps=[];
+    const newId=uid();
+    g.steps.push({id:newId,text:'',due:null,memo:null,rep:'none',done:false,children:[]});
+    // カテゴリ折りたたみ解除
+    const gKey=`${sid}::${gid}`;
+    if(collapsedStarGroups[gKey]){collapsedStarGroups[gKey]=false;}
+    await ss();renderStars();
+    focusStepByText(newId);
+    return;
+  }
+  // カテゴリアクション：削除
+  const gbaDel=e.target.closest('[data-gba-del]');
+  if(gbaDel){
+    const[sid,gid]=gbaDel.dataset.gbaDel.split('::');
+    const s=stars.find(x=>x.id===sid);if(!s)return;
+    const g=(s.groups||[]).find(x=>x.id===gid);if(!g)return;
+    const hasTasks=(g.steps||[]).length>0;
+    const msg=hasTasks?'このカテゴリを削除しますか？\n中のタスクも一緒に消えます。':'このカテゴリを削除しますか？';
+    if(!confirm(msg))return;
+    s.groups=s.groups.filter(x=>x.id!==gid);
+    selectedCategoryKey=null;
+    await ss();renderStars();renderCal();
+    toast('カテゴリを削除しました');
     return;
   }
   // 期日ピッカー
