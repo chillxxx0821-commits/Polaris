@@ -224,7 +224,7 @@
   .stext .srep{display:inline-block;font-size:9.5px;color:var(--star);border:1px solid var(--star-soft);border-radius:8px;padding:1px 5px;margin-top:3px;letter-spacing:0.05em;}
   /* trail memo + repeat style */
   .step .what .tmemo{display:block;font-size:12px;color:var(--ink-soft);margin-top:3px;line-height:1.8;font-weight:400;white-space:pre-wrap;word-wrap:break-word;}
-  .step.repeat::before{width:6px;height:6px;left:-20px;background:var(--star-soft);border-color:var(--star-soft);box-shadow:none;box-sizing:border-box;}
+  .step.repeat::before{width:6px;height:6px;background:var(--star-soft);border-color:var(--star-soft);box-shadow:none;box-sizing:border-box;}
   .step.repeat .what{font-weight:400;color:var(--ink-soft);}
   .step.repeat .repdot{font-size:9px;color:var(--star);border:1px solid var(--star-soft);border-radius:8px;padding:0 5px;margin-left:5px;letter-spacing:0.04em;}
 
@@ -305,18 +305,18 @@
   .vcal-body{position:relative;}
   .vcal-hour{display:flex;height:52px;}
   .vcal-hour .vh-label{width:38px;flex-shrink:0;font-size:9.5px;color:var(--ink-faint);text-align:right;padding-right:5px;transform:translateY(-7px);}
-  .vcal-hour .vh-cols{flex:1;display:flex;border-top:1px solid #efe9da;}
+  .vcal-hour .vh-cols{flex:1;display:flex;border-top:1px solid var(--cal-line,var(--line));}
   .vcal-hour:first-child .vh-cols{border-top:none;}
-  .vcal-hour .vh-col{flex:1;border-left:1px solid #efe9da;cursor:pointer;}
+  .vcal-hour .vh-col{flex:1;border-left:1px solid var(--cal-line,var(--line));cursor:pointer;}
   .vcal-hour .vh-col:hover{background:rgba(var(--star-rgb),0.04);}
   .vcal-events{position:absolute;top:0;left:38px;right:0;bottom:0;pointer-events:none;z-index:10;}
   .vcal-cols{position:absolute;top:0;left:38px;right:0;bottom:0;z-index:1;pointer-events:none;}
   .vcol{position:absolute;top:0;bottom:0;pointer-events:none;}
   .vcol-sel{position:absolute;background:rgba(var(--star-rgb),0.25);border:1px dashed var(--star);border-radius:3px;pointer-events:none;z-index:5;}
-  .vev{position:absolute;background:rgba(127,127,127,0.06);background:color-mix(in srgb, var(--ink) 9%, transparent);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:inset 5px 0 0 var(--cc,#5a7a9c);padding:3px 9px 3px 13px;font-size:10.5px;line-height:1.25;overflow:hidden;pointer-events:auto;z-index:11;}
+  .vev{position:absolute;background:rgba(127,127,127,0.06);background:color-mix(in srgb, var(--ink) 9%, transparent);color:var(--ink);border-radius:14px;box-shadow:inset 5px 0 0 var(--cc,#5a7a9c);padding:3px 9px 3px 13px;font-size:10.5px;line-height:1.25;overflow:hidden;pointer-events:auto;z-index:11;}
   .vev .vev-t{font-weight:600;display:inline;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;}
   .vev.task .vev-check, .vev .vev-check{vertical-align:middle;}
-  .vev .vev-m{font-size:9px;opacity:0.9;}
+  .vev .vev-m{font-size:9px;opacity:0.9;margin-left:8px;vertical-align:middle;}
   .vcal-allday{display:flex;padding-left:34px;min-height:26px;}
   .vcal-allday .vad-col{flex:1;padding:2px;display:flex;flex-direction:column;gap:2px;}
   .vad-chip{background:#b9a06a;color:#fff;border-radius:5px;font-size:9px;padding:2px 3px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -555,6 +555,12 @@
   #esheet.half-sheet.open{transition:transform 0.52s cubic-bezier(.2,.8,.2,1),visibility 0s linear 0s !important;}
   /* half-sheet が開いている時、対応する sheet-bg を上半分のクリックキャッチ領域に */
   .sheet-bg.half-open{display:block !important;background:rgba(0,0,0,0.15);pointer-events:auto !important;}
+  /* 表示テーマの選択肢 */
+  .th-opt{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;text-align:left;background:transparent;border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:8px;font-family:inherit;cursor:pointer;transition:border-color 0.18s,background 0.18s;}
+  .th-opt .th-opt-t{font-size:14px;color:var(--ink);font-weight:700;}
+  .th-opt .th-opt-s{font-size:11px;color:var(--ink-faint);}
+  .th-opt.active{border-color:var(--star);background:rgba(var(--star-rgb),0.08);}
+  .th-opt.active .th-opt-t{color:var(--star);}
   /* 現在時刻ライン */
   .now-line{
     position:absolute;left:0;right:0;
@@ -652,14 +658,14 @@
   .trail-line{position:relative;padding-left:21px;}
   .trail-line::before{content:'';position:absolute;left:6.5px;top:8px;bottom:8px;width:1px;background:linear-gradient(var(--star),var(--line));}
   .step{position:relative;padding:8px 0;display:flex;justify-content:space-between;gap:8px;}
-  .step::before{content:'';position:absolute;left:-21px;top:15px;width:8px;height:8px;border-radius:50%;background:var(--paper);border:1.5px solid var(--star);box-sizing:border-box;}
+  .step::before{content:'';position:absolute;left:-14px;top:19px;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:var(--paper);border:1.5px solid var(--star);box-sizing:border-box;}
   .step .sbody .when{font-size:10.5px;color:var(--ink-faint);}
   .step .sbody .what{font-size:14px;color:var(--ink);margin-top:2px;line-height:1.85;}
   .step .stardel{background:none;border:none;color:var(--ink-faint);font-size:14px;flex-shrink:0;padding:2px 3px;align-self:center;opacity:0.45;}
   .step .stardel:active{color:#b4503e;opacity:1;}
   .step .stactions{display:flex;gap:0;align-self:center;flex-shrink:0;}
   .step.achieved{background:linear-gradient(90deg,rgba(var(--star-rgb),0.07),transparent 80%);border-radius:8px;padding-left:8px;padding-right:8px;}
-  .step.achieved::before{width:10px;height:10px;left:-22px;background:var(--star);border-color:#f0e4b8;box-shadow:0 0 7px 1px rgba(var(--star-rgb),0.5);box-sizing:border-box;}
+  .step.achieved::before{width:10px;height:10px;background:var(--star);border-color:#f0e4b8;box-shadow:0 0 7px 1px rgba(var(--star-rgb),0.5);box-sizing:border-box;}
   .step.achieved .what{font-weight:700;}
   .step.achieved .vmark{color:var(--star);font-size:12px;margin-left:5px;}
   .trail-more{background:none;border:none;font-family:inherit;font-size:12px;color:var(--star);letter-spacing:0.04em;margin-top:3px;padding-left:21px;}
@@ -976,6 +982,7 @@
 
   /* テーマカードのトグル＋カテゴリ表示 */
   .lcard-head{display:flex;align-items:center;gap:5px;}
+  .star-cdot{display:inline-block;width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,0.12);position:relative;top:1px;}
   .lcard-head .toggle-btn{font-size:10px;padding:2px 5px 2px 0;color:var(--ink-faint);}
   .lcard-head .star-dir{flex:1;cursor:text;padding:3px 5px;margin-left:-6px;border-radius:3px;transition:background 0.18s cubic-bezier(0.4, 0.0, 0.2, 1),color 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);}
   .lcard-head .star-dir:hover{background:rgba(var(--star-rgb),0.08);}
@@ -1147,7 +1154,8 @@
   .trail-date-group{margin-bottom:21px;position:relative;padding-left:21px;}
   .trail-date-group::before{content:'';position:absolute;left:6.5px;top:30px;bottom:8px;width:1px;background:linear-gradient(var(--star),var(--line));}
   .trail-date-label{font-size:11px;color:var(--ink-soft);letter-spacing:0.06em;padding:8px 0 3px;font-weight:400;margin-left:-24px;padding-left:21px;}
-  .trail-dir-tag{margin-left:8px;font-size:10px;color:var(--star);font-weight:300;letter-spacing:0.05em;}
+  .trail-dir-tag{margin-left:8px;font-size:10px;color:var(--ink-soft);font-weight:300;letter-spacing:0.05em;}
+  .tdt-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle;box-shadow:0 0 0 1px rgba(0,0,0,0.12);}
   .trail-dir-tag.muted{color:var(--ink-faint);}
   /* 並べ替えモード */
   .lcard.reorder-mode{padding:21px 3px;}
@@ -1222,7 +1230,7 @@
   .smini.sopen:hover{color:var(--star);}
   /* 完了タスク：取り消し線＋薄く */
   .snode.step-done .stext-name{text-decoration:line-through;color:var(--ink-faint);}
-  .snode.step-done > .srow{opacity:0.5;}
+  .snode.step-done > .srow, .snode.step-done > .pv-swipe-clip > .srow{opacity:0.5;}
   .scheck.checked{background:transparent;}
   /* ドラッグ中のタスク */
   .snode.dragging{opacity:0.4;}
@@ -1235,7 +1243,7 @@
     content:'';position:absolute;bottom:-1px;left:0;right:0;
     height:2px;background:var(--star);border-radius:1px;z-index:5;
   }
-  .snode.drop-into > .srow{
+  .snode.drop-into > .srow, .snode.drop-into > .pv-swipe-clip > .srow{
     background:rgba(var(--star-rgb),0.12);border-radius:5px;
   }
   .snode{position:relative;transition:background 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);}
@@ -1269,11 +1277,14 @@
   .pvrow{position:relative;transition:background 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);}
   /* 左スワイプで削除を表示 */
   .pv-swipe-clip{position:relative;overflow:hidden;}
-  .pv-swipe-clip > .pvrow{transition:transform 0.22s cubic-bezier(0.4,0.0,0.2,1);will-change:transform;}
-  .pv-swipe-del{position:absolute;top:0;right:0;height:100%;width:55px;transform:translateX(100%);transition:transform 0.22s cubic-bezier(0.4,0.0,0.2,1);border:none;background:#c0563f;color:#fff;font-family:inherit;font-size:13px;letter-spacing:0.05em;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:0;}
+  .pv-swipe-clip > .pvrow, .pv-swipe-clip > .srow{transition:transform 0.22s cubic-bezier(0.4,0.0,0.2,1);will-change:transform;}
+  .pv-swipe-del{position:absolute;top:4px;right:0;height:calc(100% - 8px);width:55px;transform:translateX(100%);transition:transform 0.22s cubic-bezier(0.4,0.0,0.2,1);border:none;border-radius:12px;background:#c0563f;color:#fff;font-family:inherit;font-size:11px;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:0;}
   .pv-swipe-del:active{background:#a8472f;}
-  .pv-swipe-clip.swiped > .pvrow{transform:translateX(-55px);}
+  .pv-swipe-clip.swiped > .pvrow, .pv-swipe-clip.swiped > .srow{transform:translateX(-55px);}
   .pv-swipe-clip.swiped > .pv-swipe-del{transform:translateX(0);}
+  /* テーマ画面（カード）は行が低いので赤を少し短く（詳細は55pxのまま） */
+  #starsList .pv-swipe-del{width:44px;}
+  #starsList .pv-swipe-clip.swiped > .pvrow{transform:translateX(-44px);}
   .pvrow.cdragging{opacity:0.4;}
   .pvrow.cdrop-before::before{
     content:'';position:absolute;top:-1px;left:0;right:0;
@@ -1322,7 +1333,7 @@
   .theme-action-row{padding-left:13px;padding-right:13px;margin-top:3px;}
   .pvrow.pvgroup-row.cat-selected{background:rgba(var(--star-rgb),0.06);border-radius:5px;}
   /* 仮置き：タップで選択、ダブルタップで編集 */
-  .snode.inbox-selected > .srow{
+  .snode.inbox-selected > .srow, .snode.inbox-selected > .pv-swipe-clip > .srow{
     background:rgba(var(--star-rgb),0.06);
   }
   .inbox-action-row{
@@ -1607,7 +1618,7 @@
   }
   .dual-fab-btn{
     background:none;border:none;
-    color:#fff;font-family:inherit;cursor:pointer;
+    color:var(--paper);font-family:inherit;cursor:pointer;
     padding:13px 21px;
     transition:background 0.15s cubic-bezier(0.4, 0.0, 0.2, 1),transform 0.15s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
@@ -1617,7 +1628,7 @@
   .dual-fab-today.active{background:var(--star);}
   .dual-fab-add{font-family:-apple-system,sans-serif;font-size:24px;font-weight:200;line-height:1;padding:8px 21px;display:flex;align-items:center;justify-content:center;}
   .dual-fab-sep{
-    width:1px;height:21px;background:rgba(255,255,255,0.2);
+    width:1px;height:21px;background:currentColor;opacity:0.22;
   }
   /* カレンダー追加フローティングボタン */
   .cal-fab{
@@ -1717,7 +1728,7 @@
     <div class="title-right" id="titleRight">
       <button class="archive-btn" id="inboxBtn" style="display:none;">仮置き</button>
       <button class="archive-btn" id="archiveBtn" style="display:none;">アーカイブ</button>
-      
+      <button class="archive-btn" id="themeBtn" title="表示テーマ" aria-label="表示テーマ"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="vertical-align:middle;"><circle cx="8" cy="8" r="6.4" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.6 A6.4 6.4 0 0 1 8 14.4 Z" fill="currentColor"/></svg></button>
     </div>
   </div>
 
@@ -1995,6 +2006,17 @@
     <h2 style="font-size:14px;color:var(--ink-faint);letter-spacing:0.1em;margin:0 0 13px;">仮置きに追加</h2>
     <input type="text" id="qaInput" placeholder="仮置きタスクを追加" autocomplete="off" style="width:100%;padding:13px 13px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:15px;background:transparent;color:var(--ink);outline:none;">
     <div style="font-size:11px;color:var(--ink-faint);margin-top:8px;line-height:1.85;">Enter で追加。続けて入力できます。</div>
+  </div>
+
+  <div class="sheet-bg" id="thbg"></div>
+  <div class="sheet half-sheet" id="thsheet">
+    <h2 style="font-size:14px;color:var(--ink-faint);letter-spacing:0.1em;margin:0 0 13px;">表示テーマ</h2>
+    <div class="th-opts" id="thOpts">
+      <button class="th-opt" data-themepref="auto"><span class="th-opt-t">自動</span><span class="th-opt-s">時間帯で切り替え（朝昼・夕方・夜）</span></button>
+      <button class="th-opt" data-themepref="day"><span class="th-opt-t">朝・昼</span><span class="th-opt-s">明るい</span></button>
+      <button class="th-opt" data-themepref="eve"><span class="th-opt-t">夕方</span><span class="th-opt-s">トワイライト（青→ピンク）</span></button>
+      <button class="th-opt" data-themepref="night"><span class="th-opt-t">夜</span><span class="th-opt-s">紺</span></button>
+    </div>
   </div>
 
   <div class="sheet-bg" id="evbg"></div>
@@ -2672,8 +2694,8 @@ function renderStars(){
       </div>${showDoneSteps?`<div class="inbox-action-row theme-action-row" style="padding-left:34px;"><button class="inbox-action${doneAtBottom?' active':''}" data-tba-donebottom="${s.id}">完了済みを下にまとめる</button></div>`:''}${archiveExpanded?`<div class="inbox-action-row theme-action-row" style="padding-left:34px;"><button class="inbox-action" data-tba-arc-achieve="${s.id}">達成</button><button class="inbox-action" data-tba-arc-hold="${s.id}">保留</button><button class="inbox-action" data-tba-arc-delete="${s.id}">削除</button></div>`:''}`;
     }
     const themeHex=s.color?colorHex(s.color):'';
-    const dirStyle=themeHex?`style="color:${themeHex};"`:'';
-    return `<div class="lcard${isCol?' collapsed':''}${themeSelCls}" data-tcid="${s.id}"><div class="lcard-head"><button class="toggle-btn" data-togglestar="${s.id}">${tri}</button><div class="star-dir" data-themesel="${s.id}" data-tcdrag="${s.id}" ${dirStyle}>${esc(s.dir)}</div><button class="star-open-btn" data-editstar="${s.id}" title="このテーマを編集">⋯</button></div>${themeActionRow}${body}</div>`;
+    const cdot=`<span class="star-cdot" style="background:${themeHex||'var(--star)'};"></span>`;
+    return `<div class="lcard${isCol?' collapsed':''}${themeSelCls}" data-tcid="${s.id}"><div class="lcard-head"><button class="toggle-btn" data-togglestar="${s.id}">${tri}</button>${cdot}<div class="star-dir" data-themesel="${s.id}" data-tcdrag="${s.id}">${esc(s.dir)}</div><button class="star-open-btn" data-editstar="${s.id}" title="このテーマを編集">⋯</button></div>${themeActionRow}${body}</div>`;
   }).join('');
 }
 let reorderMode=false;
@@ -2867,7 +2889,7 @@ function renderStepNodes(steps,path){
     const dateActiveCls=datePickerOpen?' active':'';
     const catActiveCls=catPickerOpen?' active':'';
     const actionRow=isSelected?`<div class="inbox-action-row"><button class="inbox-action${dateActiveCls}" data-sba-date="${p}">日付</button><button class="inbox-action${catActiveCls}" data-sba-cat="${p}">カテゴリ</button><button class="inbox-action" data-sba-sub="${p}">+ サブタスク</button><button class="inbox-action" data-sba-del="${p}">削除</button></div>${datePickerOpen?renderStepDatePicker(p,st):''}${catPickerOpen?renderStepCategoryPicker(p,st):''}`:'';
-    return `<div class="snode${isCol?' collapsed':''}${doneCls}${selCls}" data-snode="${p}" data-stepid="${st.id}"><div class="srow"><button class="scheck${st.done?' checked':''}" data-check="${p}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" data-stepid="${st.id}">${esc(st.text)}</span>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button></div>${actionRow}${children}</div>`;
+    return `<div class="snode${isCol?' collapsed':''}${doneCls}${selCls}" data-snode="${p}" data-stepid="${st.id}"><div class="pv-swipe-clip"><button class="pv-swipe-del" data-sba-del="${p}" tabindex="-1">削除</button><div class="srow"><button class="scheck${st.done?' checked':''}" data-check="${p}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" data-stepid="${st.id}">${esc(st.text)}</span>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button></div></div>${actionRow}${children}</div>`;
   }).join('');
 }
 // テーマ詳細用：期日ピッカー
@@ -3119,7 +3141,7 @@ function renderTrail(){
           const star=d.starId?stars.find(s=>s.id===d.starId):null;
           const dirLabel=star?star.dir:null;
           const tagHex=star && star.color?colorHex(star.color):null;
-          const tag=dirLabel?`<span class="trail-dir-tag"${tagHex?` style="color:${tagHex};"`:''}>${esc(dirLabel)}</span>`:`<span class="trail-dir-tag muted">未分類</span>`;
+          const tag=dirLabel?`<span class="trail-dir-tag">${tagHex?`<span class="tdt-dot" style="background:${tagHex};"></span>`:''}${esc(dirLabel)}</span>`:`<span class="trail-dir-tag muted">未分類</span>`;
           const memo=d.memo?`<span class="tmemo">${esc(d.memo)}</span>`:'';
           const cls=d.repeat?'step repeat':(d.fromTask?'step achieved':'step');
           const mark=d.repeat?'<span class="repdot">↻</span>':(d.fromTask?'<span class="vmark">✓</span>':'');
@@ -3138,7 +3160,7 @@ function renderTrail(){
     const ds=useDiffs.filter(d=>d.starId===s.id).sort((a,b)=>b.ts-a.ts);
     if(ds.length){
       const hex=s.color?colorHex(s.color):'#c9a227';
-      const title=`<span class="trail-dot" style="background:${hex};"></span><span style="color:${hex};">${esc(s.dir)}</span>`;
+      const title=`<span class="trail-dot" style="background:${hex};"></span><span style="color:var(--ink);">${esc(s.dir)}</span>`;
       h+=trailBlock(s.id,title,ds,single);
     }
   });
@@ -3176,7 +3198,7 @@ function renderTrailFull(b){
   let title='',ds=[];const isLoose=key==='__loose__';
   let starObj=null;
   if(isLoose){title='— 未分類';ds=diffs.filter(d=>!d.starId||!stars.find(s=>s.id===d.starId));}
-  else{starObj=stars.find(x=>x.id===key);if(!starObj){trailFullStar=null;renderTrail();return;}const hex=starObj.color?colorHex(starObj.color):'#c9a227';title=`<span class="trail-dot" style="background:${hex};"></span><span style="color:${hex};">${esc(starObj.dir)}</span>`;ds=diffs.filter(d=>d.starId===key);}
+  else{starObj=stars.find(x=>x.id===key);if(!starObj){trailFullStar=null;renderTrail();return;}const hex=starObj.color?colorHex(starObj.color):'#c9a227';title=`<span class="trail-dot" style="background:${hex};"></span><span style="color:var(--ink);">${esc(starObj.dir)}</span>`;ds=diffs.filter(d=>d.starId===key);}
   // カテゴリフィルタ（複数選択：OR検索）
   if(trailFilterGroups.length&&starObj){
     ds=ds.filter(d=>trailFilterGroups.includes(d.groupId));
@@ -3402,7 +3424,9 @@ function eventTopHeight(it){
   else if(it.dur){h=Math.max(it.dur/60,0.4);}
   else h=0.8;
   const top=(from-DAY_START)*HOUR_H;
-  return {top:Math.max(top,0),height:h*HOUR_H};
+  const GAP=2; // 罫線に被らないよう上下に少し余白
+  const rawH=h*HOUR_H;
+  return {top:Math.max(top,0)+GAP, height:Math.max(rawH-GAP*2, 14)};
 }
 function hourLabels(cols,dayIsos){
   let h='';
@@ -3620,6 +3644,20 @@ function attachSwipe(root){
   },{passive:true});
 }
 
+// 表示テーマ設定（自動／朝昼／夕方／夜）
+function renderThemeOpts(){
+  const cur=(window.__getThemePref?window.__getThemePref():'auto');
+  document.querySelectorAll('#thOpts .th-opt').forEach(b=>b.classList.toggle('active',b.dataset.themepref===cur));
+}
+document.getElementById('themeBtn').addEventListener('click',()=>{ renderThemeOpts(); openSheet('thbg','thsheet'); });
+document.getElementById('thbg').addEventListener('click',()=>closeSheet('thbg','thsheet'));
+document.getElementById('thOpts').addEventListener('click',e=>{
+  const b=e.target.closest('[data-themepref]'); if(!b)return;
+  if(window.__setThemePref)window.__setThemePref(b.dataset.themepref);
+  renderThemeOpts();
+  closeSheet('thbg','thsheet');
+});
+
 function openSheet(bg,sheet){
   const sh=document.getElementById(sheet);
   const bgEl=document.getElementById(bg);
@@ -3641,7 +3679,7 @@ function closeSheet(bg,sheet){
     ['vbg','vsheet'],['dbg','dsheet'],['ssbg','sssheet'],['sbg','ssheet'],
     ['cbg','csheet'],['mbg','msheet'],['ebg','esheet'],['ibbg','ibsheet'],
     ['tdbg','tdsheet'],['mvbg','mvsheet'],['gpbg','gpsheet'],['dfbg','dfsheet'],
-    ['evbg','evsheet'],['qabg','qasheet']
+    ['evbg','evsheet'],['qabg','qasheet'],['thbg','thsheet']
   ];
   pairs.forEach(([bg,sheet])=>{
     const sh=document.getElementById(sheet);if(!sh)return;
@@ -4927,6 +4965,7 @@ function addRootStepInline(sid){
 }
 document.getElementById('addGroup').addEventListener('click',()=>openGroupEditor(null));
 document.getElementById('stepsTree').addEventListener('click',async e=>{
+  if(window.__polSwipeGuard && !e.target.closest('.pv-swipe-del')){return;}
   // 期日ピッカー
   const sbaDate=e.target.closest('[data-sba-date]');
   if(sbaDate){
@@ -5242,7 +5281,7 @@ function openTaskDetail(path){
   }else{
     const themeName=s.dir||'テーマ';
     const themeColor=s.color?colorHex(s.color):'#c9a227';
-    parts.push(`<span class="td-bc-item td-bc-clickable" data-bc-theme="${s.id}" style="color:${themeColor};">● ${esc(themeName)}</span>`);
+    parts.push(`<span class="td-bc-item td-bc-clickable" data-bc-theme="${s.id}"><span style="color:${themeColor};">●</span> ${esc(themeName)}</span>`);
   }
   // カテゴリ
   const np=getNumericPath(path);
@@ -7100,7 +7139,7 @@ document.getElementById('todayList').addEventListener('click',async e=>{
         const rect=sn.getBoundingClientRect();
         if(x<rect.left||x>rect.right)continue;
         // .srow部分での位置判定
-        const srow=sn.querySelector(':scope > .srow');
+        const srow=sn.querySelector(':scope > .srow, :scope > .pv-swipe-clip > .srow');
         if(!srow)continue;
         const r=srow.getBoundingClientRect();
         if(y>=r.top-4&&y<=r.bottom+4){
@@ -7362,8 +7401,8 @@ document.getElementById('todayList').addEventListener('click',async e=>{
 /* テーマカード内タスク：左スワイプで「削除」を表示 */
 (function(){
   const root=document.getElementById('starsList');if(!root)return;
-  const W=55;          // 削除ボタンの幅（フィボナッチ数）
-  const OPEN_AT=34;     // この距離を超えたら開く（34/55 ≈ 黄金比 1/φ）
+  const W=44;          // 削除ボタンの幅（カード：行が低いので55より短く）
+  const OPEN_AT=27;     // この距離を超えたら開く（27/44 ≈ 黄金比 1/φ）
   let openClip=null;
   let startX=0,startY=0,axis=null,curClip=null,curRow=null,curDel=null,wasOpen=false,mouseTracking=false;
   function closeOpen(){ if(openClip){openClip.classList.remove('swiped');openClip=null;} }
@@ -7426,6 +7465,75 @@ document.getElementById('todayList').addEventListener('click',async e=>{
   root.addEventListener('touchend',up,{passive:true});
   root.addEventListener('touchcancel',up,{passive:true});
   // デスクトップ（マウス）対応
+  root.addEventListener('mousedown',e=>{ mouseTracking=true; down(e); });
+  window.addEventListener('mousemove',e=>{ if(mouseTracking&&curClip) move(e); });
+  window.addEventListener('mouseup',e=>{ if(mouseTracking&&curClip) up(e); else mouseTracking=false; });
+})();
+
+/* テーマ詳細：タスク行 左スワイプで「削除」 */
+(function(){
+  const root=document.getElementById('stepsTree');if(!root)return;
+  const W=55, OPEN_AT=34;
+  let openClip=null;
+  let startX=0,startY=0,axis=null,curClip=null,curRow=null,curDel=null,wasOpen=false,mouseTracking=false;
+  function closeOpen(){ if(openClip){openClip.classList.remove('swiped');openClip=null;} }
+  function guard(){ window.__polSwipeGuard=true; setTimeout(()=>{window.__polSwipeGuard=false;},350); }
+  function pt(e){ const t=e.touches&&e.touches[0]?e.touches[0]:(e.changedTouches&&e.changedTouches[0]?e.changedTouches[0]:e); return {x:t.clientX,y:t.clientY}; }
+  function reset(){ curClip=null;curRow=null;curDel=null;axis=null;mouseTracking=false; }
+  function down(e){
+    if(openClip){
+      const clipOfTarget=e.target.closest('.pv-swipe-clip');
+      if(clipOfTarget!==openClip){ closeOpen(); }
+    }
+    const row=e.target.closest('.srow');
+    if(!row){ reset(); return; }
+    const clip=row.parentElement;
+    if(!clip||!clip.classList.contains('pv-swipe-clip')){ reset(); return; }
+    const p=pt(e); startX=p.x; startY=p.y; axis=null;
+    curClip=clip; curRow=row; curDel=clip.querySelector('.pv-swipe-del');
+    wasOpen=clip.classList.contains('swiped');
+  }
+  function move(e){
+    if(!curClip)return;
+    const p=pt(e); const dx=p.x-startX, dy=p.y-startY;
+    if(axis===null){
+      if(Math.abs(dx)<8 && Math.abs(dy)<8) return;
+      const node=curRow.closest('.snode');
+      if(node && node.classList.contains('dragging')){ axis='v'; return; }
+      axis=(Math.abs(dx)>Math.abs(dy))?'h':'v';
+      if(axis==='h'){
+        if(openClip && openClip!==curClip) closeOpen();
+        curRow.style.transition='none'; if(curDel)curDel.style.transition='none';
+      }
+    }
+    if(axis!=='h')return;
+    if(e.cancelable)e.preventDefault();
+    let off=(wasOpen?-W:0)+dx;
+    if(off>0)off=0; if(off<-W)off=-W;
+    curRow.style.transform='translateX('+off+'px)';
+    if(curDel)curDel.style.transform='translateX('+(W+off)+'px)';
+  }
+  function up(e){
+    if(!curClip){ reset(); return; }
+    if(axis==='h'){
+      const p=pt(e); const dx=p.x-startX;
+      let off=(wasOpen?-W:0)+dx; if(off>0)off=0; if(off<-W)off=-W;
+      curRow.style.transition=''; if(curDel)curDel.style.transition='';
+      curRow.style.transform=''; if(curDel)curDel.style.transform='';
+      if(off<=-OPEN_AT){
+        if(openClip && openClip!==curClip) closeOpen();
+        curClip.classList.add('swiped'); openClip=curClip;
+      }else{
+        curClip.classList.remove('swiped'); if(openClip===curClip) openClip=null;
+      }
+      guard();
+    }
+    reset();
+  }
+  root.addEventListener('touchstart',down,{passive:true});
+  root.addEventListener('touchmove',move,{passive:false});
+  root.addEventListener('touchend',up,{passive:true});
+  root.addEventListener('touchcancel',up,{passive:true});
   root.addEventListener('mousedown',e=>{ mouseTracking=true; down(e); });
   window.addEventListener('mousemove',e=>{ if(mouseTracking&&curClip) move(e); });
   window.addEventListener('mouseup',e=>{ if(mouseTracking&&curClip) up(e); else mouseTracking=false; });
@@ -7767,20 +7875,28 @@ load();
 (function(){
   // 3つの基調（RGB）
   const DAY  ={bg:[249,250,252], warm:[241,243,246], ink:[23,26,38],   inkSoft:[74,80,105],   inkFaint:[135,140,156], line:[225,228,232], accent:[168,137,63]};
-  const EVE  ={bg:[70,100,130],  warm:[58,82,108],   ink:[244,247,251], inkSoft:[206,218,232], inkFaint:[198,210,226], line:[110,138,168], accent:[253,190,198], grad:['#466482 0%','#7896B4 63%','#7896B4 78%','#FDBEC6 100%']};
+  const EVE  ={bg:[70,100,130],  warm:[58,82,108],   ink:[244,247,251], inkSoft:[206,218,232], inkFaint:[198,210,226], line:[110,138,168], accent:[253,190,198], calLine:'rgba(238,231,213,0.5)', grad:['#466482 0%','#7896B4 63%','#7896B4 78%','#FDBEC6 100%']};
   const NIGHT={bg:[76,79,148],   warm:[88,91,162],   ink:[232,233,246], inkSoft:[186,188,214], inkFaint:[150,152,186], line:[104,107,170], accent:[168,137,63], mblockBg:'#f2eee4'};
   // 時間帯で3色を切り替え（補間なし・パキッと切替）
   const rgbStr=a=>`rgb(${a[0]}, ${a[1]}, ${a[2]})`;
+  let themePref='auto';
+  try{themePref=localStorage.getItem('polaris:themePref')||'auto';}catch(e){}
   function moodFor(h){
+    if(themePref==='day') return DAY;
+    if(themePref==='eve') return EVE;
+    if(themePref==='night') return NIGHT;
     if(h>=6 && h<17) return DAY;    // 朝〜夕方手前：明るい
-    if(h>=17 && h<19) return EVE;   // 夕方：オレンジ
+    if(h>=17 && h<19) return EVE;   // 夕方：トワイライト
     return NIGHT;                   // 夜〜早朝：紺
   }
+  window.__getThemePref=()=>themePref;
+  window.__setThemePref=(p)=>{themePref=p;try{localStorage.setItem('polaris:themePref',p);}catch(e){}applyTimeColors();};
   function currentColors(){
     const m=moodFor(new Date().getHours());
     return {
       bg:rgbStr(m.bg), warm:rgbStr(m.warm), ink:rgbStr(m.ink),
       inkSoft:rgbStr(m.inkSoft), inkFaint:rgbStr(m.inkFaint), line:rgbStr(m.line), accent:rgbStr(m.accent), accentRgb:m.accent.join(','),
+      calLine:(m.calLine||rgbStr(m.line)),
       phoneBg:(m.grad?('linear-gradient(180deg,'+m.grad.join(',')+')'):rgbStr(m.bg)),
       mblockBg:(m.mblockBg||'#ffffff'),
       halo:(m.grad?'0 1px 3px rgba(20,30,50,0.45)':'none'),
@@ -7795,6 +7911,7 @@ load();
     r.style.setProperty('--ink-soft',c.inkSoft);
     r.style.setProperty('--ink-faint',c.inkFaint);
     r.style.setProperty('--line',c.line);
+    r.style.setProperty('--cal-line',c.calLine);
     r.style.setProperty('--card',c.bg);
     r.style.setProperty('--star',c.accent);
     r.style.setProperty('--star-rgb',c.accentRgb);
