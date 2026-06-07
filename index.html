@@ -7677,6 +7677,52 @@ tick();setInterval(tick,10000);
 load();
 
 // Service Worker 登録（PWA）
+/* === 時刻連動の背景色（北極星テーマ：青系グラデーション） === */
+(function(){
+  const KEYS=[
+    {t:0,   bg:[225,40,12],  warm:[225,35,18], ink:[220,15,92], inkSoft:[220,10,70], inkFaint:[220,10,50], line:[225,20,25]},
+    {t:5,   bg:[220,30,75],  warm:[220,25,82], ink:[220,30,15], inkSoft:[220,20,38], inkFaint:[220,15,60], line:[220,20,86]},
+    {t:9,   bg:[215,25,98],  warm:[215,20,95], ink:[220,25,12], inkSoft:[220,18,35], inkFaint:[220,12,60], line:[215,15,90]},
+    {t:13,  bg:[210,20,99],  warm:[210,15,96], ink:[220,25,10], inkSoft:[220,18,32], inkFaint:[220,12,58], line:[210,12,90]},
+    {t:17,  bg:[220,30,90],  warm:[220,25,85], ink:[220,30,15], inkSoft:[220,20,38], inkFaint:[220,15,60], line:[220,20,82]},
+    {t:20,  bg:[225,40,40],  warm:[225,35,48], ink:[220,15,90], inkSoft:[220,12,72], inkFaint:[220,10,55], line:[225,25,52]},
+    {t:23,  bg:[225,45,18],  warm:[225,40,24], ink:[220,15,90], inkSoft:[220,10,70], inkFaint:[220,10,50], line:[225,22,30]},
+    {t:24,  bg:[225,40,12],  warm:[225,35,18], ink:[220,15,92], inkSoft:[220,10,70], inkFaint:[220,10,50], line:[225,20,25]},
+  ];
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function lerpArr(a,b,t){return [lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];}
+  function hslStr(arr){return `hsl(${arr[0].toFixed(0)}, ${arr[1].toFixed(0)}%, ${arr[2].toFixed(1)}%)`;}
+  function currentColors(){
+    const d=new Date();
+    const h=d.getHours()+d.getMinutes()/60;
+    let i=0;
+    for(;i<KEYS.length-1;i++){if(h>=KEYS[i].t && h<KEYS[i+1].t)break;}
+    const a=KEYS[i],b=KEYS[i+1];
+    const t=(h-a.t)/(b.t-a.t);
+    return {
+      bg:hslStr(lerpArr(a.bg,b.bg,t)),
+      warm:hslStr(lerpArr(a.warm,b.warm,t)),
+      ink:hslStr(lerpArr(a.ink,b.ink,t)),
+      inkSoft:hslStr(lerpArr(a.inkSoft,b.inkSoft,t)),
+      inkFaint:hslStr(lerpArr(a.inkFaint,b.inkFaint,t)),
+      line:hslStr(lerpArr(a.line,b.line,t)),
+    };
+  }
+  function applyTimeColors(){
+    const c=currentColors();
+    const r=document.documentElement;
+    r.style.setProperty('--paper',c.bg);
+    r.style.setProperty('--paper-warm',c.warm);
+    r.style.setProperty('--ink',c.ink);
+    r.style.setProperty('--ink-soft',c.inkSoft);
+    r.style.setProperty('--ink-faint',c.inkFaint);
+    r.style.setProperty('--line',c.line);
+    r.style.setProperty('--card',c.bg);
+  }
+  applyTimeColors();
+  setInterval(applyTimeColors,60000);
+})();
+
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('./sw.js').catch(err=>console.log('SW登録失敗:',err));
