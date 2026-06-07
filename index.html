@@ -260,11 +260,11 @@
   .cal-dot{width:5px;height:5px;border-radius:50%;background:var(--star);}
   /* 月セル内のタイトル表示 */
   .mt-items{display:flex;flex-direction:column;gap:2px;margin-top:3px;min-width:0;}
-  .mt-bar{font-size:9.5px;line-height:1.25;padding:2px 3px;border-radius:3px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0;}
-  .mt-bar.mt-event{background:#6a8cb0;}
-  .mt-bar.mt-task{background:#7a9b7a;}
+  .mt-bar{font-size:9.5px;line-height:1.25;padding:2px 6px 2px 9px;border-radius:9px;color:var(--ink);background:rgba(127,127,127,0.06);background:color-mix(in srgb, var(--ink) 9%, transparent);border:1px solid var(--line);box-shadow:inset 4px 0 0 var(--cc,#5a7a9c);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0;}
+  .mt-bar.mt-event{}
+  .mt-bar.mt-task{}
   .mt-bar.mt-task.done{opacity:0.4;text-decoration:line-through;}
-  .mt-bar.mt-step{background:linear-gradient(150deg,var(--star),#b89020);color:#fff;}
+  .mt-bar.mt-step{}
   .mt-more{font-size:9px;color:var(--ink-faint);padding-left:3px;letter-spacing:0;}
   .cal-cell{overflow:hidden;}
   .cal-list{margin-top:21px;}
@@ -313,9 +313,7 @@
   .vcal-cols{position:absolute;top:0;left:38px;right:0;bottom:0;z-index:1;pointer-events:none;}
   .vcol{position:absolute;top:0;bottom:0;pointer-events:none;}
   .vcol-sel{position:absolute;background:rgba(var(--star-rgb),0.25);border:1px dashed var(--star);border-radius:3px;pointer-events:none;z-index:5;}
-  .vev{position:absolute;background:linear-gradient(150deg,rgba(var(--star-rgb),0.92),rgba(var(--star-rgb),0.78));color:#fff;border-radius:8px;padding:3px 8px;font-size:10.5px;line-height:1.25;overflow:hidden;box-shadow:0 1px 4px rgba(var(--star-rgb),0.3);pointer-events:auto;z-index:11;}
-  .vev *{color:#fff !important;}
-  .vev.allday{background:linear-gradient(150deg,#b9a06a,#a89058);}
+  .vev{position:absolute;background:rgba(127,127,127,0.06);background:color-mix(in srgb, var(--ink) 9%, transparent);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:inset 5px 0 0 var(--cc,#5a7a9c);padding:3px 9px 3px 13px;font-size:10.5px;line-height:1.25;overflow:hidden;pointer-events:auto;z-index:11;}
   .vev .vev-t{font-weight:600;display:inline;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;}
   .vev.task .vev-check, .vev .vev-check{vertical-align:middle;}
   .vev .vev-m{font-size:9px;opacity:0.9;}
@@ -368,8 +366,8 @@
   .mblock svg{width:100%;height:100px;display:block;margin-top:3px;}
   .mblock .mfoot{display:flex;justify-content:space-between;font-size:10px;color:var(--ink-faint);margin-top:3px;padding:0 2px;}
   /* event styles — 手順(金)と区別する青系 */
-  .vev.event{background:linear-gradient(150deg,#6a8cb0,#5a7a9c);box-shadow:0 1px 4px rgba(90,122,156,0.3);}
-  .vev.event.allday{background:linear-gradient(150deg,#7a90ab,#6b819c);}
+  .vev.event{}
+  .vev.event.allday{}
   .cal-dot.event{background:#6a8cb0;}
   .vad-chip.event{background:#6a8cb0;}
 
@@ -520,7 +518,7 @@
   }
   .vclose-btn:hover{background:var(--paper-warm);color:var(--ink);}
   /* カレンダータスク（task）：緑系で区別 */
-  .vev.task{background:linear-gradient(150deg,#7a9b7a,#5e7e5e);box-shadow:0 1px 4px rgba(110,150,110,0.3);}
+  .vev.task{}
   .vad-chip.task{background:#7a9b7a;}
   .cal-dot.task{background:#7a9b7a;}
   .cal-item.task .cdot{background:#7a9b7a;}
@@ -565,7 +563,7 @@
     width:10px;height:10px;
     background:#d04a3a;border-radius:50%;
   }
-  .vev.task .vev-check{display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border:1.5px solid #fff;border-radius:3px;margin-right:5px;vertical-align:middle;background:transparent;position:relative;overflow:visible;}
+  .vev.task .vev-check{display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border:1.5px solid var(--ink-soft);border-radius:3px;margin-right:5px;vertical-align:middle;background:transparent;position:relative;overflow:visible;}
   .vev.task .vev-check .check-svg{
     width:18px;height:18px;
     overflow:visible;
@@ -575,7 +573,7 @@
     transform:translate(-50%,-35%);
   }
   .vev.task .vev-check .check-svg path{
-    stroke:#fff;
+    stroke:var(--ink-soft);
     stroke-width:0.6;
     stroke-linecap:round;stroke-linejoin:round;
     fill:none;
@@ -3376,13 +3374,13 @@ function renderCalMonth(){
       inner=dayItems.map(it=>{
         const cls=it.kind==='event'?'mt-event':it.kind==='task'?(it.done?'mt-task done':'mt-task'):'mt-step';
         const bg=getThemeBg(it);
-        return `<div class="mt-bar ${cls}" style="${bg}">${esc(it.text)}</div>`;
+        return `<div class="mt-bar ${cls}" style="--cc:${evColor(it)}">${esc(it.text)}</div>`;
       }).join('');
     }else{
       inner=dayItems.slice(0,2).map(it=>{
         const cls=it.kind==='event'?'mt-event':it.kind==='task'?(it.done?'mt-task done':'mt-task'):'mt-step';
         const bg=getThemeBg(it);
-        return `<div class="mt-bar ${cls}" style="${bg}">${esc(it.text)}</div>`;
+        return `<div class="mt-bar ${cls}" style="--cc:${evColor(it)}">${esc(it.text)}</div>`;
       }).join('')+`<div class="mt-more">+${dayItems.length-2}</div>`;
     }
     g+=`<div class="cal-cell ${dayItems.length?'has':''} ${dIso===todayIso?'today':''} ${dIso===selectedCellDay?'selected':''}" data-cellday="${dIso}"><span class="dn">${day}</span><div class="mt-items">${inner}</div></div>`;
@@ -3454,7 +3452,7 @@ function renderCalWeek(){
       if(it.kind==='task')cb=`<span class="vev-check" data-taskdone="${it.id}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></span>`;
       else if(it.kind==='step')cb=`<span class="vev-check step" data-stepdone="${it.starId}::${encPath(it.path)}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></span>`;
       const bgStyle=getThemeBg(it);
-      evtHtml+=`<div class="${cls}" style="top:${pos.top}px;height:${pos.height}px;left:${left};width:${width};${bgStyle}"${click}>${cb}<span class="vev-t">${esc(it.text)}</span></div>`;
+      evtHtml+=`<div class="${cls}" style="top:${pos.top}px;height:${pos.height}px;left:${left};width:${width};--cc:${evColor(it)};"${click}>${cb}<span class="vev-t">${esc(it.text)}</span></div>`;
     });
   });
   // 3つの日付の時間枠（タップで予定追加・スライドで時間範囲）
@@ -3512,7 +3510,7 @@ function renderCalDay(){
     if(it.kind==='task')cb=`<span class="vev-check" data-taskdone="${it.id}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></span>`;
     else if(it.kind==='step')cb=`<span class="vev-check step" data-stepdone="${it.starId}::${encPath(it.path)}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></span>`;
     const bgStyle=getThemeBg(it);
-    evtHtml+=`<div class="${cls}" style="top:${pos.top}px;height:${pos.height}px;left:2px;right:2px;width:auto;${bgStyle}"${click}>${cb}<span class="vev-t">${esc(it.text)}</span>${meta.length||tail?`<span class="vev-m">${meta.join(' ・ ')}${tail}</span>`:''}</div>`;
+    evtHtml+=`<div class="${cls}" style="top:${pos.top}px;height:${pos.height}px;left:2px;right:2px;width:auto;--cc:${evColor(it)};"${click}>${cb}<span class="vev-t">${esc(it.text)}</span>${meta.length||tail?`<span class="vev-m">${meta.join(' ・ ')}${tail}</span>`:''}</div>`;
   });
   // 現在時刻ライン（今日が表示されている場合のみ）
   let nowLine='';
@@ -3797,6 +3795,11 @@ function getThemeBg(it){
   if(!s||!s.color)return '';
   const hex=colorHex(s.color);
   return `background:${hex} !important;`;
+}
+function evColor(it){
+  // ◎マーカーの色：テーマ色があればそれ、なければ 予定=青・タスク=緑
+  if(it.starId){const s=stars.find(x=>x.id===it.starId);if(s&&s.color)return colorHex(s.color);}
+  return it.kind==='task' ? '#7a9b7a' : '#5a7a9c';
 }
 let starDraftColor='gold';
 function renderStarColorPalette(){
