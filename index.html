@@ -7188,27 +7188,19 @@ document.getElementById('todayList').addEventListener('click',async e=>{
           arr.splice(np[np.length-1],1);
           await ss();await sib();
           if(sid==='__inbox__')renderInboxTree();else renderStepsTree();
+          if(document.getElementById('tdsheet').classList.contains('open')){renderTaskChildren();}
           renderStars();renderCal();return;
         }
         // 並列タスクを追加
         const arr=getParentArr(s,path);
         const np=getNumericPath(path);
-        arr.splice(np[np.length-1]+1,0,{id:uid(),text:'',due:null,memo:null,rep:'none',done:false,children:[]});
+        const newId=uid();
+        arr.splice(np[np.length-1]+1,0,{id:newId,text:'',due:null,memo:null,rep:'none',done:false,children:[]});
         await ss();await sib();
         if(sid==='__inbox__')renderInboxTree();else renderStepsTree();
+        if(document.getElementById('tdsheet').classList.contains('open')){renderTaskChildren();}
         renderStars();renderCal();
-        // 新しい行（空テキスト）にフォーカス
-        setTimeout(()=>{
-          const els=root.querySelectorAll('[data-editname]');
-          for(const el of els){
-            if(el.textContent.trim()===''){
-              el.focus();
-              const range=document.createRange();range.selectNodeContents(el);range.collapse(false);
-              const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
-              break;
-            }
-          }
-        },30);
+        focusStepByText(newId);
         return;
       }
     });
