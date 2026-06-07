@@ -477,14 +477,14 @@
     inset:0 !important;
     transform:none !important;
     opacity:0;
-    transition:opacity 0.18s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+    transition:opacity 0.45s cubic-bezier(0.4, 0.0, 0.2, 1),visibility 0s linear 0.45s !important;
     padding:0 !important;
     visibility:hidden;
     overflow:hidden !important;
     display:flex;
     flex-direction:column;
   }
-  .vsheet-full.open{opacity:1;visibility:visible !important;}
+  .vsheet-full.open{opacity:1;visibility:visible !important;transition:opacity 0.45s cubic-bezier(0.4, 0.0, 0.2, 1),visibility 0s linear 0s !important;}
   .vfull-inner{
     flex:1;overflow-y:auto;
     padding:55px 34px 34px;
@@ -1535,6 +1535,41 @@
     transition:background 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
   .td-delete-btn:active{background:rgba(180,80,62,0.06);}
+  /* 2段階スイッチ（汎用、終日など） */
+  .simple-switch{
+    width:34px;height:20px;background:#cfcdc6;border-radius:20px;
+    position:relative;flex-shrink:0;cursor:pointer;
+    transition:background 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+    display:inline-block;
+  }
+  .simple-switch::after{
+    content:'';position:absolute;top:2px;left:2px;
+    width:16px;height:16px;background:#fff;border-radius:50%;
+    box-shadow:0 1px 3px rgba(0,0,0,0.15);
+    transition:transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+  .simple-switch.is-on{background:var(--star);}
+  .simple-switch.is-on::after{transform:translateX(14px);}
+  /* 予定追加：テーマチップ（横スクロール） */
+  .theme-chips{
+    display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;
+    padding:5px 0 8px;margin-top:5px;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  .theme-chips::-webkit-scrollbar{display:none;}
+  .theme-chip{
+    flex-shrink:0;display:inline-flex;align-items:center;gap:5px;
+    font-family:inherit;font-size:13px;color:var(--ink-soft);
+    background:rgba(255,255,255,0.7);border:1px solid var(--line);
+    border-radius:21px;padding:8px 13px;cursor:pointer;
+    transition:all 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+  .theme-chip .chip-dot{
+    width:8px;height:8px;border-radius:50%;background:var(--star);
+    border:1px solid var(--line);flex-shrink:0;
+  }
+  .theme-chip.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .theme-chip.active .chip-dot{border-color:var(--paper);}
   /* 「今日」フローティングボタン */
   .today-fab{
     position:absolute;bottom:100px;right:18px;
@@ -1838,7 +1873,7 @@
     <div id="starMetricsEditor"></div>
     <button class="vcustom-btn" id="addStarMetric" style="margin-top:5px;"><span class="p">+</span> グラフ追加</button>
 
-    <button class="btn-full" id="starSave" style="margin-top:21px;">置く</button>
+    <button class="btn-full" id="starSave" style="margin-top:21px;">保存</button>
   </div>
 
   <div class="sheet-bg" id="sbg"></div>
@@ -1970,31 +2005,26 @@
     <div class="grip"></div>
     <div class="sword" id="eSword">EVENT</div>
     <h2 style="font-size:17px;" id="eHead">予定を追加</h2>
-    <div class="rep-row" id="eKindRow" style="margin-bottom:13px;">
+    <div class="rep-row" id="eKindRow" style="margin-bottom:21px;">
       <button class="rep-opt active" data-ekind="event">予定</button>
       <button class="rep-opt" data-ekind="task">タスク</button>
     </div>
+    <!-- 1. タイトル -->
     <label id="eTextLabel">タイトル</label>
-    <textarea id="eText" style="min-height:42px;" rows="1" placeholder="例：歯医者／打ち合わせ／ライブ"></textarea>
-    <label style="display:block;margin-top:13px;">メモ</label>
-    <textarea id="eMemo" style="min-height:48px;" placeholder="場所、相手、持ち物など"></textarea>
-    <label style="display:block;margin-top:13px;">テーマ</label>
-    <select id="eStar" style="margin-top:5px;">
-      <option value="">— 未分類</option>
-    </select>
-    
-    <div id="eGroupZone" style="display:none;">
-      <label style="display:block;margin-top:8px;">カテゴリに入れる（任意）</label>
-      <select id="eGroup" style="margin-top:5px;">
-        <option value="">— 未分類（テーマの直下）</option>
-      </select>
+    <textarea id="eText" style="min-height:55px;margin-top:5px;" rows="1" placeholder="例：歯医者／打ち合わせ／ライブ"></textarea>
+    <!-- 2. 日付（終日スイッチ） -->
+    <div style="margin-top:21px;display:flex;align-items:center;justify-content:space-between;">
+      <label style="margin:0;">日付</label>
+      <div id="eAllDayRow" style="display:flex;align-items:center;cursor:pointer;">
+        <span style="font-size:12px;color:var(--ink-soft);margin-right:8px;">終日</span>
+        <span class="simple-switch" id="eAllDaySwitch"></span>
+      </div>
     </div>
-    <label style="display:block;margin-top:13px;">日付</label>
-    <div class="due-row"><input type="date" id="eDue"></div>
-    <div class="time-row">
+    <div class="due-row" style="margin-top:8px;"><input type="date" id="eDue"></div>
+    <div class="time-row" id="eTimeRow" style="margin-top:8px;">
       <input type="text" id="eFrom" inputmode="numeric" placeholder="9:00" maxlength="5"><span class="time-sep">〜</span><input type="text" id="eTo" inputmode="numeric" placeholder="10:00" maxlength="5">
     </div>
-    <div class="dur-row">
+    <div class="dur-row" id="eDurRow" style="margin-top:8px;">
       <span class="dur-label">所要：<span id="eDurCalc">—</span></span>
       <div class="dur-presets">
         <button class="dur-p" data-dur="15">15分</button>
@@ -2003,22 +2033,39 @@
         <button class="dur-p" data-dur="120">2時間</button>
       </div>
     </div>
-    <label style="display:block;margin-top:13px;">繰り返し</label>
-    <div class="rep-row" id="eRepRow">
-      <button class="rep-opt active" data-erep="none">なし</button>
-      <button class="rep-opt" data-erep="daily">毎日</button>
-      <button class="rep-opt" data-erep="weekly">毎週</button>
-      <button class="rep-opt" data-erep="monthly">毎月</button>
+    <!-- 3. 繰り返し（折りたたみ） -->
+    <div style="margin-top:21px;">
+      <button class="td-field-btn" id="eRepBtn" style="width:auto;text-align:left;font-size:14px;padding:5px 0;">繰り返し: <span id="eRepLabel">なし</span> ▾</button>
+      <div id="eRepZone" style="display:none;margin-top:8px;">
+        <div class="rep-row" id="eRepRow">
+          <button class="rep-opt active" data-erep="none">なし</button>
+          <button class="rep-opt" data-erep="daily">毎日</button>
+          <button class="rep-opt" data-erep="weekly">毎週</button>
+          <button class="rep-opt" data-erep="monthly">毎月</button>
+        </div>
+        <div class="weekday-row" id="eWeekdayRow" style="display:none;margin-top:8px;">
+          <button class="wd" data-ewd="0">日</button><button class="wd" data-ewd="1">月</button><button class="wd" data-ewd="2">火</button><button class="wd" data-ewd="3">水</button><button class="wd" data-ewd="4">木</button><button class="wd" data-ewd="5">金</button><button class="wd" data-ewd="6">土</button>
+        </div>
+        <div class="monthday-zone" id="eMonthDayZone" style="display:none;margin-top:8px;">
+          <div class="monthday-grid" id="eMonthDayGrid"></div>
+        </div>
+      </div>
     </div>
-    <div class="weekday-row" id="eWeekdayRow" style="display:none;">
-      <button class="wd" data-ewd="0">日</button><button class="wd" data-ewd="1">月</button><button class="wd" data-ewd="2">火</button><button class="wd" data-ewd="3">水</button><button class="wd" data-ewd="4">木</button><button class="wd" data-ewd="5">金</button><button class="wd" data-ewd="6">土</button>
+    <!-- 4. テーマ選択（チップ） -->
+    <label style="display:block;margin-top:21px;">テーマ</label>
+    <select id="eStar" style="display:none;"><option value="">— 未分類</option></select>
+    <div class="theme-chips" id="eThemeChips" style="margin-top:5px;"></div>
+    <div id="eGroupZone" style="display:none;">
+      <label style="display:block;margin-top:13px;font-size:11px;">カテゴリに入れる（任意）</label>
+      <select id="eGroup" style="margin-top:5px;font-size:13px;padding:8px;">
+        <option value="">— 未分類（テーマの直下）</option>
+      </select>
     </div>
-    <div class="monthday-zone" id="eMonthDayZone" style="display:none;">
-      
-      <div class="monthday-grid" id="eMonthDayGrid"></div>
-    </div>
-    <button class="btn-full" id="eSave">追加</button>
-    <button class="btn-ghost danger" id="eDelete" style="display:none;">この予定を削除する</button>
+    <!-- 5. メモ -->
+    <label style="display:block;margin-top:21px;">メモ</label>
+    <textarea id="eMemo" style="min-height:55px;margin-top:5px;" placeholder="場所、相手、持ち物など"></textarea>
+    <button class="btn-full" id="eSave" style="margin-top:21px;">追加</button>
+    <button class="btn-ghost danger" id="eDelete" style="display:none;margin-top:8px;">この予定を削除する</button>
   </div>
 
   <!-- inbox sheet（仮置き：テーマと同じ構造、方向なし） -->
@@ -2038,7 +2085,7 @@
     </div>
   </div>
 
-  <!-- task detail sheet（タスクの中身を見る・サブタスクを足す） -->
+  <!-- task detail sheet（タスクの中身を見る・サブタスクを追加） -->
   <div class="sheet-bg" id="tdbg"></div>
   <div class="sheet vsheet-full" id="tdsheet">
     <button class="vclose-btn" id="tdClose" title="閉じる">×</button>
@@ -2076,7 +2123,7 @@
         <button class="sort-btn" id="tdToggleDone" style="font-size:11px;padding:5px 10px;">完了済みを表示</button>
       </div>
       <div id="tdChildren"></div>
-      <button class="sadd-root" id="tdAddSub" style="margin-top:8px;"><span class="p">+</span> サブタスクを足す</button>
+      <button class="sadd-root" id="tdAddSub" style="margin-top:8px;"><span class="p">+</span> サブタスクを追加</button>
       <div class="td-footer">
         <div class="td-switch-row" id="tdNoLogRow">
           <span>ジャーナルに含める <span id="tdNoLogLabel" style="font-size:11px;color:var(--ink-faint);margin-left:5px;">全部</span></span>
@@ -2107,7 +2154,7 @@
     <label>名前</label>
     <input type="text" id="gpName" placeholder="例：運動／食事／声掛け" style="margin-top:5px;">
     
-    <button class="btn-full" id="gpSave">置く</button>
+    <button class="btn-full" id="gpSave">保存</button>
     <div class="due-note" id="gpDelNote" style="display:none;">カテゴリを削除しても、中のタスクは「未分類」に戻ります。</div>
     <button class="btn-ghost danger" id="gpDelete" style="display:none;">このカテゴリを削除する</button>
     
@@ -2125,7 +2172,7 @@
       <label style="display:block;margin-top:13px;">メモ</label>
       <textarea id="dfMemo" style="min-height:60px;" placeholder="ひとこと。空でもいい。"></textarea>
     </div>
-    <button class="btn-full" id="dfSave">保存する</button>
+    <button class="btn-full" id="dfSave">保存</button>
   </div>
 
   <div class="confirm-bg" id="confirmBg">
@@ -2804,7 +2851,7 @@ function renderStepNodes(steps,path){
     const catPickerOpen=stepCategoryPickerOpen===st.id;
     const dateActiveCls=datePickerOpen?' active':'';
     const catActiveCls=catPickerOpen?' active':'';
-    const actionRow=isSelected?`<div class="inbox-action-row"><button class="inbox-action${dateActiveCls}" data-sba-date="${p}">期日</button><button class="inbox-action${catActiveCls}" data-sba-cat="${p}">カテゴリ</button><button class="inbox-action" data-sba-sub="${p}">+ サブタスク</button><button class="inbox-action" data-sba-del="${p}">削除</button></div>${datePickerOpen?renderStepDatePicker(p,st):''}${catPickerOpen?renderStepCategoryPicker(p,st):''}`:'';
+    const actionRow=isSelected?`<div class="inbox-action-row"><button class="inbox-action${dateActiveCls}" data-sba-date="${p}">日付</button><button class="inbox-action${catActiveCls}" data-sba-cat="${p}">カテゴリ</button><button class="inbox-action" data-sba-sub="${p}">+ サブタスク</button><button class="inbox-action" data-sba-del="${p}">削除</button></div>${datePickerOpen?renderStepDatePicker(p,st):''}${catPickerOpen?renderStepCategoryPicker(p,st):''}`:'';
     return `<div class="snode${isCol?' collapsed':''}${doneCls}${selCls}" data-snode="${p}" data-stepid="${st.id}"><div class="srow"><button class="scheck${st.done?' checked':''}" data-check="${p}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" data-stepid="${st.id}">${esc(st.text)}</span>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button></div>${actionRow}${children}</div>`;
   }).join('');
 }
@@ -2946,7 +2993,7 @@ function openStepEditor(sid,parentPath,editPath,groupId){
     tg.classList.toggle('active',!noSubLog);
     tg.setAttribute('aria-checked',(!noSubLog).toString());
   }
-  document.getElementById('stepSave').textContent=editing?'保存する':'追加';
+  document.getElementById('stepSave').textContent=editing?'保存':'追加';
   document.getElementById('stepDelete').style.display=editing?'block':'none';
   openSheet('sbg','ssheet');
 }
@@ -3752,7 +3799,7 @@ function openStarEditor(starId){
   starDraftMetrics=s?(s.metrics||[]).map(m=>({...m})):[];
   starDraftColor=s?(s.color||'gold'):'gold';
   renderStarColorPalette();
-  document.getElementById('starSave').textContent=s?'保存する':'置く';
+  document.getElementById('starSave').textContent=s?'保存':'追加';
   renderStarMetricsEditor();
   openSheet('ssbg','sssheet');
 }
@@ -3893,7 +3940,7 @@ function renderInboxStepNodes(steps,path){
     const movePickerOpen=inboxMovePickerOpen===st.id;
     const dateActiveCls=pickerOpen?' active':'';
     const moveActiveCls=movePickerOpen?' active':'';
-    const actionRow=isSelected?`<div class="inbox-action-row"><button class="inbox-action${dateActiveCls}" data-iba-date="${p}">期日</button><button class="inbox-action${moveActiveCls}" data-iba-move="${p}">移動</button><button class="inbox-action" data-iba-sub="${p}">+ サブタスク</button><button class="inbox-action" data-iba-del="${p}">削除</button></div>${pickerOpen?renderInboxDatePicker(p,st):''}${movePickerOpen?renderInboxMovePicker(p,st):''}`:'';
+    const actionRow=isSelected?`<div class="inbox-action-row"><button class="inbox-action${dateActiveCls}" data-iba-date="${p}">日付</button><button class="inbox-action${moveActiveCls}" data-iba-move="${p}">移動</button><button class="inbox-action" data-iba-sub="${p}">+ サブタスク</button><button class="inbox-action" data-iba-del="${p}">削除</button></div>${pickerOpen?renderInboxDatePicker(p,st):''}${movePickerOpen?renderInboxMovePicker(p,st):''}`:'';
     return `<div class="snode${isCol?' collapsed':''}${doneCls}${selCls}" data-snode="${p}" data-stepid="${st.id}"><div class="srow inbox-row"><button class="scheck${st.done?' checked':''}" data-check="${p}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></button>${toggleBtn}<div class="stext"><span class="stext-name" data-editname="${p}" data-stepid="${st.id}">${esc(st.text)}</span>${metaLine}${memoLine}${repLine}</div><button class="smini sopen" data-editstep="${p}" title="編集">⋯</button></div>${actionRow}${children}</div>`;
   }).join('');
 }
@@ -5696,7 +5743,7 @@ function openGroupEditor(groupId){
   document.getElementById('gpKind').textContent=g?'EDIT':'NEW';
   document.getElementById('gpHead').textContent=g?'カテゴリを編集':'カテゴリを追加';
   document.getElementById('gpName').value=g?g.name:'';
-  document.getElementById('gpSave').textContent=g?'保存する':'置く';
+  document.getElementById('gpSave').textContent=g?'保存':'追加';
   document.getElementById('gpDelete').style.display=g?'block':'none';
   document.getElementById('gpDelNote').style.display=g?'block':'none';
   openSheet('gpbg','gpsheet');
@@ -6153,6 +6200,9 @@ function setERep(r){
   document.getElementById('eWeekdayRow').style.display=(r==='weekly')?'flex':'none';
   document.getElementById('eMonthDayZone').style.display=(r==='monthly')?'block':'none';
   if(r==='monthly')renderEMonthDayGrid();
+  // ラベル更新
+  const lbl=document.getElementById('eRepLabel');
+  if(lbl)lbl.textContent=r==='none'?'なし':r==='daily'?'毎日':r==='weekly'?'毎週':r==='monthly'?'毎月':'なし';
 }
 function setEWd(arr){eWdState=arr.slice();document.querySelectorAll('#eWeekdayRow .wd').forEach(b=>b.classList.toggle('active',eWdState.includes(+b.dataset.ewd)));}
 function setEMd(arr){eMdState=arr.slice();document.querySelectorAll('#eMonthDayGrid .md').forEach(b=>b.classList.toggle('active',eMdState.includes(+b.dataset.emd)));}
@@ -6162,9 +6212,19 @@ function renderEMonthDayGrid(){
   g.innerHTML=h;setEMd(eMdState);
 }
 function refreshEStarSelect(){
-  const sel=document.getElementById('eStar');const cur=sel.value;
-  sel.innerHTML=`<option value="">— 未分類</option>`+stars.map(s=>`<option value="${s.id}">★ ${esc(s.dir)}</option>`).join('');
-  sel.value=cur;
+  // 隠しselectは互換のため残しつつ、表示はチップで
+  const sel=document.getElementById('eStar');
+  if(sel){const cur=sel.value;sel.innerHTML=`<option value="">— 未分類</option>`+stars.map(s=>`<option value="${s.id}">★ ${esc(s.dir)}</option>`).join('');sel.value=cur;}
+  // チップ生成
+  const chips=document.getElementById('eThemeChips');
+  if(!chips)return;
+  const curId=sel?sel.value:'';
+  let html=`<button class="theme-chip${!curId?' active':''}" data-echip=""><span class="chip-dot" style="background:transparent;border:1px solid var(--line);"></span>未分類</button>`;
+  stars.forEach(s=>{
+    const color=s.color?colorHex(s.color):'#c9a227';
+    html+=`<button class="theme-chip${curId===s.id?' active':''}" data-echip="${s.id}"><span class="chip-dot" style="background:${color};border-color:${color};"></span>${esc(s.dir)}</button>`;
+  });
+  chips.innerHTML=html;
 }
 function refreshEGroupSelect(){
   const sid=document.getElementById('eStar').value;
@@ -6180,7 +6240,6 @@ function refreshEGroupSelect(){
   sel.value=cur;
 }
 function openEventEditor(ev,defaultDue,defaultTime){
-  refreshEStarSelect();
   eEditId=ev?ev.id:null;
   // defaultTimeが文字列なら from にする
   let dft={from:'',to:''};
@@ -6194,13 +6253,32 @@ function openEventEditor(ev,defaultDue,defaultTime){
   document.getElementById('eFrom').value=ev?(ev.from||''):dft.from;
   document.getElementById('eTo').value=ev?(ev.to||''):dft.to;
   document.getElementById('eStar').value=ev?(ev.starId||''):'';
+  // 終日スイッチ：時刻が空なら終日
+  const isAllDay=!(document.getElementById('eFrom').value);
+  const sw=document.getElementById('eAllDaySwitch');
+  if(isAllDay){
+    sw.classList.add('is-on');
+    document.getElementById('eTimeRow').style.display='none';
+    document.getElementById('eDurRow').style.display='none';
+  }else{
+    sw.classList.remove('is-on');
+    document.getElementById('eTimeRow').style.display='';
+    document.getElementById('eDurRow').style.display='';
+  }
+  // テーマチップ反映
+  refreshEStarSelect();
   refreshEGroupSelect();
   document.getElementById('eGroup').value='';
   setERep(ev?(ev.rep||'none'):'none');setEWd(ev?(ev.wd||[]):[]);setEMd(ev?(ev.md||[]):[]);
+  // 繰り返しラベル＆ピッカー閉じ
+  const repVal=ev?(ev.rep||'none'):'none';
+  document.getElementById('eRepLabel').textContent=
+    repVal==='none'?'なし':repVal==='daily'?'毎日':repVal==='weekly'?'毎週':repVal==='monthly'?'毎月':'なし';
+  document.getElementById('eRepZone').style.display=(repVal!=='none')?'block':'none';
   setEKind(ev&&ev.kind==='task'?'task':'event');
   updateEDur();
   document.getElementById('eDelete').style.display=ev?'block':'none';
-  document.getElementById('eSave').textContent=ev?'保存する':'追加';
+  document.getElementById('eSave').textContent=ev?'保存':'追加';
   openSheet('ebg','esheet');
   // 新規追加時のみ、タイトルにカーソル
   if(!ev){
@@ -6211,6 +6289,37 @@ function openEventEditor(ev,defaultDue,defaultTime){
   }
 }
 document.getElementById('addEvent').addEventListener('click',()=>openEventEditor(null,iso(calAnchor||new Date())));
+// テーマチップ
+document.getElementById('eThemeChips').addEventListener('click',e=>{
+  const chip=e.target.closest('[data-echip]');
+  if(!chip)return;
+  const sid=chip.dataset.echip;
+  document.getElementById('eStar').value=sid;
+  document.querySelectorAll('#eThemeChips .theme-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  refreshEGroupSelect();
+});
+// 終日スイッチ
+document.getElementById('eAllDayRow').addEventListener('click',()=>{
+  const sw=document.getElementById('eAllDaySwitch');
+  const willBeOn=!sw.classList.contains('is-on');
+  if(willBeOn){
+    sw.classList.add('is-on');
+    document.getElementById('eFrom').value='';
+    document.getElementById('eTo').value='';
+    document.getElementById('eTimeRow').style.display='none';
+    document.getElementById('eDurRow').style.display='none';
+  }else{
+    sw.classList.remove('is-on');
+    document.getElementById('eTimeRow').style.display='';
+    document.getElementById('eDurRow').style.display='';
+  }
+});
+// 繰り返し折りたたみ
+document.getElementById('eRepBtn').addEventListener('click',()=>{
+  const zone=document.getElementById('eRepZone');
+  zone.style.display=(zone.style.display==='none'||zone.style.display==='')?'block':'none';
+});
 document.getElementById('ebg').addEventListener('click',()=>closeSheet('ebg','esheet'));
 document.getElementById('eStar').addEventListener('change',refreshEGroupSelect);
 document.getElementById('eKindRow').addEventListener('click',e=>{const b=e.target.closest('[data-ekind]');if(b)setEKind(b.dataset.ekind);});
