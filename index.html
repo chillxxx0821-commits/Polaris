@@ -288,14 +288,14 @@
     background:var(--paper);
     border-radius:8px;
     box-shadow:0 1px 4px rgba(0,0,0,0.06);
-    transition:transform 0.28s cubic-bezier(.2,.8,.2,1);
+    transition:transform 0.40s cubic-bezier(.2,.8,.2,1);
     pointer-events:none;
     z-index:0;
   }
   .cal-seg[data-active="0"]::before{transform:translateX(0);}
   .cal-seg[data-active="1"]::before{transform:translateX(100%);}
   .cal-seg[data-active="2"]::before{transform:translateX(200%);}
-  .cal-seg .seg{flex:1;font-family:inherit;font-size:13px;color:var(--ink-soft);background:none;border:none;border-radius:8px;padding:8px 0;transition:color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);position:relative;z-index:1;}
+  .cal-seg .seg{flex:1;font-family:inherit;font-size:13px;color:var(--ink-soft);background:none;border:none;border-radius:8px;padding:8px 0;transition:color 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);position:relative;z-index:1;}
   .cal-seg .seg.active{background:transparent;color:var(--ink);font-weight:700;box-shadow:none;}
   /* vertical (week/day) */
   .vcal{position:relative;margin-top:3px;}
@@ -542,14 +542,17 @@
     border-radius:21px 18px 0 0 !important;
     opacity:1 !important;visibility:hidden;
     transform:translateY(100%) !important;
-    transition:transform 0.28s cubic-bezier(.2,.8,.2,1),visibility 0s linear 0.28s !important;
+    transition:transform 0.42s cubic-bezier(.2,.8,.2,1),visibility 0s linear 0.42s !important;
     padding:21px 21px 21px !important;
     box-shadow:0 -8px 24px rgba(0,0,0,0.12);
   }
   .sheet.half-sheet.open{
     transform:translateY(0) !important;visibility:visible;
-    transition:transform 0.28s cubic-bezier(.2,.8,.2,1),visibility 0s linear 0s !important;
+    transition:transform 0.42s cubic-bezier(.2,.8,.2,1),visibility 0s linear 0s !important;
   }
+  /* 「予定を追加」シートは項目が多く高さがあるため、少しゆっくり出す */
+  #esheet.half-sheet{transition:transform 0.52s cubic-bezier(.2,.8,.2,1),visibility 0s linear 0.52s !important;}
+  #esheet.half-sheet.open{transition:transform 0.52s cubic-bezier(.2,.8,.2,1),visibility 0s linear 0s !important;}
   /* half-sheet が開いている時、対応する sheet-bg を上半分のクリックキャッチ領域に */
   .sheet-bg.half-open{display:block !important;background:rgba(0,0,0,0.15);pointer-events:auto !important;}
   /* 現在時刻ライン */
@@ -1637,11 +1640,11 @@
     position:absolute;inset:0;
     background:var(--paper);
     opacity:0;visibility:hidden;
-    transition:opacity 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition:opacity 0.32s cubic-bezier(0.4, 0.0, 0.2, 1),visibility 0s linear 0.32s;
     z-index:160;overflow-y:auto;
     padding:21px 21px 89px;
   }
-  .today-view.open{opacity:1;visibility:visible;}
+  .today-view.open{opacity:1;visibility:visible;transition:opacity 0.32s cubic-bezier(0.4, 0.0, 0.2, 1),visibility 0s linear 0s;}
   .today-close{
     position:absolute;top:14px;right:14px;
     background:none;border:none;font-family:inherit;
