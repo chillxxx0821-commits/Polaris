@@ -982,7 +982,6 @@
 
   /* テーマカードのトグル＋カテゴリ表示 */
   .lcard-head{display:flex;align-items:center;gap:5px;}
-  .star-cdot{display:inline-block;width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,0.12);position:relative;top:1px;}
   .lcard-head .toggle-btn{font-size:10px;padding:2px 5px 2px 0;color:var(--ink-faint);}
   .lcard-head .star-dir{flex:1;cursor:text;padding:3px 5px;margin-left:-6px;border-radius:3px;transition:background 0.18s cubic-bezier(0.4, 0.0, 0.2, 1),color 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);}
   .lcard-head .star-dir:hover{background:rgba(var(--star-rgb),0.08);}
@@ -2694,8 +2693,7 @@ function renderStars(){
       </div>${showDoneSteps?`<div class="inbox-action-row theme-action-row" style="padding-left:34px;"><button class="inbox-action${doneAtBottom?' active':''}" data-tba-donebottom="${s.id}">完了済みを下にまとめる</button></div>`:''}${archiveExpanded?`<div class="inbox-action-row theme-action-row" style="padding-left:34px;"><button class="inbox-action" data-tba-arc-achieve="${s.id}">達成</button><button class="inbox-action" data-tba-arc-hold="${s.id}">保留</button><button class="inbox-action" data-tba-arc-delete="${s.id}">削除</button></div>`:''}`;
     }
     const themeHex=s.color?colorHex(s.color):'';
-    const cdot=`<span class="star-cdot" style="background:${themeHex||'var(--star)'};"></span>`;
-    return `<div class="lcard${isCol?' collapsed':''}${themeSelCls}" data-tcid="${s.id}"><div class="lcard-head"><button class="toggle-btn" data-togglestar="${s.id}">${tri}</button>${cdot}<div class="star-dir" data-themesel="${s.id}" data-tcdrag="${s.id}">${esc(s.dir)}</div><button class="star-open-btn" data-editstar="${s.id}" title="このテーマを編集">⋯</button></div>${themeActionRow}${body}</div>`;
+    return `<div class="lcard${isCol?' collapsed':''}${themeSelCls}" data-tcid="${s.id}"><div class="lcard-head"><button class="toggle-btn" data-togglestar="${s.id}" style="color:${themeHex||'var(--ink-faint)'};">${tri}</button><div class="star-dir" data-themesel="${s.id}" data-tcdrag="${s.id}">${esc(s.dir)}</div><button class="star-open-btn" data-editstar="${s.id}" title="このテーマを編集">⋯</button></div>${themeActionRow}${body}</div>`;
   }).join('');
 }
 let reorderMode=false;
@@ -3712,6 +3710,7 @@ function goTab(v){
   const dfab=document.getElementById('dualFab');
   if(dfab)dfab.style.display=(v==='stars')?'flex':'none';
   const tfab=document.getElementById('todayFab');
+  if(tfab)tfab.style.display='';
   const cfab=document.getElementById('addEvent');
   if(cfab)cfab.style.display=(v==='cal')?'flex':'none';
   // カレンダータブは余白少し詰める（タイトルは表示）
