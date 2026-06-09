@@ -194,17 +194,11 @@
   .cf-row .cf-state{font-size:11px;color:var(--star);flex-shrink:0;}
   .cf-row.off{opacity:0.4;}
   .cf-row.off .cf-state{color:var(--ink-faint);}
-  .quick-compose{position:absolute;bottom:100px;right:18px;left:calc(100% - var(--qc-fabspan, 145px));z-index:151;display:flex;align-items:center;gap:8px;height:45px;background:var(--ink);color:var(--paper);border:none;border-radius:26px;padding:0 8px 0 13px;box-shadow:0 6px 18px rgba(0,0,0,0.2);opacity:0;pointer-events:none;overflow:hidden;transition:left 0.5s cubic-bezier(0.4,0,0.2,1),opacity 0.9s ease 0.3s;}
-  .quick-compose.open{left:13px;opacity:1;pointer-events:auto;transition:left 0.36s cubic-bezier(0.2,0.8,0.2,1),opacity 0s;}
   .qc-target{flex-shrink:0;font-family:inherit;font-size:11.5px;font-weight:700;color:var(--paper);background:color-mix(in srgb, var(--paper) 20%, transparent);border:none;border-radius:13px;padding:5px 8px;cursor:pointer;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;}
   #qcInput{flex:1;min-width:0;border:none;border-bottom:none;background:transparent;font-family:inherit;font-size:14px;font-weight:400;color:var(--paper);caret-color:var(--paper);outline:none;padding:3px 2px;border-radius:0;}
   #qcInput:focus{border:none;border-bottom:none;border-color:transparent;}
   #qcInput::placeholder{color:var(--paper);opacity:0.5;}
   .qc-close{flex-shrink:0;background:none;border:none;color:var(--paper);opacity:0.6;font-size:14px;cursor:pointer;padding:3px 5px;}
-  .quick-compose>.qc-target,.quick-compose>#qcInput,.quick-compose>.qc-close{transition:opacity 0.28s ease;}
-  .quick-compose:not(.open)>.qc-target,.quick-compose:not(.open)>#qcInput,.quick-compose:not(.open)>.qc-close{opacity:0;}
-  .quick-compose.open>.qc-target,.quick-compose.open>#qcInput{opacity:1;transition:opacity 0.12s ease;}
-  .quick-compose.open>.qc-close{opacity:0.6;transition:opacity 0.12s ease;}
   .qc-menu{position:absolute;left:13px;bottom:150px;min-width:170px;max-height:240px;overflow-y:auto;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.2);padding:5px;display:none;z-index:152;}
   .qc-menu.open{display:block;}
   .qc-menu button{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;font-family:inherit;font-size:13px;color:var(--ink);padding:10px 10px;border-radius:8px;cursor:pointer;text-align:left;}
@@ -631,7 +625,7 @@
     width:10px;height:10px;
     background:#d04a3a;border-radius:50%;
   }
-  .vev .vev-check{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border:1.5px solid var(--ink-soft);border-radius:3px;margin-right:5px;vertical-align:middle;background:transparent;position:relative;overflow:hidden;flex-shrink:0;box-sizing:border-box;}
+  .vev .vev-check{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;min-width:13px;max-width:13px;min-height:13px;max-height:13px;align-self:flex-start;aspect-ratio:1/1;border:1.5px solid var(--ink-soft);border-radius:3px;margin-right:5px;vertical-align:middle;background:transparent;position:relative;overflow:hidden;flex-shrink:0;flex-grow:0;box-sizing:border-box;}
   .vev .vev-check.step{border-color:var(--star);}
   .vev .vev-check .check-svg{display:none;}
   .vev.done .vev-check::after{content:'✓';font-size:10px;line-height:1;font-weight:700;color:var(--ink-soft);}
@@ -1123,7 +1117,8 @@
   }
   .pv-action-row{padding-left:34px;}
   /* テーマカード内のサブタスク */
-  .pv-children{margin-left:21px;}
+  .pv-children{margin-left:7px;padding-left:13px;border-left:1.5px solid var(--line);}
+  .pv-block-nested{padding-left:21px;}
   .pv-toggle{
     background:none;border:none;
     color:var(--ink-faint);font-size:10px;
@@ -1655,16 +1650,29 @@
   }
   .today-fab:active{transform:scale(0.96);}
   .today-fab.active{background:var(--star);}
-  /* 楕円フローティング（今日＋クイック追加） */
+  /* 統合フローティング：1ピルが [今日|＋] ⇄ [入力] に変形（背景は常駐＝重なりなし） */
   .dual-fab{
     position:absolute;bottom:100px;right:18px;
-    background:var(--ink);color:var(--paper);
-    border-radius:34px;
-    display:none;align-items:center;
+    left:calc(100% - var(--df-cw, 127px) - 18px);
+    height:45px;
+    background:color-mix(in srgb, var(--ink) 82%, transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:var(--paper);
+    border-radius:26px;
+    display:none;
     z-index:150;
     box-shadow:0 6px 18px rgba(0,0,0,0.18);
     overflow:hidden;
+    transition:left 0.42s cubic-bezier(0.4,0,0.2,1);
   }
+  .dual-fab.open{left:13px;transition:left 0.36s cubic-bezier(0.2,0.8,0.2,1);}
+  .df-layer{position:absolute;top:0;bottom:0;display:flex;align-items:center;}
+  .df-collapsed{right:0;width:max-content;white-space:nowrap;}
+  .df-expanded{left:0;right:0;gap:8px;padding:0 8px 0 13px;box-sizing:border-box;}
+  /* 閉じる：入力は即フェードアウト、[今日|＋]は縮み終わってから出る */
+  .dual-fab .df-collapsed{opacity:1;pointer-events:auto;transition:opacity 0.25s ease 0.3s;}
+  .dual-fab .df-expanded{opacity:0;pointer-events:none;transition:opacity 0.16s ease;}
+  /* 開く：[今日|＋]は即フェードアウト、入力は伸びてから出る */
+  .dual-fab.open .df-collapsed{opacity:0;pointer-events:none;transition:opacity 0.16s ease;}
+  .dual-fab.open .df-expanded{opacity:1;pointer-events:auto;transition:opacity 0.25s ease 0.2s;}
   .dual-fab-btn{
     background:none;border:none;
     color:var(--paper);font-family:inherit;cursor:pointer;
@@ -1807,17 +1815,18 @@
       </div>
     </section>
 
-    <!-- 楕円フローティング：今日 + クイック追加 -->
+    <!-- 統合フローティング：1つのピルが [今日|＋] ⇄ [入力バー] に変形 -->
     <div class="dual-fab" id="dualFab">
-      <button class="dual-fab-btn dual-fab-today" id="todayFab">今日</button>
-      <span class="dual-fab-sep"></span>
-      <button class="dual-fab-btn dual-fab-add" id="quickAddFab"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 3 L10 17 M3 10 L17 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-    </div>
-
-    <div class="quick-compose" id="quickCompose">
-      <button class="qc-target" id="qcTarget">仮置き ▾</button>
-      <input type="text" id="qcInput" placeholder="入力してEnterで追加" autocomplete="off">
-      <button class="qc-close" id="qcClose" title="閉じる">✕</button>
+      <div class="df-layer df-collapsed">
+        <button class="dual-fab-btn dual-fab-today" id="todayFab">今日</button>
+        <span class="dual-fab-sep"></span>
+        <button class="dual-fab-btn dual-fab-add" id="quickAddFab"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 3 L10 17 M3 10 L17 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="df-layer df-expanded">
+        <button class="qc-target" id="qcTarget">仮置き ▾</button>
+        <input type="text" id="qcInput" placeholder="入力してEnterで追加" autocomplete="off">
+        <button class="qc-close" id="qcClose" title="閉じる">✕</button>
+      </div>
     </div>
     <div class="qc-menu" id="qcMenu"></div>
 
@@ -2569,7 +2578,7 @@ function renderCardTaskRow(s,st,pathStr,kind){
   const dateActiveCls=datePickerOpen?' active':'';
   const catActiveCls=catPickerOpen?' active':'';
   const memoActiveCls=memoPickerOpen?' active':'';
-  const nestedCls=kind==='nested'?' pvrow-nested':'';
+  const nestedCls=kind==='nested'?' pv-block-nested':'';
   const doneCls=st.done?' pv-done':'';
   const selCls=isSelected?' pv-selected':'';
   const actionRow=isSelected?`<div class="inbox-action-row pv-action-row"><button class="inbox-action${dateActiveCls}" data-cba-date="${cbId}">日付</button><button class="inbox-action${memoActiveCls}" data-cba-memo="${cbId}">メモ</button><button class="inbox-action" data-cba-sub="${cbId}">+ サブタスク</button><button class="inbox-action${catActiveCls}" data-cba-cat="${cbId}">カテゴリ</button></div>${datePickerOpen?renderCardDatePicker(cbId,st):''}${catPickerOpen?renderCardCategoryPicker(cbId,st,s):''}${memoPickerOpen?renderCardMemoEditor(cbId,st):''}`:'';
@@ -2593,10 +2602,10 @@ function renderCardTaskRow(s,st,pathStr,kind){
       return renderCardTaskRow(s,cst,cPath,'child');
     }).join('')+'</div>';
   }
-  return `<div class="pv-task-block" data-pvblock="${s.id}::${pathStr}">
+  return `<div class="pv-task-block${nestedCls}" data-pvblock="${s.id}::${pathStr}">
     <div class="pv-swipe-clip">
     <button class="pv-swipe-del" data-cba-del="${cbId}" tabindex="-1">削除</button>
-    <div class="pvrow${nestedCls}${doneCls}${selCls}" data-cardrow="${s.id}::${st.id}" data-stepid="${st.id}" data-cardpath="${s.id}::${pathStr}">
+    <div class="pvrow${doneCls}${selCls}" data-cardrow="${s.id}::${st.id}" data-stepid="${st.id}" data-cardpath="${s.id}::${pathStr}">
       <button class="pv-check ${st.done?'checked':''}" data-sccheck="${cbId}"><svg class="check-svg" viewBox="0 0 14 14"><path d="M 4.2 4 C 4.8 4.5 5.7 5.8 6.6 6.8 C 6.9 7 7.1 6.9 7.3 6.4 C 8.3 4.2 10 1 12.5 -1.5"/></svg></button>
       ${toggleBtn}
       <span class="pv-task-text" data-themeeditname="${cbId}" data-stepid="${st.id}" data-sid="${s.id}">${esc(st.text)}</span>
@@ -7367,13 +7376,14 @@ function qcTargetLabel(){
 }
 async function saveQuickCompose(){try{await window.storage.set(K.quickcompose,JSON.stringify({pinned:qcPinned,target:qcTarget}));}catch(e){}}
 function renderQuickCompose(){
-  const bar=document.getElementById('quickCompose');if(!bar)return;
+  const dfab=document.getElementById('dualFab');if(!dfab)return;
   const onStars=document.getElementById('v-stars').classList.contains('active');
   const open=qcPinned&&onStars;
-  const dfab=document.getElementById('dualFab');
-  if(dfab&&dfab.offsetWidth>0)bar.style.setProperty('--qc-fabspan',(dfab.offsetWidth+18)+'px');
-  bar.classList.toggle('open',open);
-  if(dfab)dfab.style.display=open?'none':(onStars?'flex':'none');
+  dfab.style.display=onStars?'flex':'none';
+  // 畳んだ中身（今日|＋）の実幅を測ってピルの畳み幅に反映
+  const col=dfab.querySelector('.df-collapsed');
+  if(col&&col.offsetWidth>0)dfab.style.setProperty('--df-cw',col.offsetWidth+'px');
+  dfab.classList.toggle('open',open);
   const t=document.getElementById('qcTarget');if(t)t.textContent=qcTargetLabel()+' ▾';
   if(!open)document.getElementById('qcMenu').classList.remove('open');
 }
@@ -7396,9 +7406,9 @@ document.getElementById('qcMenu').addEventListener('click',async e=>{
   document.getElementById('qcInput').focus();
 });
 document.getElementById('qcInput').addEventListener('focus',()=>{document.getElementById('qcMenu').classList.remove('open');setTimeout(qcKbAdjust,100);});
-document.getElementById('qcInput').addEventListener('blur',()=>{const bar=document.getElementById('quickCompose');if(bar)bar.style.bottom='';});
+document.getElementById('qcInput').addEventListener('blur',()=>{const bar=document.getElementById('dualFab');if(bar)bar.style.bottom='';});
 function qcKbAdjust(){
-  const bar=document.getElementById('quickCompose');if(!bar||!bar.classList.contains('open'))return;
+  const bar=document.getElementById('dualFab');if(!bar||!bar.classList.contains('open'))return;
   if(window.visualViewport&&document.activeElement===document.getElementById('qcInput')){
     const kb=window.innerHeight-window.visualViewport.height-window.visualViewport.offsetTop;
     bar.style.bottom=(kb>40?(kb+8):'')+ (kb>40?'px':'');
