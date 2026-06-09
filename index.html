@@ -194,6 +194,22 @@
   .cf-row .cf-state{font-size:11px;color:var(--star);flex-shrink:0;}
   .cf-row.off{opacity:0.4;}
   .cf-row.off .cf-state{color:var(--ink-faint);}
+  .quick-compose{position:absolute;bottom:100px;right:18px;left:calc(100% - var(--qc-fabspan, 145px));z-index:151;display:flex;align-items:center;gap:8px;height:45px;background:var(--ink);color:var(--paper);border:none;border-radius:26px;padding:0 8px 0 13px;box-shadow:0 6px 18px rgba(0,0,0,0.2);opacity:0;pointer-events:none;overflow:hidden;transition:left 0.5s cubic-bezier(0.4,0,0.2,1),opacity 0.9s ease 0.3s;}
+  .quick-compose.open{left:13px;opacity:1;pointer-events:auto;transition:left 0.36s cubic-bezier(0.2,0.8,0.2,1),opacity 0s;}
+  .qc-target{flex-shrink:0;font-family:inherit;font-size:11.5px;font-weight:700;color:var(--paper);background:color-mix(in srgb, var(--paper) 20%, transparent);border:none;border-radius:13px;padding:5px 8px;cursor:pointer;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;}
+  #qcInput{flex:1;min-width:0;border:none;border-bottom:none;background:transparent;font-family:inherit;font-size:14px;font-weight:400;color:var(--paper);caret-color:var(--paper);outline:none;padding:3px 2px;border-radius:0;}
+  #qcInput:focus{border:none;border-bottom:none;border-color:transparent;}
+  #qcInput::placeholder{color:var(--paper);opacity:0.5;}
+  .qc-close{flex-shrink:0;background:none;border:none;color:var(--paper);opacity:0.6;font-size:14px;cursor:pointer;padding:3px 5px;}
+  .quick-compose>.qc-target,.quick-compose>#qcInput,.quick-compose>.qc-close{transition:opacity 0.28s ease;}
+  .quick-compose:not(.open)>.qc-target,.quick-compose:not(.open)>#qcInput,.quick-compose:not(.open)>.qc-close{opacity:0;}
+  .quick-compose.open>.qc-target,.quick-compose.open>#qcInput{opacity:1;transition:opacity 0.12s ease;}
+  .quick-compose.open>.qc-close{opacity:0.6;transition:opacity 0.12s ease;}
+  .qc-menu{position:absolute;left:13px;bottom:150px;min-width:170px;max-height:240px;overflow-y:auto;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.2);padding:5px;display:none;z-index:152;}
+  .qc-menu.open{display:block;}
+  .qc-menu button{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;font-family:inherit;font-size:13px;color:var(--ink);padding:10px 10px;border-radius:8px;cursor:pointer;text-align:left;}
+  .qc-menu button.sel{background:rgba(var(--star-rgb),0.1);}
+  .qc-menu .qc-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
   .sheet-bg.open{display:none;}
   .sheet{position:absolute;left:0;right:0;top:0;bottom:0;background:var(--paper);border-radius:0;padding:21px 21px 89px;opacity:0;transition:opacity 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);z-index:201;overflow-y:auto;visibility:hidden;}
   .sheet.open{opacity:1;visibility:visible;}
@@ -1798,6 +1814,13 @@
       <button class="dual-fab-btn dual-fab-add" id="quickAddFab"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 3 L10 17 M3 10 L17 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
     </div>
 
+    <div class="quick-compose" id="quickCompose">
+      <button class="qc-target" id="qcTarget">仮置き ▾</button>
+      <input type="text" id="qcInput" placeholder="入力してEnterで追加" autocomplete="off">
+      <button class="qc-close" id="qcClose" title="閉じる">✕</button>
+    </div>
+    <div class="qc-menu" id="qcMenu"></div>
+
     <section class="view" id="v-log">
       <textarea id="diffText" placeholder="" style="width:100%;min-height:89px;"></textarea>
       <div id="diffStarPicker" class="diff-theme-picker" style="margin-top:13px;"></div>
@@ -1898,7 +1921,7 @@
     <div class="vfull-inner">
       <div style="display:flex;align-items:center;gap:13px;">
         <h2 class="detail-dir" id="dDir" style="font-size:26px;flex:1;margin:0;line-height:1.65;">—</h2>
-        <button class="td-field-btn" id="dEdit" style="font-size:12px;color:var(--ink-faint);width:auto;flex-shrink:0;padding:5px 0;text-align:right;">編集 ›</button>
+        <button class="td-field-btn" id="dEdit" style="font-size:12px;color:var(--ink-faint);width:auto;flex:0 0 auto;padding:5px 0;text-align:right;">編集 ›</button>
       </div>
       <div class="detail-memo" id="dMemo" style="display:none;"></div>
       <div class="metrics-on-star" id="metricsOnStar"></div>
@@ -2035,6 +2058,10 @@
         <span class="mk-glyph">—</span><div><div class="mk-title">ただ記録したい</div><div class="mk-desc">体温、血圧など、方向は問わず</div></div>
       </button>
     </div>
+    <label style="display:block;margin-top:13px;">表示の仕方</label>
+    <button class="mkind-opt" id="metricDailyToggle" style="margin-top:5px;">
+      <span class="mk-glyph">↻</span><div><div class="mk-title">毎日リセット</div><div class="mk-desc">その日の合計を表示し、0時に0へ戻す（オフ＝これまで通り）</div></div>
+    </button>
     <button class="btn-full" id="metricSave">追加</button>
     <button class="btn-ghost danger" id="metricDelete" style="display:none;">このグラフを削除する</button>
   </div>
@@ -2278,12 +2305,13 @@ if(typeof window.storage==='undefined'||!window.storage){
     }
   };
 }
-const K={v:'polaris:values',s:'polaris:stars',d:'polaris:diffs',va:'polaris:values_arch',sa:'polaris:stars_arch',sh:'polaris:stars_hold',ev:'polaris:events',ml:'polaris:metric_logs',ib:'polaris:inbox',timer:'polaris:timer',calhidden:'polaris:cal_hidden'};
+const K={v:'polaris:values',s:'polaris:stars',d:'polaris:diffs',va:'polaris:values_arch',sa:'polaris:stars_arch',sh:'polaris:stars_hold',ev:'polaris:events',ml:'polaris:metric_logs',ib:'polaris:inbox',timer:'polaris:timer',calhidden:'polaris:cal_hidden',quickcompose:'polaris:quick_compose'};
 // 仮置き：テーマと同じ構造（steps, groups）を持つ単一オブジェクト
 let inbox={id:'__inbox__',steps:[],groups:[]};
 let values=[], stars=[], diffs=[], valuesArch=[], starsArch=[], starsHold=[], events=[], metricLogs=[];
 let activeTimer=null, timerTick=null;
 let calHidden=new Set();
+let qcPinned=false, qcTarget='__inbox__';
 const SEED=['ロールモデル','理想的な職場','10年後','大事にしたい時間','機嫌よくいられる条件','ゆずれないこと','憧れの人','心地よい暮らし','手放したいこと','すり減ること'];
 const TITLES={
   values:['価値観','自分が大事にしたいこと'],
@@ -2320,6 +2348,7 @@ async function load(){
   try{const r=await window.storage.get(K.ml);if(r)metricLogs=JSON.parse(r.value);}catch(e){}
   try{const r=await window.storage.get(K.timer);if(r)activeTimer=JSON.parse(r.value);}catch(e){}
   try{const r=await window.storage.get(K.calhidden);if(r)calHidden=new Set(JSON.parse(r.value));}catch(e){}
+  try{const r=await window.storage.get(K.quickcompose);if(r){const o=JSON.parse(r.value);qcPinned=!!o.pinned;qcTarget=o.target||'__inbox__';}}catch(e){}
   // 日付が変わっていたら（前日からの計測・止め忘れ）は持ち越さずリセット
   if(activeTimer&&activeTimer.createdDay!==iso(new Date())){activeTimer=null;try{await window.storage.delete(K.timer);}catch(e){}}
   try{const r=await window.storage.get(K.ib);if(r){const o=JSON.parse(r.value);inbox.steps=o.steps||[];inbox.groups=o.groups||[];}}catch(e){}
@@ -3004,7 +3033,10 @@ function renderMetricsOnStar(){
   box.innerHTML=ms.map(m=>{
     const logs=metricLogs.filter(l=>l.starId===detailSid&&l.metricId===m.id).sort((a,b)=>b.ts-a.ts);
     let cur='—';
-    if(logs.length){
+    if(m.daily){
+      const t0=new Date();t0.setHours(0,0,0,0);
+      cur=logs.filter(l=>l.ts>=t0.getTime()).reduce((a,b)=>a+b.val,0);
+    }else if(logs.length){
       if(m.kind==='sum')cur=logs.reduce((a,b)=>a+b.val,0);
       else cur=logs[0].val;
     }
@@ -3024,6 +3056,7 @@ function renderMetricsOnStar(){
 
 let metricEditCtx=null; // {starId, metricId|null} | {draft:true, index:number|null}
 function setMKindActive(k){document.querySelectorAll('#metricKindList .mkind-opt').forEach(b=>b.classList.toggle('active',b.dataset.mk===k));}
+document.getElementById('metricDailyToggle').addEventListener('click',function(){this.classList.toggle('active');});
 function openMetricEditor(starId,metricIdOrIndex){
   const isDraft=starId==='__draft__';
   let m=null;
@@ -3040,6 +3073,7 @@ function openMetricEditor(starId,metricIdOrIndex){
   document.getElementById('metricName').value=m?m.name:'';
   document.getElementById('metricUnitField').value=m?(m.unit||''):'';
   setMKindActive(m?m.kind:'up');
+  document.getElementById('metricDailyToggle').classList.toggle('active',m?!!m.daily:false);
   document.getElementById('metricDelete').style.display=m?'block':'none';
   openSheet('mbg','msheet');
 }
@@ -3951,6 +3985,7 @@ function goTab(v){
     if(tv){tv.classList.remove('open');if(tfab)tfab.classList.remove('active');}
   }
   if(v!=='archive')prevTab=v;
+  renderQuickCompose();
   if(v==='trail')renderTrail();if(v==='log')renderStarSelect();if(v==='week')renderWeek();if(v==='archive')renderArchive();if(v==='cal')renderCal();
 }
 
@@ -5132,11 +5167,12 @@ document.getElementById('metricSave').addEventListener('click',async()=>{
   const name=document.getElementById('metricName').value.trim();if(!name){toast('指標の名前を入れてください');return;}
   const unit=document.getElementById('metricUnitField').value.trim()||null;
   const active=document.querySelector('#metricKindList .mkind-opt.active');const kind=active?active.dataset.mk:'up';
+  const daily=document.getElementById('metricDailyToggle').classList.contains('active');
   if(metricEditCtx.draft){
-    const m={id:uid(),name,unit,kind};
+    const m={id:uid(),name,unit,kind,daily};
     if(metricEditCtx.index!=null){
       // 既存ドラフト編集
-      starDraftMetrics[metricEditCtx.index]={...starDraftMetrics[metricEditCtx.index],name,unit,kind};
+      starDraftMetrics[metricEditCtx.index]={...starDraftMetrics[metricEditCtx.index],name,unit,kind,daily};
     }else{
       starDraftMetrics.push(m);
     }
@@ -5146,9 +5182,9 @@ document.getElementById('metricSave').addEventListener('click',async()=>{
   const s=stars.find(x=>x.id===metricEditCtx.starId);if(!s)return;
   if(!s.metrics)s.metrics=[];
   if(metricEditCtx.metricId){
-    const m=s.metrics.find(x=>x.id===metricEditCtx.metricId);if(m){m.name=name;m.unit=unit;m.kind=kind;}
+    const m=s.metrics.find(x=>x.id===metricEditCtx.metricId);if(m){m.name=name;m.unit=unit;m.kind=kind;m.daily=daily;}
   }else{
-    s.metrics.push({id:uid(),name,unit,kind});
+    s.metrics.push({id:uid(),name,unit,kind,daily});
   }
   await ss();renderMetricsOnStar();renderStars();closeSheet('mbg','msheet');toast('グラフを追加しました');
 });
@@ -7325,11 +7361,67 @@ document.getElementById('todayFab').addEventListener('click',()=>{
 });
 
 // クイック追加：仮置きに即追加
-document.getElementById('quickAddFab').addEventListener('click',()=>{
-  preFocusForKeyboard();
-  document.getElementById('qaInput').value='';
-  openSheet('qabg','qasheet');
-  setTimeout(()=>document.getElementById('qaInput').focus(),350);
+function qcTargetLabel(){
+  if(qcTarget==='__inbox__')return '仮置き';
+  const s=stars.find(x=>x.id===qcTarget);return s?(s.dir||'(無題)'):'仮置き';
+}
+async function saveQuickCompose(){try{await window.storage.set(K.quickcompose,JSON.stringify({pinned:qcPinned,target:qcTarget}));}catch(e){}}
+function renderQuickCompose(){
+  const bar=document.getElementById('quickCompose');if(!bar)return;
+  const onStars=document.getElementById('v-stars').classList.contains('active');
+  const open=qcPinned&&onStars;
+  const dfab=document.getElementById('dualFab');
+  if(dfab&&dfab.offsetWidth>0)bar.style.setProperty('--qc-fabspan',(dfab.offsetWidth+18)+'px');
+  bar.classList.toggle('open',open);
+  if(dfab)dfab.style.display=open?'none':(onStars?'flex':'none');
+  const t=document.getElementById('qcTarget');if(t)t.textContent=qcTargetLabel()+' ▾';
+  if(!open)document.getElementById('qcMenu').classList.remove('open');
+}
+function renderQcMenu(){
+  const menu=document.getElementById('qcMenu');
+  let h=`<button data-qct="__inbox__" class="${qcTarget==='__inbox__'?'sel':''}"><span class="qc-dot" style="background:#8a8f9c"></span>仮置き</button>`;
+  h+=stars.map(s=>`<button data-qct="${s.id}" class="${qcTarget===s.id?'sel':''}"><span class="qc-dot" style="background:${s.color?colorHex(s.color):'#5a7a9c'}"></span>${esc(s.dir||'(無題)')}</button>`).join('');
+  menu.innerHTML=h;
+}
+document.getElementById('quickAddFab').addEventListener('click',async()=>{
+  qcPinned=!qcPinned;await saveQuickCompose();renderQuickCompose();
+  if(qcPinned){preFocusForKeyboard();setTimeout(()=>document.getElementById('qcInput').focus(),60);}
+});
+document.getElementById('qcClose').addEventListener('click',async()=>{qcPinned=false;await saveQuickCompose();renderQuickCompose();});
+document.getElementById('qcTarget').addEventListener('click',()=>{renderQcMenu();document.getElementById('qcMenu').classList.toggle('open');});
+document.getElementById('qcMenu').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-qct]');if(!b)return;
+  qcTarget=b.dataset.qct;await saveQuickCompose();renderQuickCompose();
+  document.getElementById('qcMenu').classList.remove('open');
+  document.getElementById('qcInput').focus();
+});
+document.getElementById('qcInput').addEventListener('focus',()=>{document.getElementById('qcMenu').classList.remove('open');setTimeout(qcKbAdjust,100);});
+document.getElementById('qcInput').addEventListener('blur',()=>{const bar=document.getElementById('quickCompose');if(bar)bar.style.bottom='';});
+function qcKbAdjust(){
+  const bar=document.getElementById('quickCompose');if(!bar||!bar.classList.contains('open'))return;
+  if(window.visualViewport&&document.activeElement===document.getElementById('qcInput')){
+    const kb=window.innerHeight-window.visualViewport.height-window.visualViewport.offsetTop;
+    bar.style.bottom=(kb>40?(kb+8):'')+ (kb>40?'px':'');
+    if(kb<=40)bar.style.bottom='';
+  }else{bar.style.bottom='';}
+}
+if(window.visualViewport){window.visualViewport.addEventListener('resize',qcKbAdjust);window.visualViewport.addEventListener('scroll',qcKbAdjust);}
+document.getElementById('qcInput').addEventListener('keydown',async e=>{
+  if(e.key!=='Enter')return;
+  if(e.isComposing||e.keyCode===229)return;
+  e.preventDefault();
+  const txt=e.target.value.trim();if(!txt)return;
+  const step={id:uid(),text:txt,due:null,memo:null,rep:'none',done:false,children:[]};
+  if(qcTarget==='__inbox__'){
+    if(!inbox.steps)inbox.steps=[];inbox.steps.push(step);await sib();
+    if(typeof renderInboxTree==='function')renderInboxTree();
+    toast('仮置きに追加しました');
+  }else{
+    const s=stars.find(x=>x.id===qcTarget);
+    if(s){if(!s.steps)s.steps=[];s.steps.push(step);await ss();renderStars();toast('「'+esc(s.dir||'')+'」に追加しました');}
+    else{toast('テーマが見つかりません');}
+  }
+  e.target.value='';
 });
 document.getElementById('qabg').addEventListener('click',()=>closeSheet('qabg','qasheet'));
 document.getElementById('qaInput').addEventListener('keydown',async e=>{
