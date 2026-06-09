@@ -184,6 +184,16 @@
   /* 指標(グラフ)編集はテーマ編集の上に出る必要がある */
   #mbg{z-index:450;}
   #msheet{z-index:451 !important;}
+  #cfbg{z-index:415;}
+  #calFilterSheet{z-index:416 !important;}
+  .cal-filter-btn{background:none;border:none;color:var(--ink-soft);cursor:pointer;padding:4px 7px;display:inline-flex;align-items:center;border-radius:8px;}
+  .cal-filter-btn:active{transform:scale(0.94);}
+  .cf-row{display:flex;align-items:center;gap:11px;width:100%;background:none;border:none;border-bottom:1px solid var(--line);padding:13px 4px;font-family:inherit;cursor:pointer;text-align:left;}
+  .cf-row .cf-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+  .cf-row .cf-name{flex:1;font-size:14px;color:var(--ink);}
+  .cf-row .cf-state{font-size:11px;color:var(--star);flex-shrink:0;}
+  .cf-row.off{opacity:0.4;}
+  .cf-row.off .cf-state{color:var(--ink-faint);}
   .sheet-bg.open{display:none;}
   .sheet{position:absolute;left:0;right:0;top:0;bottom:0;background:var(--paper);border-radius:0;padding:21px 21px 89px;opacity:0;transition:opacity 0.18s cubic-bezier(0.4, 0.0, 0.2, 1);z-index:201;overflow-y:auto;visibility:hidden;}
   .sheet.open{opacity:1;visibility:visible;}
@@ -336,15 +346,43 @@
   .metric-unit-label{font-size:14px;color:var(--ink-soft);}
   /* metrics on star detail */
   .metrics-on-star{margin-top:13px;display:flex;flex-direction:column;gap:8px;}
-  .mcard{display:flex;align-items:center;gap:8px;background:var(--paper-warm);border:1px solid var(--line);border-radius:13px;padding:13px 13px;}
+  .mcard{display:flex;align-items:center;flex-wrap:wrap;gap:8px;background:var(--paper-warm);border:1px solid var(--line);border-radius:13px;padding:13px 13px;}
   .mcard .mg{font-size:18px;color:var(--star);flex-shrink:0;}
   .mcard.flat .mg{color:#5a7a9c;}
-  .mcard .mname{flex:1;font-size:14px;font-weight:700;color:var(--ink);}
-  .mcard .mcur{font-size:14px;color:var(--ink-soft);font-weight:700;}
+  .mcard .mname{flex:1;min-width:0;font-size:14px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .mcard .mcur{font-size:14px;color:var(--ink-soft);font-weight:700;white-space:nowrap;flex-shrink:0;}
   .mcard .mcur .u{font-size:11px;color:var(--ink-faint);margin-left:2px;}
   .mcard .mrec{font-family:inherit;background:var(--star);color:#fff;border:none;border-radius:8px;padding:5px 13px;font-size:11.5px;font-weight:700;}
   .mcard .mrec:active{transform:scale(0.96);}
   .mcard .medit{background:none;border:none;color:var(--ink-faint);font-size:14px;}
+  .m-timer-btn{font-family:inherit;font-size:11px;color:var(--star);background:transparent;border:1px solid var(--star);border-radius:12px;padding:4px 12px;cursor:pointer;flex-shrink:0;white-space:nowrap;}
+  .m-timer-btn:active{transform:scale(0.96);}
+  .m-timer-btn.stop{color:#c98a6a;border-color:#c98a6a;}
+  .mcard .m-timer-run{flex-basis:100%;justify-content:flex-end;margin-top:2px;}
+  .m-timer-run{display:inline-flex;align-items:center;flex-wrap:wrap;gap:7px;}
+  .m-timer-elapsed{font-variant-numeric:tabular-nums;font-size:12.5px;color:var(--star);font-weight:700;}
+  .timer-fs{position:absolute;inset:0;z-index:460;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#0e1320,#141a2b 50%,#10161f);color:#f4f7fb;opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.04);transition:opacity 0.5s ease,transform 0.6s cubic-bezier(.2,.8,.2,1),visibility 0s linear 0.5s;}
+  .timer-fs.open{opacity:1;visibility:visible;pointer-events:auto;transform:scale(1);transition:opacity 0.5s ease,transform 0.6s cubic-bezier(.2,.8,.2,1);}
+  .tfs-label,.timer-fs .tfs-time,.tfs-controls{position:relative;z-index:1;}
+  .tfs-bg{position:absolute;inset:0;overflow:hidden;z-index:0;}
+  .tfs-bg .b{position:absolute;border-radius:50%;filter:blur(70px);opacity:0.42;mix-blend-mode:screen;}
+  .tfs-bg .b1{width:62%;height:62%;left:-12%;top:-6%;background:radial-gradient(circle,#3b6f8c,transparent 70%);animation:tfsDrift1 26s ease-in-out infinite;}
+  .tfs-bg .b2{width:56%;height:56%;right:-10%;top:18%;background:radial-gradient(circle,#5b4f9c,transparent 70%);animation:tfsDrift2 33s ease-in-out infinite;}
+  .tfs-bg .b3{width:52%;height:52%;left:12%;bottom:-14%;background:radial-gradient(circle,#2f7f78,transparent 70%);animation:tfsDrift3 30s ease-in-out infinite;}
+  @keyframes tfsDrift1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(9%,11%) scale(1.16);}}
+  @keyframes tfsDrift2{0%,100%{transform:translate(0,0) scale(1.1);}50%{transform:translate(-11%,7%) scale(0.95);}}
+  @keyframes tfsDrift3{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(7%,-9%) scale(1.2);}}
+  @media (prefers-reduced-motion: reduce){.tfs-bg .b{animation:none;}}
+  .tfs-close{position:absolute;top:20px;right:20px;z-index:2;background:none;border:none;color:#f4f7fb;font-size:20px;opacity:0.55;cursor:pointer;padding:8px;}
+  .tfs-label{font-size:13px;letter-spacing:0.05em;opacity:0.7;margin-bottom:20px;text-align:center;padding:0 28px;max-width:90%;}
+  .timer-fs .tfs-time{font-size:clamp(54px,19vw,92px);font-weight:300;line-height:1;color:#f4f7fb;}
+  .tfs-controls{display:flex;gap:11px;margin-top:44px;flex-wrap:wrap;justify-content:center;padding:0 20px;}
+  .tfs-btn{font-family:inherit;font-size:14px;color:#f4f7fb;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.22);border-radius:22px;padding:11px 22px;cursor:pointer;}
+  .tfs-btn.primary{background:#f4f7fb;color:#10131c;border-color:#f4f7fb;font-weight:700;}
+  .tfs-btn.ghost{background:none;border-color:transparent;opacity:0.6;}
+  .tfs-btn:active{transform:scale(0.97);}
+  .tfs-discard{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:1;background:none;border:none;font-family:inherit;font-size:12px;color:#f4f7fb;opacity:0.38;cursor:pointer;padding:9px 16px;letter-spacing:0.02em;transition:opacity 0.2s,color 0.2s;}
+  .tfs-discard.warn{opacity:0.95;color:#e8927c;}
   /* metric kind list */
   .metric-kind-list{display:flex;flex-direction:column;gap:8px;margin-top:5px;}
   .mkind-opt{display:flex;gap:13px;align-items:center;font-family:inherit;background:var(--paper-warm);border:1px solid var(--line);border-radius:13px;padding:13px 13px;text-align:left;}
@@ -1789,7 +1827,7 @@
     </section>
 
     <section class="view" id="v-cal">
-      <div class="cal-head"><div class="cal-mo" id="calMonth">—</div><button class="cal-today-btn" id="calToday" title="今日に戻る">今日</button></div>
+      <div class="cal-head"><div class="cal-mo" id="calMonth">—</div><div style="display:flex;align-items:center;gap:4px;"><button class="cal-filter-btn" id="calFilterBtn" title="テーマで表示／非表示"><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M2 4 H16 L11 9.5 V15 L7 15 V9.5 Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></button><button class="cal-today-btn" id="calToday" title="今日に戻る">今日</button></div></div>
       <div id="calMonthView"><div class="cal-grid" id="calGrid"></div></div>
       <div id="calWeekView" style="display:none;"></div>
       <div id="calDayView" style="display:none;"></div>
@@ -1800,6 +1838,14 @@
       </div>
     </section>
     <button class="cal-fab" id="addEvent" title="予定を追加"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3 L10 17 M3 10 L17 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+
+    <div class="sheet-bg" id="cfbg"></div>
+    <div class="sheet half-sheet" id="calFilterSheet">
+      <div class="grip"></div>
+      <h2 style="font-size:17px;margin-bottom:4px;">カレンダーに表示するテーマ</h2>
+      <p style="font-size:12px;color:var(--ink-soft);margin-bottom:13px;">タップで表示／非表示を切り替え</p>
+      <div id="calFilterList"></div>
+    </div>
 
     <section class="view" id="v-week">
       
@@ -1958,7 +2004,7 @@
     <div class="sword">DONE</div>
     <h2 style="font-size:18px;" id="cTask">—</h2>
     <div id="cMetricZone" style="display:none;margin-bottom:13px;"></div>
-    <label>ひとこと残す（任意）</label>
+    <label id="cNoteLabel">ひとこと残す（任意）</label>
     <textarea id="cNote" placeholder="気づき／やったこと／思ったこと"></textarea>
     <button class="btn-full" id="cConfirm">完了</button>
     <button class="btn-ghost" id="cSkipLog">記録しないで完了</button>
@@ -2100,6 +2146,12 @@
           </div>
           <div id="tdDatePicker" style="display:none;"></div>
         </div>
+        <div class="td-field" id="tdFieldTimer" style="display:none;">
+          <div class="td-field-main">
+            <div class="td-field-label">計測</div>
+            <div id="tdTimerCtl"></div>
+          </div>
+        </div>
         <div class="td-field" id="tdFieldCat" style="display:none;">
           <div class="td-field-main">
             <div class="td-field-label">カテゴリ</div>
@@ -2180,7 +2232,32 @@
     </div>
   </div>
 
+  <div class="confirm-bg" id="rscopeBg">
+    <div class="confirm">
+      <h3 id="rscopeTitle">繰り返しの予定を変更</h3>
+      <p id="rscopeMsg" style="margin-bottom:13px;">この変更をどの範囲に反映しますか？</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn-full" id="rscopeThis">この予定のみ</button>
+        <button class="btn-full" id="rscopeAfter">これ以降すべて</button>
+        <button class="btn-full" id="rscopeAll" style="display:none;">すべての予定</button>
+        <button class="btn-ghost" id="rscopeCancel">キャンセル</button>
+      </div>
+    </div>
+  </div>
 
+
+
+  <div class="timer-fs" id="timerFs">
+    <div class="tfs-bg"><span class="b b1"></span><span class="b b2"></span><span class="b b3"></span></div>
+    <button class="tfs-close" id="tfsClose" aria-label="閉じる">✕</button>
+    <div class="tfs-label" id="tfsLabel">計測中</div>
+    <div class="tfs-time m-timer-elapsed" id="tfsTime">0:00</div>
+    <div class="tfs-controls">
+      <button class="tfs-btn" id="tfsPause">一時停止</button>
+      <button class="tfs-btn primary" id="tfsComplete">完了</button>
+    </div>
+    <button class="tfs-discard" id="tfsCancel">記録せずにやめる</button>
+  </div>
 
   <div class="toast" id="toast"></div>
 </div>
@@ -2201,10 +2278,12 @@ if(typeof window.storage==='undefined'||!window.storage){
     }
   };
 }
-const K={v:'polaris:values',s:'polaris:stars',d:'polaris:diffs',va:'polaris:values_arch',sa:'polaris:stars_arch',sh:'polaris:stars_hold',ev:'polaris:events',ml:'polaris:metric_logs',ib:'polaris:inbox'};
+const K={v:'polaris:values',s:'polaris:stars',d:'polaris:diffs',va:'polaris:values_arch',sa:'polaris:stars_arch',sh:'polaris:stars_hold',ev:'polaris:events',ml:'polaris:metric_logs',ib:'polaris:inbox',timer:'polaris:timer',calhidden:'polaris:cal_hidden'};
 // 仮置き：テーマと同じ構造（steps, groups）を持つ単一オブジェクト
 let inbox={id:'__inbox__',steps:[],groups:[]};
 let values=[], stars=[], diffs=[], valuesArch=[], starsArch=[], starsHold=[], events=[], metricLogs=[];
+let activeTimer=null, timerTick=null;
+let calHidden=new Set();
 const SEED=['ロールモデル','理想的な職場','10年後','大事にしたい時間','機嫌よくいられる条件','ゆずれないこと','憧れの人','心地よい暮らし','手放したいこと','すり減ること'];
 const TITLES={
   values:['価値観','自分が大事にしたいこと'],
@@ -2239,6 +2318,10 @@ async function load(){
   try{const r=await window.storage.get(K.sh);if(r)starsHold=JSON.parse(r.value);}catch(e){}
   try{const r=await window.storage.get(K.ev);if(r)events=JSON.parse(r.value);}catch(e){}
   try{const r=await window.storage.get(K.ml);if(r)metricLogs=JSON.parse(r.value);}catch(e){}
+  try{const r=await window.storage.get(K.timer);if(r)activeTimer=JSON.parse(r.value);}catch(e){}
+  try{const r=await window.storage.get(K.calhidden);if(r)calHidden=new Set(JSON.parse(r.value));}catch(e){}
+  // 日付が変わっていたら（前日からの計測・止め忘れ）は持ち越さずリセット
+  if(activeTimer&&activeTimer.createdDay!==iso(new Date())){activeTimer=null;try{await window.storage.delete(K.timer);}catch(e){}}
   try{const r=await window.storage.get(K.ib);if(r){const o=JSON.parse(r.value);inbox.steps=o.steps||[];inbox.groups=o.groups||[];}}catch(e){}
   await loadCollapsed();
   await loadCollapsedStarCards();
@@ -2282,6 +2365,21 @@ function confirmAsk(title,msg){
 }
 document.getElementById('cfYes').onclick=()=>{document.getElementById('confirmBg').classList.remove('open');cfResolve&&cfResolve(true);};
 document.getElementById('cfNo').onclick=()=>{document.getElementById('confirmBg').classList.remove('open');cfResolve&&cfResolve(false);};
+let rscopeResolve=null;
+function chooseRecurScope(opts){
+  opts=opts||{};
+  document.getElementById('rscopeTitle').textContent=opts.title||'繰り返しの予定を変更';
+  document.getElementById('rscopeMsg').textContent=opts.msg||'この変更をどの範囲に反映しますか？';
+  document.getElementById('rscopeAll').style.display=opts.showAll?'':'none';
+  document.getElementById('rscopeBg').classList.add('open');
+  return new Promise(res=>{rscopeResolve=res;});
+}
+function _rscopeDone(v){document.getElementById('rscopeBg').classList.remove('open');const r=rscopeResolve;rscopeResolve=null;r&&r(v);}
+document.getElementById('rscopeThis').onclick=()=>_rscopeDone('this');
+document.getElementById('rscopeAfter').onclick=()=>_rscopeDone('after');
+document.getElementById('rscopeAll').onclick=()=>_rscopeDone('all');
+document.getElementById('rscopeCancel').onclick=()=>_rscopeDone(null);
+function dayBefore(isoStr){const d=new Date(isoStr+'T00:00:00');d.setDate(d.getDate()-1);return iso(d);}
 
 /* VALUES */
 function renderValues(){
@@ -2744,6 +2842,158 @@ function openStarDetail(sid){
   if(s)openDetail(s);
 }
 
+function isTimeUnit(u){return !!u && (u.includes('分')||u.includes('時'));}
+function fmtElapsed(ms){const s=Math.floor(ms/1000);const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return (h?h+':':'')+String(m).padStart(h?2:1,'0')+':'+String(sec).padStart(2,'0');}
+function timerElapsedMs(t){t=t||activeTimer;if(!t)return 0;const acc=t.accumMs||0;return t.startTs?acc+(Date.now()-t.startTs):acc;}
+function timerRunning(){return !!(activeTimer&&activeTimer.startTs);}
+async function persistTimer(){try{await window.storage.set(K.timer,JSON.stringify(activeTimer));}catch(e){}}
+function ensureTimerTick(){
+  if(timerTick)return;
+  timerTick=setInterval(()=>{
+    if(!activeTimer){clearInterval(timerTick);timerTick=null;return;}
+    const txt=fmtElapsed(timerElapsedMs());
+    document.querySelectorAll('.m-timer-elapsed').forEach(el=>el.textContent=txt);
+  },1000);
+}
+async function pauseTimer(){
+  if(!activeTimer||!activeTimer.startTs)return;
+  activeTimer.accumMs=(activeTimer.accumMs||0)+(Date.now()-activeTimer.startTs);
+  activeTimer.startTs=null;
+  await persistTimer();updateTimerViews();
+}
+async function resumeTimer(){
+  if(!activeTimer||activeTimer.startTs)return;
+  activeTimer.startTs=Date.now();
+  await persistTimer();ensureTimerTick();updateTimerViews();
+}
+function updateTimerViews(){renderMetricsOnStar();renderTdTimer();renderTimerFs();}
+async function startMetricTimer(metricId){
+  if(activeTimer){toast('すでに計測中です');return;}
+  activeTimer={kind:'metric',starId:detailSid,metricId,startTs:Date.now(),accumMs:0,createdDay:iso(new Date())};
+  await persistTimer();
+  renderMetricsOnStar();ensureTimerTick();
+}
+async function clearActiveTimer(){
+  activeTimer=null;
+  if(timerTick){clearInterval(timerTick);timerTick=null;}
+  try{await window.storage.delete(K.timer);}catch(e){}
+}
+// タスク用タイマー（タスク詳細から計測。完了時に時間を完了シートへ渡す）
+function taskTimerOn(sid,path){
+  return !!(activeTimer&&activeTimer.kind==='task'&&activeTimer.sid===sid&&encPath(activeTimer.path)===encPath(path));
+}
+async function startTaskTimer(){
+  if(activeTimer){toast('すでに計測中です');return;}
+  if(!taskDetailPath)return;
+  activeTimer={kind:'task',sid:detailSid,path:taskDetailPath,startTs:Date.now(),accumMs:0,createdDay:iso(new Date())};
+  await persistTimer();
+  renderTdTimer();ensureTimerTick();
+}
+async function cancelTaskTimer(){
+  if(!activeTimer||activeTimer.kind!=='task')return;
+  await clearActiveTimer();
+  renderTdTimer();
+}
+function timerFsName(){
+  if(!activeTimer)return '計測中';
+  if(activeTimer.kind==='metric'){const s=getContainer(activeTimer.starId);const m=s&&(s.metrics||[]).find(x=>x.id===activeTimer.metricId);return m?m.name:'計測中';}
+  const s=getContainer(activeTimer.sid);const node=s&&getStepByPath(s,activeTimer.path);return node?node.text:'計測中';
+}
+function renderTimerFs(){
+  const fs=document.getElementById('timerFs');if(!fs||!fs.classList.contains('open'))return;
+  if(!activeTimer){closeTimerFs();return;}
+  document.getElementById('tfsTime').textContent=fmtElapsed(timerElapsedMs());
+  document.getElementById('tfsPause').textContent=timerRunning()?'一時停止':'再開';
+  document.getElementById('tfsComplete').textContent=activeTimer.kind==='metric'?'記録して終了':'完了して記録';
+  document.getElementById('tfsLabel').textContent=timerFsName();
+}
+let wakeLockObj=null;
+async function requestWake(){try{if('wakeLock'in navigator)wakeLockObj=await navigator.wakeLock.request('screen');}catch(e){}}
+function releaseWake(){try{if(wakeLockObj){wakeLockObj.release();wakeLockObj=null;}}catch(e){}}
+function openTimerFs(){
+  if(!activeTimer)return;
+  resetTfsCancel();
+  document.getElementById('timerFs').classList.add('open');
+  renderTimerFs();ensureTimerTick();requestWake();
+}
+function closeTimerFs(){document.getElementById('timerFs').classList.remove('open');resetTfsCancel();releaseWake();}
+let tfsCancelArmed=false,tfsCancelTimer=null;
+function resetTfsCancel(){tfsCancelArmed=false;if(tfsCancelTimer){clearTimeout(tfsCancelTimer);tfsCancelTimer=null;}const b=document.getElementById('tfsCancel');if(b){b.textContent='記録せずにやめる';b.classList.remove('warn');}}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&document.getElementById('timerFs').classList.contains('open')&&timerRunning())requestWake();});
+document.getElementById('tfsClose').onclick=closeTimerFs;
+document.getElementById('tfsPause').onclick=()=>{timerRunning()?pauseTimer():resumeTimer();};
+document.getElementById('tfsCancel').onclick=async()=>{
+  const btn=document.getElementById('tfsCancel');
+  if(!tfsCancelArmed){
+    tfsCancelArmed=true;
+    btn.textContent='もう一度タップで記録が消えます';
+    btn.classList.add('warn');
+    if(tfsCancelTimer)clearTimeout(tfsCancelTimer);
+    tfsCancelTimer=setTimeout(resetTfsCancel,4000);
+    return;
+  }
+  resetTfsCancel();
+  await clearActiveTimer();updateTimerViews();closeTimerFs();toast('記録せずにやめました');
+};
+document.getElementById('tfsComplete').onclick=async()=>{
+  if(!activeTimer)return;
+  if(activeTimer.kind==='metric'){closeTimerFs();stopMetricTimer();}
+  else{const t=activeTimer;closeTimerFs();detailSid=t.sid;taskDetailPath=t.path;await completeStep(null,t.path);}
+};
+document.addEventListener('click',e=>{
+  if(e.target.closest('[data-timer-fs]')){openTimerFs();return;}
+  if(e.target.closest('[data-timer-pause]')){pauseTimer();return;}
+  if(e.target.closest('[data-timer-resume]')){resumeTimer();return;}
+});
+function renderTdTimer(){
+  const field=document.getElementById('tdFieldTimer');const ctl=document.getElementById('tdTimerCtl');
+  if(!field||!ctl){return;}
+  if(!taskDetailPath){field.style.display='none';return;}
+  const s=getContainer(detailSid);
+  const hasTimeMetric=!!s&&(s.metrics||[]).some(m=>isTimeUnit(m.unit));
+  if(!hasTimeMetric){field.style.display='none';return;}
+  field.style.display='';
+  if(taskTimerOn(detailSid,taskDetailPath)){
+    const pr=timerRunning()?`<button class="m-timer-btn" data-timer-pause>一時停止</button>`:`<button class="m-timer-btn" data-timer-resume>再開</button>`;
+    ctl.innerHTML=`<span class="m-timer-run"><span class="m-timer-elapsed">${fmtElapsed(timerElapsedMs())}</span>${pr}<button class="m-timer-btn" data-timer-fs>全画面</button><button class="m-timer-btn stop" data-tdtimer-cancel>やめる</button></span><div style="font-size:11px;color:var(--ink-faint);margin-top:5px;">完了すると、この時間が記録されます</div>`;
+    ensureTimerTick();
+  }else if(!activeTimer){
+    ctl.innerHTML=`<button class="m-timer-btn" data-tdtimer-start>計測</button>`;
+  }else{
+    ctl.innerHTML=`<span style="font-size:12px;color:var(--ink-faint);">別の計測が進行中です</span>`;
+  }
+}
+function isHourUnit(u){return !!u && u.includes('時');}
+async function stopMetricTimer(){
+  if(!activeTimer)return;
+  // 計測を一時停止して記録シートを開く（記録/破棄を確定するまでタイマーは消さない）
+  if(activeTimer.startTs){activeTimer.accumMs=(activeTimer.accumMs||0)+(Date.now()-activeTimer.startTs);activeTimer.startTs=null;await persistTimer();}
+  if(timerTick){clearInterval(timerTick);timerTick=null;}
+  const t=activeTimer;
+  renderMetricsOnStar();
+  const star=getContainer(t.starId);const m=star&&(star.metrics||[]).find(x=>x.id===t.metricId);
+  if(!m)return;
+  const totalMin=timerElapsedMs(t)/60000;
+  // 単位どおりに換算（時間=小数1桁 / 分=整数）。1秒が1単位にならないよう実態で丸める
+  const val=isHourUnit(m.unit)?Math.round(totalMin/60*10)/10:Math.round(totalMin);
+  openTimerStopSheet(t.starId,m,val);
+}
+function openTimerStopSheet(starId,m,val){
+  completeCtx={type:'timer',starId,metricId:m.id,unit:m.unit||'',name:m.name};
+  document.getElementById('cTask').textContent=`${m.name} を計測`;
+  const z=document.getElementById('cMetricZone');
+  z.style.display='block';
+  const longish=isHourUnit(m.unit)?(val>=6):(val>=360);
+  z.innerHTML=`<div style="font-size:12px;color:var(--ink-soft);margin-bottom:6px;">記録する${m.unit?`（${esc(m.unit)}）`:''}</div>
+    <div class="metric-input-row"><input type="text" inputmode="decimal" id="cTimerVal" value="${val}" style="font-size:15px;padding:13px;width:110px;"><span class="metric-unit-label">${esc(m.unit||'')}</span></div>
+    ${longish?'<div style="font-size:12px;color:#c98a6a;margin-top:6px;">長めです。止め忘れなら数値を直してください。</div>':''}`;
+  document.getElementById('cNote').value='';
+  const nl=document.getElementById('cNoteLabel');if(nl)nl.style.display='';
+  document.getElementById('cNote').style.display='';
+  document.getElementById('cConfirm').textContent='記録する';
+  document.getElementById('cSkipLog').style.display='';
+  openSheet('cbg','csheet');
+}
 function renderMetricsOnStar(){
   const box=document.getElementById('metricsOnStar');if(!box)return;
   const s=getContainer(detailSid);if(!s){box.innerHTML='';return;}
@@ -2757,8 +3007,18 @@ function renderMetricsOnStar(){
       if(m.kind==='sum')cur=logs.reduce((a,b)=>a+b.val,0);
       else cur=logs[0].val;
     }
-    return `<div class="mcard ${m.kind==='flat'?'flat':''}"><span class="mg">${glyph[m.kind]||'•'}</span><span class="mname">${esc(m.name)}</span><span class="mcur">${cur}${m.unit?`<span class="u">${esc(m.unit)}</span>`:''}</span></div>`;
+    let timerCtl='';
+    if(isTimeUnit(m.unit)){
+      if(activeTimer&&activeTimer.kind!=='task'&&activeTimer.starId===detailSid&&activeTimer.metricId===m.id){
+        const pr=timerRunning()?`<button class="m-timer-btn" data-timer-pause>一時停止</button>`:`<button class="m-timer-btn" data-timer-resume>再開</button>`;
+        timerCtl=`<span class="m-timer-run"><span class="m-timer-elapsed">${fmtElapsed(timerElapsedMs())}</span>${pr}<button class="m-timer-btn" data-timer-fs>全画面</button><button class="m-timer-btn stop" data-mtimer-stop>停止</button></span>`;
+      }else if(!activeTimer){
+        timerCtl=`<button class="m-timer-btn" data-mtimer-start="${m.id}">計測</button>`;
+      }
+    }
+    return `<div class="mcard ${m.kind==='flat'?'flat':''}"><span class="mg">${glyph[m.kind]||'•'}</span><span class="mname">${esc(m.name)}</span><span class="mcur">${cur}${m.unit?`<span class="u">${esc(m.unit)}</span>`:''}</span>${timerCtl}</div>`;
   }).join('');
+  if(activeTimer&&activeTimer.kind!=='task'&&activeTimer.starId===detailSid)ensureTimerTick();
 }
 
 let metricEditCtx=null; // {starId, metricId|null} | {draft:true, index:number|null}
@@ -3358,6 +3618,8 @@ function expandEvents(rangeStart,rangeEnd){
         else include=cur.getDate()===start.getDate();
       }
       else if(ev.rep==='yearly')include=(cur.getMonth()===start.getMonth()&&cur.getDate()===start.getDate());
+      if(include&&(ev.exdates||[]).includes(iso(cur)))include=false;
+      if(ev.until&&iso(cur)>ev.until)break;
       if(include&&cur>=start)out.push({...ev,due:iso(cur),kind:k,done:(ev.doneDates||[]).includes(iso(cur))});
       cur.setDate(cur.getDate()+1);
     }
@@ -3383,8 +3645,8 @@ function renderCal(){
 }
 function renderCalMonth(){
   const monthStart=new Date(calYear,calMonth,1);const monthEnd=new Date(calYear,calMonth+1,0);
-  const tasks=gatherDated(monthStart,monthEnd);
-  const evs=expandEvents(monthStart,monthEnd);
+  const tasks=gatherDated(monthStart,monthEnd).filter(calItemVisible);
+  const evs=expandEvents(monthStart,monthEnd).filter(calItemVisible);
   const items=tasks.concat(evs);
   document.getElementById('calMonth').textContent=`${calYear}年 ${calMonth+1}月`;
   const first=new Date(calYear,calMonth,1);const startDow=first.getDay();
@@ -3445,8 +3707,8 @@ function renderCalWeek(){
   // calAnchorを起点に3日間
   const start=new Date(calAnchor);start.setHours(0,0,0,0);
   const end=new Date(start);end.setDate(end.getDate()+2);
-  const tasks=gatherDated(start,end);
-  const evs=expandEvents(start,end);
+  const tasks=gatherDated(start,end).filter(calItemVisible);
+  const evs=expandEvents(start,end).filter(calItemVisible);
   const items=tasks.concat(evs);
   const dows=['日','月','火','水','木','金','土'];const todayIso=iso(new Date());
   const days=[];for(let i=0;i<3;i++){const d=new Date(start);d.setDate(d.getDate()+i);days.push(d);}
@@ -3509,8 +3771,8 @@ function renderCalDay(){
   const dIso=iso(d);
   const dStart=new Date(d);dStart.setHours(0,0,0,0);
   const dEnd=new Date(d);dEnd.setHours(23,59,59,999);
-  const tasks=gatherDated(dStart,dEnd);
-  const evs=expandEvents(dStart,dEnd);
+  const tasks=gatherDated(dStart,dEnd).filter(calItemVisible);
+  const evs=expandEvents(dStart,dEnd).filter(calItemVisible);
   const items=tasks.concat(evs);
   const timed=items.filter(it=>it.due===dIso&&it.from);
   const allDayItems=items.filter(it=>it.due===dIso&&!it.from);
@@ -3640,6 +3902,7 @@ function closeSheet(bg,sheet){
   const pairs=[
     ['vbg','vsheet'],['dbg','dsheet'],['ssbg','sssheet'],['sbg','ssheet'],
     ['cbg','csheet'],['mbg','msheet'],['ebg','esheet'],['ibbg','ibsheet'],
+    ['cfbg','calFilterSheet'],
     ['tdbg','tdsheet'],['mvbg','mvsheet'],['gpbg','gpsheet'],['dfbg','dfsheet'],
     ['evbg','evsheet'],['qabg','qasheet'],['thbg','thsheet']
   ];
@@ -3791,6 +4054,19 @@ function evColor(it){
   // ◎マーカーの色：テーマ色があればそれ、なければ 予定=青・タスク=緑
   if(it.starId){const s=stars.find(x=>x.id===it.starId);if(s&&s.color)return colorHex(s.color);}
   return it.kind==='task' ? '#7a9b7a' : '#5a7a9c';
+}
+function calItemVisible(it){return !calHidden.has(it.starId||'__none__');}
+async function saveCalHidden(){try{await window.storage.set(K.calhidden,JSON.stringify([...calHidden]));}catch(e){}}
+function renderCalFilter(){
+  const box=document.getElementById('calFilterList');if(!box)return;
+  let rows=stars.map(s=>{
+    const hidden=calHidden.has(s.id);
+    const color=s.color?colorHex(s.color):'#5a7a9c';
+    return `<button class="cf-row ${hidden?'off':''}" data-cf="${s.id}"><span class="cf-dot" style="background:${color}"></span><span class="cf-name">${esc(s.dir||'(無題)')}</span><span class="cf-state">${hidden?'非表示':'表示'}</span></button>`;
+  }).join('');
+  const noneHidden=calHidden.has('__none__');
+  rows+=`<button class="cf-row ${noneHidden?'off':''}" data-cf="__none__"><span class="cf-dot" style="background:#8a8f9c"></span><span class="cf-name">テーマなしの予定</span><span class="cf-state">${noneHidden?'非表示':'表示'}</span></button>`;
+  box.innerHTML=rows;
 }
 let starDraftColor='gold';
 function renderStarColorPalette(){
@@ -4181,6 +4457,12 @@ document.getElementById('starColorPalette').addEventListener('click',e=>{
   renderStarColorPalette();
 });
 document.getElementById('addStarMetric').addEventListener('click',()=>openMetricEditor('__draft__',null));
+document.getElementById('metricsOnStar').addEventListener('click',e=>{
+  const st=e.target.closest('[data-mtimer-start]');
+  if(st){startMetricTimer(st.dataset.mtimerStart);return;}
+  const sp=e.target.closest('[data-mtimer-stop]');
+  if(sp){stopMetricTimer();return;}
+});
 document.getElementById('starMetricsEditor').addEventListener('click',e=>{
   const ed=e.target.closest('[data-editdraft]');if(ed){openMetricEditor('__draft__',+ed.dataset.editdraft);return;}
   const dl=e.target.closest('[data-deldraft]');if(dl){starDraftMetrics.splice(+dl.dataset.deldraft,1);renderStarMetricsEditor();}
@@ -5232,6 +5514,7 @@ function openTaskDetail(path){
   bc.innerHTML=parts.join('<span class="td-bc-sep">›</span>');
   // 日付ボタン
   updateTdDateBtn(node);
+  renderTdTimer();
   // カテゴリ（テーマで、カテゴリが存在する場合だけ表示）
   const tdFieldCat=document.getElementById('tdFieldCat');
   if(detailSid!=='__inbox__' && s.groups && s.groups.length){
@@ -5607,6 +5890,10 @@ document.getElementById('tdComplete').addEventListener('click',async e=>{
   const path=taskDetailPath;
   completeStep(e.target,path);
 });
+document.getElementById('tdFieldTimer').addEventListener('click',e=>{
+  if(e.target.closest('[data-tdtimer-start]')){startTaskTimer();return;}
+  if(e.target.closest('[data-tdtimer-cancel]')){cancelTaskTimer();return;}
+});
 document.getElementById('tdToggleDone').addEventListener('click',()=>{
   showDoneSteps=!showDoneSteps;
   const btn=document.getElementById('tdToggleDone');
@@ -5947,9 +6234,12 @@ async function completeStep(btn,path,occ){
   const metrics=(s.metrics||[]);
   if(metrics.length){
     zone.style.display='block';
+    const tmin=taskTimerOn(detailSid,path)?timerElapsedMs(activeTimer)/60000:null;
     let h=`<label>この方向の指標に、数値を入れますか？（任意）</label>`;
     metrics.forEach(m=>{
-      h+=`<div class="metric-input-row" style="margin-top:8px;"><span style="font-size:12px;color:var(--ink-soft);min-width:80px;">${esc(m.name)}</span><input type="text" inputmode="decimal" data-mid="${m.id}" placeholder="数字" style="font-size:15px;padding:13px 13px;"><span class="metric-unit-label">${esc(m.unit||'')}</span></div>`;
+      let pv='';
+      if(tmin!=null&&isTimeUnit(m.unit))pv=isHourUnit(m.unit)?Math.round(tmin/60*10)/10:Math.round(tmin);
+      h+=`<div class="metric-input-row" style="margin-top:8px;"><span style="font-size:12px;color:var(--ink-soft);min-width:80px;">${esc(m.name)}</span><input type="text" inputmode="decimal" data-mid="${m.id}" value="${pv}" placeholder="数字" style="font-size:15px;padding:13px 13px;"><span class="metric-unit-label">${esc(m.unit||'')}</span></div>`;
     });
     zone.innerHTML=h;
   }else{
@@ -5972,6 +6262,25 @@ async function completeStep(btn,path,occ){
 }
 async function finalizeComplete(logIt){
   if(!completeCtx)return;
+  // タイマー計測：指標とジャーナルの両方に記録
+  if(completeCtx.type==='timer'){
+    const ctx=completeCtx;completeCtx=null;
+    const note=document.getElementById('cNote').value.trim();
+    const inp=document.getElementById('cTimerVal');
+    const val=inp?parseFloat(inp.value):NaN;
+    closeSheet('cbg','csheet');
+    if(logIt && !isNaN(val) && val>0){
+      metricLogs.push({id:uid(),starId:ctx.starId,metricId:ctx.metricId,val,ts:Date.now()});
+      await sml();
+      diffs.unshift({id:uid(),ts:Date.now(),text:`${ctx.name} ${val}${ctx.unit}`,starId:ctx.starId,groupId:null,memo:note||null,fromTask:true});
+      await sd();
+      playCompleteSound();
+      renderTrail();renderWeek();
+      toast('記録しました');
+    }
+    await clearActiveTimer();updateTimerViews();
+    return;
+  }
   // 予定の記録（done フラグなし、ジャーナルだけ）
   if(completeCtx.type==='event-log'){
     const note=document.getElementById('cNote').value.trim();
@@ -6036,6 +6345,7 @@ async function finalizeComplete(logIt){
       metricLogs.push({id:uid(),starId:detailSid,metricId:inp.dataset.mid,val:v,ts:Date.now()});
     });
   }
+  if(taskTimerOn(detailSid,path)){await clearActiveTimer();renderTdTimer();}
   // カテゴリIDを判定（pathが['g',groupId,...]形式なら）
   const groupId=path[0]==='g'?path[1]:null;
   // 親のどこかに noSubLog があるか判定 ＋ 自分自身が journal:'none' か
@@ -6138,12 +6448,21 @@ function nextOpenOccurrence(node){
 }
 function displayDue(node){return (node.rep&&node.rep!=='none')?nextOpenOccurrence(node):node.due;}
 document.getElementById('cbg').addEventListener('click',()=>closeSheet('cbg','csheet'));
+document.getElementById('calFilterBtn').addEventListener('click',()=>{renderCalFilter();openSheet('cfbg','calFilterSheet');});
+document.getElementById('cfbg').addEventListener('click',()=>closeSheet('cfbg','calFilterSheet'));
+document.getElementById('calFilterList').addEventListener('click',async e=>{
+  const row=e.target.closest('[data-cf]');if(!row)return;
+  const id=row.dataset.cf;
+  if(calHidden.has(id))calHidden.delete(id);else calHidden.add(id);
+  await saveCalHidden();renderCalFilter();renderCal();
+});
 document.getElementById('cConfirm').addEventListener('click',()=>finalizeComplete(true));
 document.getElementById('cSkipLog').addEventListener('click',()=>finalizeComplete(false));
 
 /* ===== events (カレンダー専用予定) ===== */
 let eEditId=null, eRepState='none', eWdState=[], eMdState=[], eKindState='event';
 let eDueState=null, eDatePickerMonth=null, eFromState=null, eToState=null, eRepOpen=false, eMmodeState='date', eNthState=[];
+let eOccDate=null;
 function renderEDatePicker(){
   const el=document.getElementById('eDatePicker');
   if(!el)return;
@@ -6209,6 +6528,7 @@ function refreshEGroupSelect(){
 }
 function openEventEditor(ev,defaultDue,defaultTime){
   eEditId=ev?ev.id:null;
+  eOccDate=ev?ev.due:null;
   // defaultTimeが文字列なら from にする
   let dft={from:'',to:''};
   if(defaultTime){
@@ -6361,6 +6681,18 @@ function normalizeTime(v){
   const m=v.match(/^(\d{1,2}):(\d{1,2})$/);if(m)return `${+m[1]}:${String(+m[2]).padStart(2,'0')}`;
   return null;
 }
+function applyRecurThisOnly(baseEv,obj,occ){
+  // この予定のみ：その回をシリーズから除外し、変更を反映した単発予定を作る
+  baseEv.exdates=baseEv.exdates||[];
+  if(!baseEv.exdates.includes(occ))baseEv.exdates.push(occ);
+  events.push({id:uid(),done:false,...obj,rep:'none',wd:[],md:[],mmode:'date',nth:[]});
+}
+function applyRecurAfter(baseEv,obj,occ){
+  // これ以降すべて：先頭の回ならシリーズ全体を置き換え。途中なら元を打ち切り＋新シリーズ
+  if(occ<=baseEv.due){Object.assign(baseEv,obj);return;}
+  baseEv.until=dayBefore(occ);
+  events.push({id:uid(),done:false,...obj,doneDates:[],exdates:[],until:null});
+}
 document.getElementById('eSave').addEventListener('click',async()=>{
   const txt=document.getElementById('eText').value.trim();if(!txt){toast(eKindState==='task'?'タスクの内容を書いてください':'予定の内容を書いてください');return;}
   const due=eDueState;if(!due){toast('日付を選んでください');return;}
@@ -6370,9 +6702,26 @@ document.getElementById('eSave').addEventListener('click',async()=>{
   const groupId=document.getElementById('eGroup').value||null;
   const isMW=eRepState==='monthly'&&eMmodeState==='weekday';
   const obj={text:txt,memo:document.getElementById('eMemo').value.trim()||null,due,from,to,rep:eRepState,wd:(eRepState==='weekly'||isMW)?eWdState.slice():[],md:(eRepState==='monthly'&&!isMW)?eMdState.slice():[],mmode:isMW?'weekday':'date',nth:isMW?eNthState.slice():[],kind:eKindState,starId:starId||null,groupId:groupId||null};
-  if(eEditId){const ev=events.find(x=>x.id===eEditId);Object.assign(ev,obj);}
+  if(eEditId){
+    const baseEv=events.find(x=>x.id===eEditId);
+    if(baseEv){
+      const wasRecurring=baseEv.rep&&baseEv.rep!=='none';
+      const dateChanged=!!eOccDate&&eDueState!==eOccDate;
+      const timeChanged=(eFromState||null)!==(baseEv.from||null)||(eToState||null)!==(baseEv.to||null);
+      if(wasRecurring&&(dateChanged||timeChanged)){
+        const scope=await chooseRecurScope();
+        if(scope===null)return; // キャンセル：編集画面はそのまま
+        if(scope==='this')applyRecurThisOnly(baseEv,obj,eOccDate);
+        else applyRecurAfter(baseEv,obj,eOccDate);
+        await sev();renderCal();closeSheet('ebg','esheet');toast('変更しました');
+        return;
+      }
+      if(wasRecurring)obj.due=baseEv.due; // 日程を変えていない → 繰り返しの起点を動かさない
+      Object.assign(baseEv,obj);
+    }
+  }
   else events.push({id:uid(),done:false,...obj});
-  await sev();renderCal();closeSheet('ebg','esheet');toast(eKindState==='task'?'タスクを追加しました':'予定を追加しました');
+  await sev();renderCal();closeSheet('ebg','esheet');toast(eEditId?'保存しました':(eKindState==='task'?'タスクを追加しました':'予定を追加しました'));
 });
 document.getElementById('eComplete').addEventListener('click',async()=>{
   if(!eEditId)return;
@@ -6385,6 +6734,22 @@ document.getElementById('eComplete').addEventListener('click',async()=>{
 });
 document.getElementById('eDelete').addEventListener('click',async()=>{
   if(!eEditId)return;
+  const baseEv=events.find(x=>x.id===eEditId);
+  if(baseEv&&baseEv.rep&&baseEv.rep!=='none'&&eOccDate){
+    const scope=await chooseRecurScope({title:'繰り返しの予定を削除',msg:'どの範囲を削除しますか？',showAll:true});
+    if(scope===null)return; // キャンセル
+    if(scope==='this'){
+      baseEv.exdates=baseEv.exdates||[];
+      if(!baseEv.exdates.includes(eOccDate))baseEv.exdates.push(eOccDate);
+    }else if(scope==='all'){
+      events=events.filter(x=>x.id!==eEditId); // シリーズ全体を削除
+    }else{ // これ以降すべて
+      if(eOccDate<=baseEv.due)events=events.filter(x=>x.id!==eEditId); // 先頭の回ならシリーズ全体を削除
+      else baseEv.until=dayBefore(eOccDate);
+    }
+    await sev();renderCal();closeSheet('ebg','esheet');toast('削除しました');
+    return;
+  }
   const ok=await confirmAsk('この予定を削除しますか？','元に戻せません。');if(!ok)return;
   events=events.filter(x=>x.id!==eEditId);await sev();renderCal();closeSheet('ebg','esheet');toast('削除しました');
 });
@@ -6743,7 +7108,9 @@ function handleCalItemTap(type,data,extra){
     if(type==='event'){
       openEventDetail({type:'event',data});
     }else{
-      openEventDetail({type:'step',data,sid:extra.sid,path:extra.path});
+      // タスク（テーマのステップ）は詳細へ直行：子タスク・計測・完了がそこで触れる
+      detailSid=extra.sid;
+      openTaskDetail(extra.path);
     }
   },300);
 }
