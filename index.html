@@ -1766,14 +1766,14 @@
   </div>
 
   <div class="screen">
-    <section class="view active" id="v-values">
+    <section class="view" id="v-values">
       
       <div class="chip-zone" id="chipZone"><div class="chip-label">こんなことば、どうですか</div><div class="chips" id="chips"></div></div>
       <div class="lcards" id="vcards"></div>
       <button class="vcustom-btn" id="addValue"><span class="p">+</span> 自分のことばを作る</button>
     </section>
 
-    <section class="view" id="v-stars">
+    <section class="view active" id="v-stars">
       
       <div class="lcards" id="starsList"></div>
       
@@ -1861,8 +1861,8 @@
   </div>
 
   <div class="tabbar">
-    <button class="tab active" data-v="values"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="0" cy="0" r="13"/><circle cx="0" cy="0" r="8"/></svg></span><span class="lb">価値観</span></button>
-    <button class="tab" data-v="stars"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22"><polygon points="0,-13 3.06,-4.04 12.36,-4.02 4.85,1.54 7.64,10.5 0,5 -7.64,10.5 -4.85,1.54 -12.36,-4.02 -3.06,-4.04" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span class="lb">テーマ</span></button>
+    <button class="tab" data-v="values"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="0" cy="0" r="13"/><circle cx="0" cy="0" r="8"/></svg></span><span class="lb">価値観</span></button>
+    <button class="tab active" data-v="stars"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22"><polygon points="0,-13 3.06,-4.04 12.36,-4.02 4.85,1.54 7.64,10.5 0,5 -7.64,10.5 -4.85,1.54 -12.36,-4.02 -3.06,-4.04" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span class="lb">テーマ</span></button>
     <button class="tab" data-v="log"><span class="ic"><svg viewBox="-18 -10 36 20" width="24" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M -16,3 Q -10,-3 -3,1 C 2,3 7,-5 3,-6 C -2,-6 -2,2 4,2 L 16,-3"/></svg></span><span class="lb">記録</span></button>
     <button class="tab" data-v="trail"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22"><rect x="-13" y="-12" width="3" height="24" fill="currentColor" stroke="none"/><rect x="-10" y="-12" width="20" height="24" fill="none" stroke="currentColor" stroke-width="1.5" rx="0.5"/><path d="M 4,-12 L 4,8 L 7,5 L 10,8 L 10,-12 Z" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg></span><span class="lb">ジャーナル</span></button>
     <button class="tab" data-v="cal"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22" fill="none" stroke="currentColor"><rect x="-13" y="-13" width="26" height="26" stroke-width="1.5" rx="2"/><line x1="-7.8" y1="-13" x2="-7.8" y2="13" stroke-width="0.6"/><line x1="-2.6" y1="-13" x2="-2.6" y2="13" stroke-width="0.6"/><line x1="2.6" y1="-13" x2="2.6" y2="13" stroke-width="0.6"/><line x1="7.8" y1="-13" x2="7.8" y2="13" stroke-width="0.6"/><line x1="-13" y1="-7.8" x2="13" y2="-7.8" stroke-width="0.6"/><line x1="-13" y1="-2.6" x2="13" y2="-2.6" stroke-width="0.6"/><line x1="-13" y1="2.6" x2="13" y2="2.6" stroke-width="0.6"/><line x1="-13" y1="7.8" x2="13" y2="7.8" stroke-width="0.6"/></svg></span><span class="lb">カレンダー</span></button>
@@ -2339,6 +2339,7 @@ async function load(){
   // 「翌日になった完了タスク」を整理（その日の終わりに自動消去）
   cleanupYesterdayDone();
   renderAll();
+  goTab('stars');
 }
 function cleanupYesterdayDone(){
   // 完了済みタスクは消さない（ユーザーが手動で削除するか、完了済みを非表示で見えなくする）
