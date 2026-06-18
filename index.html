@@ -726,7 +726,7 @@
   .tab.active{color:var(--star);}
   .tab.active .lb{font-weight:700;}
 
-  .toast{position:absolute;bottom:100px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--paper);padding:13px 21px;border-radius:21px;font-size:13px;opacity:0;pointer-events:none;transition:all 0.35s cubic-bezier(0.4, 0.0, 0.2, 1);z-index:300;white-space:nowrap;}
+  .toast{position:absolute;bottom:max(34px, calc(env(safe-area-inset-bottom, 0px) + 21px));left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--paper);padding:13px 21px;border-radius:21px;font-size:13px;opacity:0;pointer-events:none;transition:all 0.35s cubic-bezier(0.4, 0.0, 0.2, 1);z-index:300;white-space:nowrap;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
   .toast .ts{color:var(--star-soft);}
 
@@ -1639,7 +1639,7 @@
   .theme-chip.active .chip-dot{border-color:var(--paper);}
   /* 「今日」フローティングボタン */
   .today-fab{
-    position:absolute;bottom:100px;right:18px;
+    position:absolute;bottom:max(34px, calc(env(safe-area-inset-bottom, 0px) + 21px));right:18px;
     background:var(--ink);color:var(--paper);
     border:none;border-radius:21px;
     padding:13px 21px;font-family:inherit;
@@ -1652,7 +1652,7 @@
   .today-fab.active{background:var(--star);}
   /* 統合フローティング：1ピルが [今日|＋] ⇄ [入力] に変形（背景は常駐＝重なりなし） */
   .dual-fab{
-    position:absolute;bottom:100px;right:18px;
+    position:absolute;bottom:max(34px, calc(env(safe-area-inset-bottom, 0px) + 21px));right:18px;
     left:calc(100% - var(--df-cw, 127px) - 18px);
     height:45px;
     background:color-mix(in srgb, var(--ink) 82%, transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:var(--paper);
@@ -1689,7 +1689,7 @@
   }
   /* カレンダー追加フローティングボタン */
   .cal-fab{
-    position:absolute;bottom:160px;right:18px;
+    position:absolute;bottom:max(96px, calc(env(safe-area-inset-bottom, 0px) + 83px));right:18px;
     background:var(--ink);color:var(--paper);
     border:none;border-radius:50%;
     width:48px;height:48px;
@@ -1771,13 +1771,67 @@
   .today-tag{margin-left:8px;font-size:10px;color:var(--star);font-weight:300;letter-spacing:0.05em;}
   .today-tag.muted{color:var(--ink-faint);}
   .today-empty{text-align:center;padding:55px 13px;color:var(--ink-faint);font-size:13px;line-height:1.8;}
+  /* ===== 左ドロワー ===== */
+  .menu-btn{align-self:flex-end;background:none;border:none;padding:8px 8px 9px 0;margin:0 8px 4px 0;cursor:pointer;color:var(--ink-faint);display:flex;flex-direction:column;gap:4px;flex-shrink:0;}
+  .menu-btn span{display:block;width:17px;height:1.4px;background:currentColor;border-radius:1px;}
+  .menu-btn:active{color:var(--star);}
+  .titlebar .tleft{flex:1;min-width:0;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(20,22,28,0.30);z-index:600;opacity:0;visibility:hidden;transition:opacity 0.3s cubic-bezier(0.4, 0.0, 0.2, 1),visibility 0s linear 0.3s;}
+  .drawer-scrim.open{opacity:1;visibility:visible;transition:opacity 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);}
+  .drawer-scrim.dragging{visibility:visible;transition:none;}
+  .drawer{position:absolute;top:0;bottom:0;left:0;width:min(233px,72%);background:var(--paper-warm);border-right:1px solid var(--line);z-index:1;display:flex;flex-direction:column;padding-top:max(12px, env(safe-area-inset-top));}
+  .main-pane{position:relative;z-index:2;flex:1;min-height:0;display:flex;flex-direction:column;background:var(--phone-bg);transform:translateX(0);transition:transform 0.32s cubic-bezier(0.4, 0.0, 0.2, 1);box-shadow:-8px 0 34px rgba(0,0,0,0.14);will-change:transform;}
+  .main-pane.drawer-open{transform:translateX(min(233px,72%));}
+  .main-pane.dragging{transition:none;}
+  .drawer-sub.active{color:var(--ink);background:rgba(var(--star-rgb),0.10);}
+  .drawer-head{padding:21px 21px 13px;font-size:13px;letter-spacing:0.3em;color:var(--star);font-weight:700;flex-shrink:0;}
+  .drawer-body{flex:1;overflow-y:auto;padding:5px 13px 13px;-webkit-overflow-scrolling:touch;}
+  .drawer-row{display:flex;align-items:stretch;}
+  .drawer-row .drawer-item{flex:1;min-width:0;}
+  .drawer-disclose{flex-shrink:0;width:37px;background:none;border:none;color:var(--ink-faint);cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:11px;padding:0;}
+  .drawer-disclose svg{transition:transform 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);}
+  .drawer-disclose.closed svg{transform:rotate(-90deg);}
+  .drawer-disclose:active{color:var(--star);}
+  .drawer-body.editing .drawer-disclose{visibility:hidden;}
+  .drawer-subs{display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.28s cubic-bezier(0.4, 0.0, 0.2, 1);}
+  .drawer-subs.collapsed{grid-template-rows:0fr;}
+  .drawer-subs>.ds-inner{overflow:hidden;min-height:0;}
+  .drawer-sub .vis{margin-left:auto;font-size:11px;color:var(--ink-faint);flex-shrink:0;}
+  .drawer-sub.edit .nm{color:var(--ink-faint);}
+  .drawer-sub.edit.on .nm{color:var(--ink-soft);}
+  .drawer-sub.edit.on .vis{color:var(--star);}
+  .drawer-foot{flex-shrink:0;border-top:1px solid var(--line);padding:8px 13px calc(13px + env(safe-area-inset-bottom, 0px));}
+  .drawer-edit{width:100%;padding:10px 13px;background:none;border:none;border-radius:11px;font-family:inherit;font-size:12px;font-weight:300;letter-spacing:0.1em;color:var(--ink-faint);cursor:pointer;text-align:left;}
+  .drawer-edit.on{color:var(--star);font-weight:500;}
+  .drawer-body::-webkit-scrollbar{display:none;}
+  .drawer-item{display:flex;align-items:center;gap:13px;width:100%;padding:11px 13px;background:none;border:none;border-radius:13px;font-family:inherit;font-size:14.5px;font-weight:300;color:var(--ink-soft);cursor:pointer;text-align:left;letter-spacing:0.05em;transition:background 0.2s cubic-bezier(0.4, 0.0, 0.2, 1),color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);}
+  .drawer-item .ic{width:24px;display:inline-flex;justify-content:center;align-items:center;color:var(--ink-faint);flex-shrink:0;}
+  .drawer-item .ic svg{display:block;}
+  .drawer-item.active{color:var(--ink);background:rgba(var(--star-rgb),0.10);}
+  .drawer-item.active .ic{color:var(--star);}
+  .drawer-item:active{background:rgba(var(--star-rgb),0.08);}
+  .drawer-sub{display:flex;align-items:center;gap:10px;width:calc(100% - 37px);margin-left:37px;padding:8px 13px;background:none;border:none;border-radius:11px;font-family:inherit;font-size:13px;font-weight:300;color:var(--ink-soft);cursor:pointer;text-align:left;transition:background 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);}
+  .drawer-sub .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--ink-faint);}
+  .drawer-sub .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .drawer-sub:active{background:rgba(var(--star-rgb),0.08);}
+  .drawer-sep{height:1px;background:var(--line);margin:8px 13px;}
+  @keyframes drawerJump{0%{box-shadow:0 0 0 2px rgba(var(--star-rgb),0);}25%{box-shadow:0 0 0 2px rgba(var(--star-rgb),0.55);}100%{box-shadow:0 0 0 2px rgba(var(--star-rgb),0);}}
+  .lcard.drawer-jump{animation:drawerJump 1.25s cubic-bezier(0.4, 0.0, 0.2, 1);}
   /* スクロールバー */
   ::-webkit-scrollbar{width:0;background:transparent;}
 </style>
 </head>
 <body>
 <div class="phone">
+  <!-- 左ドロワー（背面に静止。本体が右へスライドして現れる） -->
+  <nav class="drawer" id="drawer" aria-label="ナビゲーション">
+    <div class="drawer-head">POLARIS</div>
+    <div class="drawer-body" id="drawerBody"></div>
+    <div class="drawer-foot"><button class="drawer-edit" id="drawerEditBtn">表示テーマを選ぶ</button></div>
+  </nav>
+  <div class="main-pane" id="mainPane">
   <div class="titlebar">
+    <button class="menu-btn" id="menuBtn" aria-label="メニュー"><span></span><span></span><span></span></button>
     <div class="tleft">
       <h1 id="screenTitle">価値観</h1>
       <div class="sub" id="screenSub">自分が大事にしたいこと</div>
@@ -1892,14 +1946,8 @@
     </section>
   </div>
 
-  <div class="tabbar">
-    <button class="tab" data-v="values"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="0" cy="0" r="13"/><circle cx="0" cy="0" r="8"/></svg></span><span class="lb">価値観</span></button>
-    <button class="tab active" data-v="stars"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22"><polygon points="0,-13 3.06,-4.04 12.36,-4.02 4.85,1.54 7.64,10.5 0,5 -7.64,10.5 -4.85,1.54 -12.36,-4.02 -3.06,-4.04" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span class="lb">テーマ</span></button>
-    <button class="tab" data-v="log"><span class="ic"><svg viewBox="-18 -10 36 20" width="24" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M -16,3 Q -10,-3 -3,1 C 2,3 7,-5 3,-6 C -2,-6 -2,2 4,2 L 16,-3"/></svg></span><span class="lb">記録</span></button>
-    <button class="tab" data-v="trail"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22"><rect x="-13" y="-12" width="3" height="24" fill="currentColor" stroke="none"/><rect x="-10" y="-12" width="20" height="24" fill="none" stroke="currentColor" stroke-width="1.5" rx="0.5"/><path d="M 4,-12 L 4,8 L 7,5 L 10,8 L 10,-12 Z" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg></span><span class="lb">ジャーナル</span></button>
-    <button class="tab" data-v="cal"><span class="ic"><svg viewBox="-16 -16 32 32" width="22" height="22" fill="none" stroke="currentColor"><rect x="-13" y="-13" width="26" height="26" stroke-width="1.5" rx="2"/><line x1="-7.8" y1="-13" x2="-7.8" y2="13" stroke-width="0.6"/><line x1="-2.6" y1="-13" x2="-2.6" y2="13" stroke-width="0.6"/><line x1="2.6" y1="-13" x2="2.6" y2="13" stroke-width="0.6"/><line x1="7.8" y1="-13" x2="7.8" y2="13" stroke-width="0.6"/><line x1="-13" y1="-7.8" x2="13" y2="-7.8" stroke-width="0.6"/><line x1="-13" y1="-2.6" x2="13" y2="-2.6" stroke-width="0.6"/><line x1="-13" y1="2.6" x2="13" y2="2.6" stroke-width="0.6"/><line x1="-13" y1="7.8" x2="13" y2="7.8" stroke-width="0.6"/></svg></span><span class="lb">カレンダー</span></button>
-    <button class="tab" data-v="week"><span class="ic"><svg viewBox="-16 -10 32 20" width="24" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M 0,0 C -5,-8 -13,-8 -13,0 C -13,8 -5,8 0,0 C 5,-8 13,-8 13,0 C 13,8 5,8 0,0 Z"/></svg></span><span class="lb">振り返り</span></button>
-  </div>
+  <!-- ドロワーを閉じる用の暗幕（本体側に被さる） -->
+  <div class="drawer-scrim" id="drawerScrim"></div>
 
   <div class="sheet-bg" id="vbg"></div>
   <div class="sheet vsheet-full" id="vsheet">
@@ -2296,6 +2344,7 @@
   </div>
 
   <div class="toast" id="toast"></div>
+  </div><!-- /main-pane -->
 </div>
 
 <script>
@@ -2314,7 +2363,7 @@ if(typeof window.storage==='undefined'||!window.storage){
     }
   };
 }
-const K={v:'polaris:values',s:'polaris:stars',d:'polaris:diffs',va:'polaris:values_arch',sa:'polaris:stars_arch',sh:'polaris:stars_hold',ev:'polaris:events',ml:'polaris:metric_logs',ib:'polaris:inbox',timer:'polaris:timer',calhidden:'polaris:cal_hidden',quickcompose:'polaris:quick_compose'};
+const K={v:'polaris:values',s:'polaris:stars',d:'polaris:diffs',va:'polaris:values_arch',sa:'polaris:stars_arch',sh:'polaris:stars_hold',ev:'polaris:events',ml:'polaris:metric_logs',ib:'polaris:inbox',timer:'polaris:timer',calhidden:'polaris:cal_hidden',quickcompose:'polaris:quick_compose',drawernav:'polaris:drawer_nav'};
 // 仮置き：テーマと同じ構造（steps, groups）を持つ単一オブジェクト
 let inbox={id:'__inbox__',steps:[],groups:[]};
 let values=[], stars=[], diffs=[], valuesArch=[], starsArch=[], starsHold=[], events=[], metricLogs=[];
@@ -2358,6 +2407,7 @@ async function load(){
   try{const r=await window.storage.get(K.timer);if(r)activeTimer=JSON.parse(r.value);}catch(e){}
   try{const r=await window.storage.get(K.calhidden);if(r)calHidden=new Set(JSON.parse(r.value));}catch(e){}
   try{const r=await window.storage.get(K.quickcompose);if(r){const o=JSON.parse(r.value);qcPinned=!!o.pinned;qcTarget=o.target||'__inbox__';}}catch(e){}
+  try{const r=await window.storage.get(K.drawernav);if(r){const o=JSON.parse(r.value)||{};drawerNav.collapsed=o.collapsed||{};drawerNav.hidden=o.hidden||{};}}catch(e){}
   // 日付が変わっていたら（前日からの計測・止め忘れ）は持ち越さずリセット
   if(activeTimer&&activeTimer.createdDay!==iso(new Date())){activeTimer=null;try{await window.storage.delete(K.timer);}catch(e){}}
   try{const r=await window.storage.get(K.ib);if(r){const o=JSON.parse(r.value);inbox.steps=o.steps||[];inbox.groups=o.groups||[];}}catch(e){}
@@ -3380,7 +3430,14 @@ function filterDiffsBySearch(arr){
 function renderTrail(){
   const fb=document.getElementById('trailFilter');if(fb)fb.innerHTML='';
   const b=document.getElementById('trailBody');
-  if(trailFullStar){renderTrailFull(b);return;}
+  // テーマ個別ページは常に新しい順なので、並び替え・検索の行ごと隠す
+  const segRow=document.querySelector('.trail-mode-seg');
+  if(segRow)segRow.style.display=trailFullStar?'none':'flex';
+  if(trailFullStar){
+    const sb=document.getElementById('trailSearchBox');if(sb)sb.style.display='none';
+    const tg=document.getElementById('trailSearchToggle');if(tg)tg.classList.remove('active');
+    renderTrailFull(b);return;
+  }
   trailFilterGroups=[];
   // 検索フィルタを適用
   const searching=trailSearchQuery||trailSearchFrom||trailSearchTo;
@@ -3997,6 +4054,167 @@ function goTab(v){
   renderQuickCompose();
   if(v==='trail')renderTrail();if(v==='log')renderStarSelect();if(v==='week')renderWeek();if(v==='archive')renderArchive();if(v==='cal')renderCal();
 }
+
+/* ===== 左ドロワー =====
+   旧タブバーの移設先。エッジスワイプ右で開き、左で閉じる。
+   テーマは個別に階層表示し、タップでそのカードへジャンプ。 */
+const DRAWER_ITEMS=[
+  {v:'values',label:'価値観',ic:'<svg viewBox="-16 -16 32 32" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="0" cy="0" r="13"/><circle cx="0" cy="0" r="8"/></svg>'},
+  {v:'stars',label:'テーマ',ic:'<svg viewBox="-16 -16 32 32" width="20" height="20"><polygon points="0,-13 3.06,-4.04 12.36,-4.02 4.85,1.54 7.64,10.5 0,5 -7.64,10.5 -4.85,1.54 -12.36,-4.02 -3.06,-4.04" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>'},
+  {v:'log',label:'記録',ic:'<svg viewBox="-18 -10 36 20" width="22" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M -16,3 Q -10,-3 -3,1 C 2,3 7,-5 3,-6 C -2,-6 -2,2 4,2 L 16,-3"/></svg>'},
+  {v:'trail',label:'ジャーナル',ic:'<svg viewBox="-16 -16 32 32" width="20" height="20"><rect x="-13" y="-12" width="3" height="24" fill="currentColor" stroke="none"/><rect x="-10" y="-12" width="20" height="24" fill="none" stroke="currentColor" stroke-width="1.5" rx="0.5"/><path d="M 4,-12 L 4,8 L 7,5 L 10,8 L 10,-12 Z" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>'},
+  {v:'cal',label:'カレンダー',ic:'<svg viewBox="-16 -16 32 32" width="20" height="20" fill="none" stroke="currentColor"><rect x="-13" y="-13" width="26" height="26" stroke-width="1.5" rx="2"/><line x1="-7.8" y1="-13" x2="-7.8" y2="13" stroke-width="0.6"/><line x1="-2.6" y1="-13" x2="-2.6" y2="13" stroke-width="0.6"/><line x1="2.6" y1="-13" x2="2.6" y2="13" stroke-width="0.6"/><line x1="7.8" y1="-13" x2="7.8" y2="13" stroke-width="0.6"/><line x1="-13" y1="-7.8" x2="13" y2="-7.8" stroke-width="0.6"/><line x1="-13" y1="-2.6" x2="13" y2="-2.6" stroke-width="0.6"/><line x1="-13" y1="2.6" x2="13" y2="2.6" stroke-width="0.6"/><line x1="-13" y1="7.8" x2="13" y2="7.8" stroke-width="0.6"/></svg>'},
+  {v:'week',label:'振り返り',ic:'<svg viewBox="-16 -10 32 20" width="22" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M 0,0 C -5,-8 -13,-8 -13,0 C -13,8 -5,8 0,0 C 5,-8 13,-8 13,0 C 13,8 5,8 0,0 Z"/></svg>'}
+];
+let drawerOpen=false;
+let drawerEditMode=false;
+let drawerNav={collapsed:{},hidden:{}}; // collapsed: 階層の開閉 / hidden: ドロワーに出さないテーマID
+async function sdn(){try{await window.storage.set(K.drawernav,JSON.stringify(drawerNav));}catch(e){}}
+const DISCLOSE_SVG='<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5 L6 7.5 L9 4.5"/></svg>';
+function renderDrawer(){
+  const cur=document.querySelector('.view.active');
+  const curV=cur?cur.id.slice(2):'';
+  const list=drawerEditMode?stars:stars.filter(s=>!drawerNav.hidden[s.id]);
+  const subRows=(attr,activeId)=>list.map(s=>{
+    const hx=colorHex(s.color);
+    if(drawerEditMode){
+      const on=!drawerNav.hidden[s.id];
+      return `<button class="drawer-sub edit${on?' on':''}" data-drawervis="${s.id}"><span class="dot"${hx?` style="background:${hx};"`:''}></span><span class="nm">${esc(s.dir)}</span><span class="vis">${on?'●':'○'}</span></button>`;
+    }
+    const act=activeId===s.id?' active':'';
+    return `<button class="drawer-sub${act}" data-${attr}="${s.id}"><span class="dot"${hx?` style="background:${hx};"`:''}></span><span class="nm">${esc(s.dir)}</span></button>`;
+  }).join('');
+  const group=(it,attr,activeId)=>{
+    const collapsed=!drawerEditMode&&!!drawerNav.collapsed[it.v];
+    return `<div class="drawer-row"><button class="drawer-item${curV===it.v?' active':''}" data-drawergo="${it.v}"><span class="ic">${it.ic}</span><span class="lb">${it.label}</span></button><button class="drawer-disclose${collapsed?' closed':''}" data-drawertoggle="${it.v}" aria-label="開閉">${DISCLOSE_SVG}</button></div><div class="drawer-subs${collapsed?' collapsed':''}" data-subs="${it.v}"><div class="ds-inner">${subRows(attr,activeId)}</div></div>`;
+  };
+  const body=document.getElementById('drawerBody');
+  body.classList.toggle('editing',drawerEditMode);
+  body.innerHTML=DRAWER_ITEMS.map(it=>{
+    if(it.v==='stars')return group(it,'drawerstar',null)+`<div class="drawer-sep"></div>`;
+    if(it.v==='trail')return group(it,'drawertrail',curV==='trail'?trailFullStar:null);
+    return `<button class="drawer-item${curV===it.v?' active':''}" data-drawergo="${it.v}"><span class="ic">${it.ic}</span><span class="lb">${it.label}</span></button>`;
+  }).join('');
+  const eb=document.getElementById('drawerEditBtn');
+  eb.textContent=drawerEditMode?'完了':'表示テーマを選ぶ';
+  eb.classList.toggle('on',drawerEditMode);
+}
+function openDrawer(){
+  renderDrawer();drawerOpen=true;
+  const p=document.getElementById('mainPane'),s=document.getElementById('drawerScrim');
+  p.classList.remove('dragging');s.classList.remove('dragging');
+  p.style.transform='';s.style.opacity='';
+  p.classList.add('drawer-open');s.classList.add('open');
+}
+function closeDrawer(){
+  drawerOpen=false;drawerEditMode=false;
+  const p=document.getElementById('mainPane'),s=document.getElementById('drawerScrim');
+  p.classList.remove('dragging');s.classList.remove('dragging');
+  p.style.transform='';s.style.opacity='';
+  p.classList.remove('drawer-open');s.classList.remove('open');
+}
+function drawerJumpStar(id){
+  goTab('stars');
+  if(collapsedStarCards[id]){collapsedStarCards[id]=false;saveCollapsedStarCards();renderStars();}
+  requestAnimationFrame(()=>{
+    const card=document.querySelector(`.lcard[data-tcid="${id}"]`);
+    const screen=document.querySelector('.screen');
+    if(!card||!screen)return;
+    const y=card.getBoundingClientRect().top-screen.getBoundingClientRect().top+screen.scrollTop-8;
+    if(typeof screen.scrollTo==='function'){try{screen.scrollTo({top:y,behavior:'smooth'});}catch(e){screen.scrollTop=y;}}
+    else screen.scrollTop=y;
+    card.classList.add('drawer-jump');
+    setTimeout(()=>card.classList.remove('drawer-jump'),1300);
+  });
+}
+document.getElementById('menuBtn').addEventListener('click',()=>{drawerOpen?closeDrawer():openDrawer();});
+document.getElementById('drawerScrim').addEventListener('click',closeDrawer);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&drawerOpen){if(drawerEditMode){drawerEditMode=false;renderDrawer();}else closeDrawer();}});
+document.getElementById('drawerBody').addEventListener('click',e=>{
+  const tg=e.target.closest('[data-drawertoggle]');
+  if(tg){
+    if(drawerEditMode)return;
+    const k=tg.dataset.drawertoggle;
+    const closed=!drawerNav.collapsed[k];
+    drawerNav.collapsed[k]=closed;sdn();
+    tg.classList.toggle('closed',closed);
+    const subs=document.querySelector(`.drawer-subs[data-subs="${k}"]`);
+    if(subs)subs.classList.toggle('collapsed',closed);
+    return;
+  }
+  if(drawerEditMode){
+    const vis=e.target.closest('[data-drawervis]');
+    if(vis){
+      const id=vis.dataset.drawervis;
+      drawerNav.hidden[id]=!drawerNav.hidden[id];sdn();
+      const on=!drawerNav.hidden[id];
+      document.querySelectorAll(`[data-drawervis="${id}"]`).forEach(b=>{
+        b.classList.toggle('on',on);
+        const v=b.querySelector('.vis');if(v)v.textContent=on?'●':'○';
+      });
+    }
+    return; // 編集中はナビゲーションしない
+  }
+  const go=e.target.closest('[data-drawergo]');
+  if(go){
+    if(go.dataset.drawergo==='trail')trailFullStar=null; // ジャーナル本体タップ＝全テーマ一覧
+    goTab(go.dataset.drawergo);closeDrawer();return;
+  }
+  const tr=e.target.closest('[data-drawertrail]');
+  if(tr){trailFullStar=tr.dataset.drawertrail;goTab('trail');closeDrawer();return;}
+  const st=e.target.closest('[data-drawerstar]');
+  if(st){closeDrawer();drawerJumpStar(st.dataset.drawerstar);}
+});
+document.getElementById('drawerEditBtn').addEventListener('click',()=>{drawerEditMode=!drawerEditMode;renderDrawer();});
+/* エッジスワイプ：左端から右で開く／開いている間は左で閉じる */
+(function(){
+  const d=document.getElementById('drawer');
+  const p=document.getElementById('mainPane');
+  const s=document.getElementById('drawerScrim');
+  const phone=document.querySelector('.phone');
+  const EDGE=24;
+  let sx=0,sy=0,active=false,engaged=false,mode=null,lastX=0,lastT=0,vx=0,dx=0;
+  const W=()=>d.offsetWidth||233;
+  const modalOpen=()=>!!document.querySelector('.sheet-bg.open, .timer-fs.open');
+  phone.addEventListener('touchstart',e=>{
+    if(e.touches.length!==1)return;
+    const t=e.touches[0];
+    if(drawerOpen){mode='close';}
+    else if(t.clientX-phone.getBoundingClientRect().left<=EDGE&&!modalOpen()){mode='open';}
+    else{active=false;return;}
+    active=true;engaged=false;dx=0;
+    sx=t.clientX;sy=t.clientY;lastX=sx;lastT=e.timeStamp;vx=0;
+  },{passive:true});
+  phone.addEventListener('touchmove',e=>{
+    if(!active)return;
+    const t=e.touches[0];
+    dx=t.clientX-sx;const dy=t.clientY-sy;
+    if(!engaged){
+      if(Math.abs(dy)>13&&Math.abs(dy)>Math.abs(dx)){active=false;return;}
+      if(Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)*1.15){
+        if(mode==='open'&&dx<0){active=false;return;}
+        engaged=true;
+        p.classList.add('dragging');s.classList.add('dragging');
+      }else return;
+    }
+    if(e.cancelable)e.preventDefault();
+    const w=W();
+    const pos=mode==='open'?Math.max(0,Math.min(w,dx)):Math.max(0,Math.min(w,w+dx));
+    p.style.transform=`translateX(${pos}px)`;
+    s.style.opacity=String(Math.max(0,Math.min(1,pos/w)));
+    vx=(t.clientX-lastX)/Math.max(1,e.timeStamp-lastT);
+    lastX=t.clientX;lastT=e.timeStamp;
+  },{passive:false});
+  phone.addEventListener('touchend',()=>{
+    if(!active)return;
+    if(engaged){
+      const w=W();
+      const shouldOpen=mode==='open'?(dx>w*0.35||vx>0.35):!(dx<-w*0.25||vx<-0.35);
+      if(shouldOpen)openDrawer();else closeDrawer();
+    }
+    active=false;engaged=false;
+  },{passive:true});
+})();
 
 document.getElementById('archiveBtn').addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
